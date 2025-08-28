@@ -15,6 +15,19 @@ VISH.Editor.Slideset = (function(V,$,undefined){
 		initialized = true;
 	};
 
+
+	/*
+	 * Add new screen to the scene
+	 */
+	var addScreen = function(event){
+		var options = {};
+		options.slideNumber = V.Slides.getSlidesQuantity()+1;
+		var slidesetId = V.Utils.getId("article");
+		var slide = V.Editor.Flashcard.getDummy(slidesetId,options);
+		V.Editor.Slides.addSlide(slide);
+		$.fancybox.close();
+	};
+
 	/*
 	 * Module to create slidesets
 	 * Obj: slide or slide type
@@ -247,6 +260,7 @@ VISH.Editor.Slideset = (function(V,$,undefined){
 
 	return {
 		init 							: init,
+		addScreen						: addScreen,
 		getCreatorModule				: getCreatorModule,
 		getDummy						: getDummy,
 		onEnterSlideset					: onEnterSlideset,

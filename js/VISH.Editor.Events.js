@@ -19,7 +19,9 @@ VISH.Editor.Events = (function(V,$,undefined){
 	var bindEditorEventListeners = function(){
 		if(!_bindedEditorEventListeners){
 
-			$(document).on('click', '#addSlideButton', V.Editor.Tools.Menu.insertSlide);
+			console.log(typeof V.Editor.Slideset.addScreen);
+			$(document).on('click', '#addScreenButton', V.Editor.Slideset.addScreen);
+			//$(document).on('click', '#addSlideButton', V.Editor.Tools.Menu.insertSlide);
 			$(document).on('click', '#addSlideButtonOnSubslides', V.Editor.Tools.Menu.insertSubslide);
 			$(document).on('click', '#importButton', function(){
 				var firstEnabledId = $("#tab_pdfex,#tab_efile,#tab_presentations_repo").not(".disabled").attr("id");
@@ -40,42 +42,11 @@ VISH.Editor.Events = (function(V,$,undefined){
 
 			$(document).on('click', '#slideset_selected_img', V.Editor.Slideset.onClickOpenSlideset);
 			
-			//Settings events
-			$(document).on('click', '#presentation_details_preview_thumbnail', V.Editor.Settings.onChangeThumbnailClicked);
-			$(document).on('hover', '#presentation_details_preview_thumbnail', function(event){
-				var thumbnail = $("#presentation_details_preview_thumbnail_img");
-				if($(thumbnail).hasClass("addThumbnailPlus")){
-					return;
-				}
-				if(event.type==="mouseenter"){
-					$("#editthumb").slideDown();
-				} else {
-					$("#editthumb").slideUp();
-				}
-			});
-			
-			$(document).on('keyup', '#presentation_details_input_title', V.Editor.Settings.onKeyUpOnTitle);
-			$(document).on('keyup', '#presentation_details_preview_addtitle_textarea', V.Editor.Settings.onKeyUpOnPreviewTitle);
-			$(document).on('click', '#metadata_clasification_button', V.Editor.Settings.onMetadataButtonClicked);
-			$(document).on('click', '#done_in_metadata', V.Editor.Settings.onDoneMetadataButtonClicked);
-			$(document).on('click', '.js_tabs_asettings', V.Editor.Settings.advancedTabs);
-			$(document).on('click', '#catalog_button', V.Editor.Settings.onCatalogButtonClicked);
-			$(document).on('click', '#catalog_done_button', V.Editor.Settings.onDoneCatalogButtonClicked);
-			$(document).on('change', '#attachment_file', V.Editor.Settings.onChangeAttachmentFile);
-			$(document).on('click', '#upload_file_attachment', V.Editor.Settings.onUploadAttachmentFile);
-
-			$(document).on('click', '#fill_details_later_button', function(event){
-				event.preventDefault();
-				$("#catalog_content").hide();
-				$.fancybox.close();
-			});
-			$(document).on('change', '#tlt_hours, #tlt_minutes, #tlt_seconds', V.Editor.Settings.onTLTchange);
-			$(document).on('keyup', '#tlt_hours, #tlt_minutes, #tlt_seconds', V.Editor.Settings.onTLTchange);
+			//Settings events		
 			$(document).on('click', '#save_presentation_details', V.Editor.Settings.onSavePresentationDetailsButtonClicked);
 			
 			$(document).on('click','div.templatethumb', V.Editor.onSlideThumbClicked);
 			$(document).on('click','div.stthumb', V.Editor.onSlideThumbClicked);
-			$(document).on('click','#animation_fancybox div.slidethumb', V.Editor.onAnimationThumbClicked); //animations thumb
 
 			$(document).on('click','.stthumb_wrapper p', V.Editor.onSlideThumbClicked);
 			$(document).on('click','.editable', V.Editor.onEditableClicked);

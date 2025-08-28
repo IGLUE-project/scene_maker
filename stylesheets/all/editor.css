@@ -109,32 +109,11 @@ p.presentation_details_column_title {
 
 #presentation_details_fields_row1_column1 {
 	height: 100%;
-    width: 23%;
+    width: 100%;
     margin-left: 46px;
     padding-top: 24px;
     float: left;
     background-color: #fff;
-}
-
-#presentation_details_fields_row1_column2 {
-	height: 450px;
-    width: 491px;
-    margin-top: 23px;
-    float: left;
-    border-left: 1px solid #EBEBEB;
-    padding-left: 30px;
-    margin-left: 0px;
-}
-
-#presentation_details_fields_row1_column3 {
-	height: 450px;
-    width: 191px;
-    float: left;
-    margin-left: -55px;
-    padding-left: 29px;
-    margin-top: 17px;
-    margin-bottom: -50px;
-    border-left: 1px solid #EBEBEB;
 }
 
 #presentation_details_fields_row2 {
@@ -222,8 +201,7 @@ p.presentation_details_column_title {
 }
 
 #presentation_details_title {
-	width: 100%;
-	display: inline;
+	width: 94%;
 }
 
 span.presentation_details_text {
@@ -1070,15 +1048,11 @@ input.slider_range_input {
 	text-decoration: none;
 }
 
-#addSlideButton > .slidesScrollbarButton {
-	width: 90px;
+#addScreenButton > .slidesScrollbarButton {
+	width: 95%;
 }
 
-#importButton > .slidesScrollbarButton {
-	width: 70px;
-}
-
-#addSlideButton span, #importButton span, #addSlideButtonOnSubslides span, #importButtonOnSubslides span {
+#addScreenButton span, #addSlideButtonOnSubslides span {
 	margin-left: 3px;
 }
 
@@ -1086,15 +1060,6 @@ input.slider_range_input {
 	width: 90px;
 	margin-top: 20px;
 }
-
-#importButtonOnSubslides {
-	display: none;
-}
-
-#importButtonOnSubslides > .slidesScrollbarButton {
-	width: 90px;
-}
-
 
 #slides_list {
 	position: relative;
