@@ -85,10 +85,6 @@ VISH.Editor.Events = (function(V,$,undefined){
 			$(document).on('click','.delete_content', V.Editor.onDeleteItemClicked);
 			$(document).on('click','.delete_slide', V.Editor.onDeleteSlideClicked);
 
-			$(document).on('click','#animation_fancybox div[animation]', V.Editor.Animations.onAnimationSelected);
-
-			$(document).on('click','#theme_fancybox img[theme]', V.Editor.Themes.Presentation.onThemeSelected);
-
 			$(document).on("click", ".change_bg_button", V.Editor.Tools.changeBackground);
 
 			$(document).bind('keydown', handleBodyKeyDown);
@@ -271,9 +267,6 @@ VISH.Editor.Events = (function(V,$,undefined){
 			});
 
 			//Element Settings
-			$(document).on("click", "#quizSettingsDone", V.Editor.Quiz.onQuizSettingsDone);
-			$(document).on("click", "#exportQuizToIMSQTI", function(){ V.Editor.Quiz.onExportTo("QTI") });
-			$(document).on("click", "#exportQuizToMoodleXML", function(){ V.Editor.Quiz.onExportTo("MoodleXML") });
 			$(document).on("click", "#objectSettingsDone", V.Editor.Object.onObjectSettingsDone);
 			
 			//onbeforeunload event

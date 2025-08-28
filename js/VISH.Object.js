@@ -3,7 +3,6 @@ VISH.Object = (function(V,$,undefined){
 	var init = function(){
 		V.Object.PDF.init();
 		V.Object.GoogleDOC.init();
-		V.Object.Webapp.init();
 	};
 
 	///////////////////////////////////////

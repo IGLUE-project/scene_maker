@@ -50,33 +50,17 @@ VISH.Viewer = (function(V,$,undefined){
 	var _initAferStatusLoaded = function(options,presentation){
 		V.Utils.Loader.loadDeviceCSS();
 		V.Utils.Loader.loadLanguageCSS();
-		V.Themes.init();
-		V.Themes.Core.applyConfigTheme(function(VEtheme){
-			_initAferVEThemeLoaded(options,presentation);
-		});
-	};
-
-	var _initAferVEThemeLoaded = function(options,presentation){
 		V.EventsNotifier.init();
 		V.Object.init();
 		V.Slideset.init();
-		V.Quiz.initBeforeRender(presentation);
 		V.Slides.init();
 		V.I18n.translateUI();
 		V.User.init(options);
 		V.Storage.init();
-		V.Recommendations.init(options);
 		V.Events.init();
 		V.Video.init();
 		V.Audio.init();
 		V.FullScreen.init();
-		V.SCORM.init();
-		V.Themes.Presentation.loadTheme(presentation.theme, function(){
-			_initAferPresentationThemeLoaded(options,presentation);
-		});
-	};
-
-	var _initAferPresentationThemeLoaded = function(options,presentation){
 		V.Presentation.init(presentation.slides, function(){
 			_initAferRenderPresentation(options,presentation);
 		});
@@ -84,31 +68,11 @@ VISH.Viewer = (function(V,$,undefined){
 
 	var _initAferRenderPresentation = function(options,presentation){
 		V.Video.HTML5.setMultimediaEvents();
-		V.Animations.loadAnimation(presentation.animation, function(){
-			_initAferAnimationLoaded(options,presentation);
-		})
-	};
-
-	var _initAferAnimationLoaded = function(options,presentation){
 		V.Slides.updateCurrentSlideFromHash();
 		//we have to update slides AFTER load theme and before anything
 		//This way we prevent undesired behaviours 
 		V.Slides.updateSlides();
-
-		//Init some modules (and submodules) after render
-		V.Quiz.init();
-		V.SCORM.initAfterRender();
-		V.IframeMessenger.init();
-
-		//Init ViSH Editor Addons
-		if(options.addons){
-			V.Addons.init(options.addons);
-		}
-
 		V.ViewerAdapter.init(options); //Also init texts
-
-		//Clean hash
-		// V.Utils.cleanHash();
 
 		if(V.Slides.getCurrentSlideNumber()>0){
 			V.Slides.triggerEnterEventById($(V.Slides.getCurrentSlide()).attr("id"));
@@ -118,9 +82,6 @@ VISH.Viewer = (function(V,$,undefined){
 			//Try to win focus
 			window.focus();
 		}
-
-		//After all, init tracking system
-		V.TrackingSystem.init();
 	};
 
 	
@@ -166,20 +127,12 @@ VISH.Viewer = (function(V,$,undefined){
 			}
 		},timeToLoadObjects);
 
-		// if(V.Status.getDevice().mobile){
-		// 	V.ImagePlayer.reloadGifs($(slide));
-		// }
-
 		if(!isSlideset){
 			V.Video.HTML5.playMultimedia(slide);
 		}
 
 		if(isSlideset){
 			V.Slideset.onEnterSlideset(slide);
-		}
-
-		if(!isSubslide){
-			V.Recommendations.checkForRecommendations();
 		}
 
 		V.EventsNotifier.notifyEvent(V.Constant.Event.onEnterSlide,{"id": slide.id, "slideNumber": cSlideNumber},false);

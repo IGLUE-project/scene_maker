@@ -1,6 +1,5 @@
 /*
  * Wrapper for jQuery custom content scroller
- * http://manos.malihu.gr/jquery-custom-content-scroller/
  */
 
 VISH.Editor.Scrollbar = (function(V,$,undefined){

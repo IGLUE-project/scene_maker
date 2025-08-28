@@ -8,14 +8,6 @@ VISH.Editor.Image = (function(V,$,undefined){
 	var urlInputId = "picture_url";
 	
 	var init = function(){
-		V.Editor.Image.Flickr.init();
-		V.Editor.Image.XWiki.init();
-		VISH.Editor.Image.Europeana.init();
-		V.Editor.Image.Repository.init();
-		V.Editor.Image.LRE.init();
-
-		// $("#" + urlInputId).vewatermark(V.I18n.getTrans("i.pasteImageURL"));
-
 		//Load from URL
 		$("#" + urlDivId + " .previewButton").click(function(event){
 			if(V.Police.validateObject($("#" + urlInputId).val())[0]){

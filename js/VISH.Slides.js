@@ -302,16 +302,6 @@ VISH.Slides = (function(V,$,undefined){
 	* n < 0 (go back)
 	*/
 	var moveSlides = function(n){
-		if((!V.Editing)&&(isCurrentLastSlide())){
-			if(n>0){
-				V.Recommendations.showFancybox();
-				return;
-			} else if((n<0)&&(V.Recommendations.isRecVisible())){
-				V.Recommendations.hideFancybox();
-				return;
-			}
-		}
-
 		var no = curSlideIndex+n+1;
 		no = Math.min(Math.max(1,no),slideEls.length);
 		goToSlide(no);

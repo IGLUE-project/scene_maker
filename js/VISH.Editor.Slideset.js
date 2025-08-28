@@ -10,10 +10,7 @@ VISH.Editor.Slideset = (function(V,$,undefined){
 			return;
 		}
 		//Initialize module
-
 		V.Editor.Flashcard.init();
-		V.Editor.VirtualTour.init();
-		V.Editor.EVideo.init();
 
 		initialized = true;
 	};

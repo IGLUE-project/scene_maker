@@ -67,7 +67,7 @@ VISH.Slideset = (function(V,$,undefined){
 
 	var draw = function(slidesetJSON){
 		var slidesetViewer = getViewerModule(slidesetJSON.type);
-		if(typeof slidesetViewer.draw == "function"){
+		if((typeof slidesetViewer !== "undefined")&&(typeof slidesetViewer.draw == "function")){
 			slidesetViewer.draw(slidesetJSON);
 		}
 	};

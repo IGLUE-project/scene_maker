@@ -9,16 +9,10 @@ VISH.Editor.Object = (function(V,$,undefined){
 		
 
 	var init = function(){
-		V.Editor.Object.LRE.init();
-		V.Editor.Object.Repository.init();
-		V.Editor.Object.Live.init();
 		V.Editor.Object.Web.init();
 		V.Editor.Object.GoogleDOC.init();
 		V.Editor.Object.PDF.init();
-		V.Editor.Object.Snapshot.init();
-		V.Editor.Object.Scorm.init();
-		V.Editor.Object.Webapp.init();
-		
+
 		var urlInput = $("#"+urlDivId).find("input");
 		// $(urlInput).vewatermark(V.I18n.getTrans("i.pasteEmbedObject"));
 		

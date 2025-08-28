@@ -335,7 +335,7 @@ VISH.Editor.Text = (function(V,$,undefined){
 			}
 
 			//Color depends of the current theme
-			var initialTextColor = "color:#" + V.Editor.Themes.Presentation.getCurrentTheme().color;
+			var initialTextColor = "color:#000";
 			var blankTextColor = initialTextColor; //For placeholders
 
 			//We can also specify initial_texts style in the options param

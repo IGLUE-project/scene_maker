@@ -83,34 +83,19 @@ VISH.Editor = (function(V,$,undefined){
 		}
 		V.Utils.Loader.loadDeviceCSS();
 		V.Utils.Loader.loadLanguageCSS();
-		V.Themes.init();
-		V.Editor.Themes.init();
-		V.Themes.Core.applyConfigTheme(function(VEtheme){
-			_initAferVEThemeLoaded(options,presentation);
-		});
-	};
-
-	var _initAferVEThemeLoaded = function(options,presentation){
 		V.I18n.translateUI();
 		V.Editor.ViewerAdapter.init();
 		V.Object.init();
-		V.Editor.IMSQTI.init();
 		V.Editor.Dummies.init();
-		V.Editor.API.init();
 		V.EventsNotifier.init();
-		V.Editor.Animations.init();
 		V.Flashcard.init();
-		V.VirtualTour.init();
 		V.Editor.Slideset.init();
-		V.Editor.Presentation.init();
 		V.Renderer.init();
 		V.Slides.init();
 		V.User.init(options);
 		V.Video.init();
 		V.Audio.init();
-		V.Editor.LRE.init(V.I18n.getLanguage());
 		V.Editor.Settings.init(); //Settings must be initialize before V.Editor.Renderer.init(presentation);
-		V.SCORM.init();
 		
 		//If we have to edit
 		if(initialPresentation){
@@ -127,13 +112,10 @@ VISH.Editor = (function(V,$,undefined){
 				// V.Editor.Tools.changePublishButtonStatus("disabled");
 				V.Editor.Tools.changePublishButtonStatus("unpublish");
 			}
-			V.Editor.Themes.Presentation.selectTheme(presentation.theme,false,function(){
-				//Presentation theme loaded
-				V.Editor.Renderer.init(presentation);
-				//remove focus from any zone
-				_removeSelectableProperties();
-				_initAferPresentationLoaded(options,presentation);
-			});
+			V.Editor.Renderer.init(presentation);
+			//remove focus from any zone
+			_removeSelectableProperties();
+			_initAferPresentationLoaded(options,presentation);
 		} else {
 			initialPresentation = false;
 			V.Editor.Settings.loadPresentationSettings();
@@ -162,18 +144,12 @@ VISH.Editor = (function(V,$,undefined){
 		V.Editor.Video.init();
 		V.Editor.Audio.init();
 		V.Editor.Object.init();
-		V.Editor.PDFex.init();
-		V.Editor.EPackage.init();
-		V.Editor.Presentation.Repository.init();
 		V.Editor.Thumbnails.init();
-		V.Editor.Quiz.init();
 		V.Editor.Preview.init();
 		V.Editor.Tools.init();
-		V.Editor.Filter.init();
 		V.Storage.init();
 		V.Editor.Clipboard.init();
 		V.Editor.Events.init();
-		V.IframeMessenger.init();
 		
 		//Init ViSH Editor Addons
 		if(options.addons){
@@ -208,9 +184,6 @@ VISH.Editor = (function(V,$,undefined){
 
 		//Try to win focus
 		window.focus();
-
-		//Call VE theme callback (for custom JS features)
-		V.Themes.Core.onThemeCallback(options,presentation);
 
 		$("#waiting_overlay").hide();
 	};

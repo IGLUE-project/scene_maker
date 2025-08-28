@@ -11,10 +11,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 	//Close button
 	var _closeButton;
 
-	//Recommendations
-	var _showRec;
-	var _showEval;
-
 	//Internals
 	var _initialized = false;
 	//Prevent updateInterface with same params (Make ViSH Viewer more efficient)
@@ -41,10 +37,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 
 		//Close button false by default
 		_closeButton = false;
-
-		//Recommendations
-		_showRec = V.Recommendations.canShowRecommendations();
-		_showEval = V.Recommendations.canShowEvaluateButton();
 
 		//Mobiles
 		if(V.Status.getDevice().mobile){
@@ -108,13 +100,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 			}
 		}
 
-		//Evaluations (in recommendation window)
-		if(_showEval){
-			V.Recommendations.showEvaluations();
-		} else {
-			V.Recommendations.hideEvaluations();
-		}
-
 		if(_closeButton){
 			$("button#closeButton").show();
 		}
@@ -168,21 +153,17 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 		}
 
 		// Pager
-		if(V.Recommendations.isRecVisible()){
+		if(V.Slides.isCurrentFirstSlide()){
+			$("#page-switcher-start").addClass("disabledarrow");
+		} else {
 			$("#page-switcher-start").removeClass("disabledarrow");
+		}
+		if(V.Slides.isCurrentLastSlide()){
 			$("#page-switcher-end").addClass("disabledarrow");
 		} else {
-			if(V.Slides.isCurrentFirstSlide()){
-				$("#page-switcher-start").addClass("disabledarrow");
-			} else {
-				$("#page-switcher-start").removeClass("disabledarrow");
-			}
-			if((V.Slides.isCurrentLastSlide())&&(!V.Recommendations.isEnabled())){
-				$("#page-switcher-end").addClass("disabledarrow");
-			} else {
-				$("#page-switcher-end").removeClass("disabledarrow");
-			}
+			$("#page-switcher-end").removeClass("disabledarrow");
 		}
+		
 	};
 
 
@@ -357,20 +338,11 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 		//Texts callbacks
 		V.Text.aftersetupSize(increase,increaseW);
 
-		//Snapshot callbacks
-		V.SnapshotPlayer.aftersetupSize(increase,increaseW);
-		
 		//Object callbacks
 		V.ObjectPlayer.aftersetupSize(increase,increaseW);
 
 		//Slidesets
 		V.Slideset.afterSetupSize(increase,increaseW);
-
-		//Quiz callbacks
-		V.Quiz.aftersetupSize(increase,increaseW);
-
-		//Recommendations callbacks
-		V.Recommendations.aftersetupSize(increase,increaseW);
 	};
 
 	var _getDesiredVieweBarHeight = function(windowHeight){

@@ -7,8 +7,6 @@ VISH.Editor.Video = (function(V,$,undefined){
 		
 	var init = function(){
 		V.Editor.Video.HTML5.init();
-		V.Editor.Video.Repository.init();
-		V.Editor.Video.Youtube.init();
 
 		var urlInput = $("#"+urlDivId).find("input");
 		// $(urlInput).vewatermark(V.I18n.getTrans("i.pasteVideoURL"));

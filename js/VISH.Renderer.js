@@ -149,12 +149,6 @@ VISH.Renderer = (function(V,$,undefined){
 			case V.Constant.MEDIA.YOUTUBE_VIDEO:
 				return V.Video.Youtube.renderVideoFromJSON(element,{extraClasses: "objectelement youtubeelement " + loadingObjectClass + " " + template + "_" + element['areaid']});
 				break;
-			case V.Constant.MEDIA.SCORM_PACKAGE:
-				return V.SCORM.renderSCORMFromJSON(element,{extraClasses: loadingObjectClass + " " + template + "_" + element['areaid']});
-				break;
-			case V.Constant.MEDIA.WEB_APP:
-				return V.Object.Webapp.renderWebappFromJSON(element,{extraClasses: loadingObjectClass + " " + template + "_" + element['areaid']});
-				break;
 			case V.Constant.MEDIA.PDF:
 				return V.Object.PDF.renderPDFFromJSON(element,{extraClasses: loadingObjectClass + " " + template +"_" + element['areaid'], source: objectInfo.source});
 				break;

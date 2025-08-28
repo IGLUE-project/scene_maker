@@ -14,7 +14,6 @@ VISH.Editor.Settings = (function(V,$,undefined){
 
 
 	var init = function(){
-		LOM_Difficulty = V.Editor.Utils.LOM.getDifficulty();
 		_initSliders();
 	};
 
@@ -36,18 +35,9 @@ VISH.Editor.Settings = (function(V,$,undefined){
 			value: [ V.Constant.DIFFICULTY ],
 			slide: function( event, ui ) {
 				$("#difficulty_range").attr("difficulty",ui.value);
-				$("#difficulty_range").val(LOM_Difficulty[ui.value].text);
 			}
 		}); 
 		$( "#difficulty_range" ).attr( "difficulty" , V.Constant.DIFFICULTY);
-		$("#difficulty_range").val(LOM_Difficulty[V.Constant.DIFFICULTY].text);
-
-		//Tags
-		if(!tagsLoaded){
-			$("#tagBoxIntro").attr("HTMLcontent", $("#tagBoxIntro").html());
-			V.Utils.Loader.startLoadingInContainer($("#tagBoxIntro"),{style: "loading_tags"});
-			V.Editor.API.requestTags(_onInitialTagsReceived,_onInitialTagsReceived);
-		}
 	};
 
 	var displaySettings = function(){
@@ -182,11 +172,7 @@ VISH.Editor.Settings = (function(V,$,undefined){
 			}
 		}
 
-		//Themes
-		selectTheme(V.Editor.Themes.Presentation.getCurrentTheme().number);
-
 		//Metadata
-
 		if(presentation.language){
 			$("#language_tag").val(presentation.language);
 		}
@@ -489,21 +475,7 @@ VISH.Editor.Settings = (function(V,$,undefined){
 		if((typeof licenseName == "string")&&(licenseKey)){
 			settings.license = {name: licenseName, key: licenseKey};
 		}
-		
-		var themeNumber = V.Editor.Themes.Presentation.getCurrentTheme().number;
-		if(typeof  themeNumber == "string"){
-			settings.theme = "theme" + themeNumber;
-		} else {
-			settings.theme = V.Constant.Themes.Default;
-		}
-
-		var animationSelection = V.Editor.Animations.getCurrentAnimation().filename;
-		if(typeof  animationSelection == "string"){
-			settings.animation = animationSelection;
-		} else {
-			settings.animation = V.Constant.Animations.Default;
-		}
-
+	
 		//Metadata fields
 		var language = $("#language_tag").val();
 		if(typeof language == "string"){
@@ -520,20 +492,6 @@ VISH.Editor.Settings = (function(V,$,undefined){
 			settings.age_range = age_range;
 		}
 		
-		var difficultyIndexValue = $("#difficulty_range").attr("difficulty");
-		var difficultyValue = LOM_Difficulty[difficultyIndexValue];
-		if(typeof difficultyValue == "object"){
-			var difficulty = difficultyValue.value;
-			if((typeof difficulty == "string")&&(difficulty!="unspecified")){
-				settings.difficulty = difficulty;
-			}
-		}
-		
-		var TLT = _getTLT();
-		if(typeof TLT == "string"){
-			settings.TLT = TLT;
-		}
-
 		var subjectsToSave = [];
 		var subjects = $("#subject_tag").val();
 		var sL = subjects.length;
