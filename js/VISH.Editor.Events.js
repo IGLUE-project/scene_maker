@@ -19,8 +19,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 	var bindEditorEventListeners = function(){
 		if(!_bindedEditorEventListeners){
 
-			console.log(typeof V.Editor.Slideset.addScreen);
-			$(document).on('click', '#addScreenButton', V.Editor.Slideset.addScreen);
+			$(document).on('click', '#addScreenButton', V.Editor.Screen.addScreen);
 			//$(document).on('click', '#addSlideButton', V.Editor.Tools.Menu.insertSlide);
 			$(document).on('click', '#addSlideButtonOnSubslides', V.Editor.Tools.Menu.insertSubslide);
 			$(document).on('click', '#importButton', function(){
@@ -40,7 +39,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 				}
 			});
 
-			$(document).on('click', '#slideset_selected_img', V.Editor.Slideset.onClickOpenSlideset);
+			$(document).on('click', '#slideset_selected_img', V.Editor.Screen.onClickOpenSlideset);
 			
 			//Settings events		
 			$(document).on('click', '#save_presentation_details', V.Editor.Settings.onSavePresentationDetailsButtonClicked);
@@ -494,7 +493,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 		switch (event.keyCode) {
 		case 39: // right arrow
 			if(V.Editor.Slides.isSlideFocused()){
-				if(V.Editor.Slideset.isSlideset(V.Slides.getCurrentSlide())){
+				if(V.Editor.Screen.isSlideset(V.Slides.getCurrentSlide())){
 					V.Editor.Slides.forwardOneSubslide();
 				}
 				event.preventDefault();
@@ -512,7 +511,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 			break;
 		case 37: // left arrow
 			if(V.Editor.Slides.isSlideFocused()){
-				if(V.Editor.Slideset.isSlideset(V.Slides.getCurrentSlide())){
+				if(V.Editor.Screen.isSlideset(V.Slides.getCurrentSlide())){
 					V.Editor.Slides.backwardOneSubslide();
 				}
 				event.preventDefault();

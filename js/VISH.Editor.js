@@ -89,7 +89,7 @@ VISH.Editor = (function(V,$,undefined){
 		V.Editor.Dummies.init();
 		V.EventsNotifier.init();
 		V.Flashcard.init();
-		V.Editor.Slideset.init();
+		V.Editor.Screen.init();
 		V.Renderer.init();
 		V.Slides.init();
 		V.User.init(options);
@@ -169,8 +169,8 @@ VISH.Editor = (function(V,$,undefined){
 
 		//Add the first slide
 		if(!initialPresentation){
-			var slide = V.Editor.Dummies.getDummy(V.Constant.STANDARD, {template:"1", slideNumber:1});
-			V.Editor.Slides.addSlide(slide);
+			var screen = V.Editor.Screen.getDummy(V.Utils.getId("article"),{slideNumber:1});
+			V.Editor.Slides.addSlide(screen);
 			V.Slides.goToSlide(1);
 		}
 
@@ -461,7 +461,7 @@ VISH.Editor = (function(V,$,undefined){
 		e.stopPropagation();
 
 		if(V.Slideset.isSlideset(slide)){
-			V.Editor.Slideset.onEnterSlideset(slide);
+			V.Editor.Screen.onEnterSlideset(slide);
 		} else {
 			//Standard slide
 			V.Editor.Utils.Loader.loadObjectsInEditorSlide(slide);
@@ -485,7 +485,7 @@ VISH.Editor = (function(V,$,undefined){
 		e.stopPropagation();
 
 		if(V.Slideset.isSlideset(slide)){
-			V.Editor.Slideset.onLeaveSlideset(slide);
+			V.Editor.Screen.onLeaveSlideset(slide);
 		} else {
 			//Standard slide
 			V.Editor.Utils.Loader.unloadObjectsInEditorSlide(slide);
@@ -526,9 +526,8 @@ VISH.Editor = (function(V,$,undefined){
 			if(!V.Slideset.isSlideset(slideDOM)){
 				slide = _saveStandardSlide(slideDOM,presentation,false);
 			} else {
-				var slidesetModule = V.Editor.Slideset.getCreatorModule(slideDOM);
 				V.Utils.addTempShown(slideDOM);
-				slide = slidesetModule.getSlideHeader(slideDOM);
+				slide = V.Editor.Screen.getSlideHeader(slideDOM);
 				//Save subslides
 				$(slideDOM).find("article").each(function(index,subslideDOM){
 					var subslide = _saveStandardSlide(subslideDOM,presentation,true);

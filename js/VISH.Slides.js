@@ -101,7 +101,7 @@ VISH.Slides = (function(V,$,undefined){
 
 	var getCurrentSubslide = function(){
 		if(V.Editing){
-			return V.Editor.Slideset.getCurrentSubslide();
+			return V.Editor.Screen.getCurrentSubslide();
 		}
 
 		if(curSubSlideId === null){

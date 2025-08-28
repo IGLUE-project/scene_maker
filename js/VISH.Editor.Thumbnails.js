@@ -53,10 +53,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		var slide = V.Slides.getSlideWithNumber(slideNumber);
 		var isSlideset = V.Slideset.isSlideset(slide);
 		if(isSlideset){
-			var creator = V.Editor.Slideset.getCreatorModule(slide);
-			if(typeof creator.onThumbnailLoadFail == "function"){
-				creator.onThumbnailLoadFail(slide);
-			}
+			V.Editor.Screen.onThumbnailLoadFail(slide);
 		}
 	}
 
@@ -197,7 +194,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		var isSlideset = V.Slideset.isSlideset(slideType);
 
 		if(isSlideset){
-			thumbnailURL = V.Editor.Slideset.getCreatorModule(slideType).getThumbnailURL(slide);
+			thumbnailURL = V.Editor.Screen.getThumbnailURL(slide);
 		} else if(slideType==V.Constant.STANDARD){
 			//If the slide only contains one element, and it's an image, use it as thumbnail.
 			var zone = $(slide).children("div.vezone");
@@ -217,16 +214,10 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 	var getDefaultThumbnailURL = function(slide){
 		var slideType = $(slide).attr('type');
-
 		if(slideType==V.Constant.STANDARD){
 			return _getDefaultThumbnailURLForStandardSlide(slide);
 		} else if(V.Slideset.isSlideset(slideType)){
-			var creatorModule = V.Editor.Slideset.getCreatorModule(slideType);
-			if(typeof creatorModule.getDefaultThumbnailURL == "function"){
-				return creatorModule.getDefaultThumbnailURL(slide);
-			} else {
-				return creatorModule.getThumbnailURL(slide);
-			}
+			return V.Editor.Screen.getDefaultThumbnailURL(slide);
 		}
 	};
 
@@ -290,7 +281,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			});
 		});
 
-		V.Editor.Slideset.beforeCreateSlidesetThumbnails();
+		V.Editor.Screen.beforeCreateSlidesetThumbnails();
 
 		var options = new Array();
 		options['horizontalScroll'] = true;
@@ -349,7 +340,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 	var _onClickSubslideElement = function(event){
 		var subslideNumber = $(event.target).attr("slideNumber");
-		V.Editor.Slideset.openSubslideWithNumber(subslideNumber);
+		V.Editor.Screen.openSubslideWithNumber(subslideNumber);
 	}
 
 	var selectSubslideThumbnail = function(no){

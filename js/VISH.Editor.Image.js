@@ -156,7 +156,7 @@ VISH.Editor.Image = (function(V,$,undefined){
 
 		switch(contentAddMode){
 			case V.Constant.FLASHCARD:
-				V.Editor.Flashcard.onBackgroundSelected(contentToAdd);
+				V.Editor.Screen.onBackgroundSelected(contentToAdd);
 				break;
 			case V.Constant.THUMBNAIL:
 				V.Editor.Settings.onThumbnailSelected(contentToAdd);

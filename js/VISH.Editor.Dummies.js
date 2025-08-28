@@ -38,7 +38,8 @@ VISH.Editor.Dummies = (function(V,undefined){
 	var getDummy = function(slideType, options){
 		var isSlideset = V.Slideset.isSlideset(slideType);
 		if(isSlideset){
-			return V.Editor.Slideset.getDummy(slideType, options);
+			var slidesetId = V.Utils.getId("article");
+			return V.Editor.Screen.getDummy(slidesetId, options);
 		} else if(slideType==V.Constant.STANDARD){
 			if((options)&&(options.subslide)){
 				return _getDummyForSubslide(slideType, options);
@@ -76,7 +77,7 @@ VISH.Editor.Dummies = (function(V,undefined){
 		var slideType = V.Slides.getSlideType(slide);
 		var isSlideset = V.Slideset.isSlideset(slideType);
 		if(isSlideset){
-			var dummy = V.Editor.Slideset.getDummy(slideType, options);
+			var dummy = V.Editor.Screen.getDummy(slide.id, options);
 			if(dummy){
 				return _removeEditable(_replaceIds(dummy, options.slideNumber, slide.id));
 			}

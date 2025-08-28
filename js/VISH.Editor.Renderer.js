@@ -7,17 +7,7 @@ VISH.Editor.Renderer = (function(V,$,undefined){
 	 */
 	var init = function(presentation){
 		_isRendering = false;
-		V.Editor.Animations.setCurrentAnimation(presentation.animation);
-		
-		if(presentation.type===V.Constant.PRESENTATION){
-			renderPresentation(presentation);
-		} else if(presentation.type===V.Constant.QUIZ_SIMPLE){
-			// Presentation stored in the quiz_simple_json field of quizzes;
-			// Edit this kind of presentations makes no sense, just for testing
-			// Edit as standard presentation
-			presentation.type = V.Constant.PRESENTATION;
-			renderPresentation(presentation);
-		}
+		renderPresentation(presentation);
 	};
 
 	var renderPresentation = function(presentation){
@@ -150,8 +140,7 @@ VISH.Editor.Renderer = (function(V,$,undefined){
 			}
 
 			//Complete scaffold
-			var slidesetCreator = V.Editor.Slideset.getCreatorModule(slidesetJSON.type);
-			slidesetCreator.draw(slidesetJSON,scaffoldDOM);
+			V.Editor.Screen.draw(slidesetJSON,scaffoldDOM);
 		}
 	};
 

@@ -37,7 +37,7 @@ VISH.Editor.Events.Mobile = (function(V,$,undefined){
 					V.Slides.goToSlide(slide_number);
 				} else if($(target).parents("#subslides_list").length > 0){
 					var subslide_number = $(target).attr("slidenumber");
-					V.Editor.Slideset.openSubslideWithNumber(subslide_number);
+					V.Editor.Screen.openSubslideWithNumber(subslide_number);
 				}
 			});
 		}

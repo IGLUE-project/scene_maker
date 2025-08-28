@@ -77,7 +77,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 			cSubslideNumber = 0;
 		}
 		//Get subslides quantity
-		var subslidesQuantity = V.Editor.Slideset.getSubslidesQuantity(cSlide);
+		var subslidesQuantity = V.Editor.Screen.getSubslidesQuantity(cSlide);
 
 		var no = cSubslideNumber+n;
 		var cno = Math.min(Math.max(0,no),subslidesQuantity);
@@ -92,9 +92,9 @@ VISH.Editor.Slides = (function(V,$,undefined){
 	var goToSubslide = function(no){
 		if(no===0){
 			//Select slideset
-			V.Editor.Slideset.onClickOpenSlideset();
+			V.Editor.Screen.onClickOpenSlideset();
 		} else {
-			V.Editor.Slideset.openSubslideWithNumber(no);
+			V.Editor.Screen.openSubslideWithNumber(no);
 		}
 	};
 
@@ -365,8 +365,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 
 		if(V.Slideset.isSlideset(slideType)){
 			// Create/Load dummy slideset
-			var slidesetCreator = V.Editor.Slideset.getCreatorModule(slideType);
-			slidesetCreator.draw(null,slide);
+			V.Editor.Screen.draw(null,slide);
 		}
 
 		V.Editor.Thumbnails.redrawThumbnails(function(){
@@ -385,7 +384,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		}
 
 		if(V.Slideset.isSlideset(slide)){
-			V.Editor.Slideset.beforeRemoveSlideset(slide);
+			V.Editor.Screen.beforeRemoveSlideset(slide);
 		}
 
 		var removing_current_slide = false;
@@ -420,14 +419,14 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		appendSubslide(slideset,subslide);
 		V.Editor.Tools.addTooltipsToSlide(subslide);
 
-		V.Editor.Slideset.openSubslide(subslide);
+		V.Editor.Screen.openSubslide(subslide);
 
 		V.Editor.Thumbnails.drawSlidesetThumbnails($(slideset).find("article"),function(){
 			//Subslides Thumbnails drawed succesfully
 			V.Editor.Thumbnails.selectSubslideThumbnail($(subslide).attr("slidenumber"));
 		});
 
-		V.Editor.Slideset.afterCreateSubslide(slideset,subslide);
+		V.Editor.Screen.afterCreateSubslide(slideset,subslide);
 	};
 
 	var appendSubslide = function(slideset,subslide){
@@ -440,7 +439,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		}
 
 		var slideset = $(subslide).parent();
-		V.Editor.Slideset.beforeRemoveSubslide(slideset,subslide);
+		V.Editor.Screen.beforeRemoveSubslide(slideset,subslide);
 		$(subslide).remove();
 
 		//Update subslide counters
@@ -454,12 +453,12 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		});
 
 		//After remove a subslide, load slideset
-		V.Editor.Slideset.openSlideset(slideset);
+		V.Editor.Screen.openSlideset(slideset);
 	};
 
 	var removeSlideKeyboard = function(){
-		if(V.Editor.Slideset.getCurrentSubslide()!=null){
-			removeSubslide(V.Editor.Slideset.getCurrentSubslide());
+		if(V.Editor.Screen.getCurrentSubslide()!=null){
+			removeSubslide(V.Editor.Screen.getCurrentSubslide());
 		} else {
 			removeSlide(V.Slides.getCurrentSlide());
 		}
