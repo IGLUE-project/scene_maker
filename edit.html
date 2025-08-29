@@ -132,8 +132,6 @@
 		<img src="/images/carrousel/carrousel_sprite.png" style="display:none"/>
 		<img src="/images/vicons/fullscreen.png" style="display:none"/>
 		<img src="/images/templatesthumbs/flashcard_templateh.png" style="display:none"/>
-		<img src="/images/templatesthumbs/tVTourh.png" style="display:none"/>
-		<img src="/images/templatesthumbs/tEVideoh.png" style="display:none"/>
 		<img src="/images/templatesthumbs/t1h.png" style="display:none"/>
 		<img src="/images/templatesthumbs/t2h.png" style="display:none"/>
 		<img src="/images/templatesthumbs/t3h.png" style="display:none"/>
@@ -241,7 +239,7 @@
 				</a>
 				<div class="subToolbar toolbar_btn tool_action toolbar_flashcard" action="addHotspot">
 					<img class="toolbar_icon" src="/images/toolbar/add_hotspot.png"/>
-					<p i18n-key="i.AddHotspot">Add image</p>
+					<p i18n-key="i.AddHotspot">Add hotspot</p>
 				</div>
 				<div class="subToolbar toolbar_btn tool_action toolbar_flashcard" action="addZone">
 					<img class="toolbar_icon" src="/images/toolbar/add_zone.png"/>
@@ -249,9 +247,9 @@
 				</div>
 			</div>
 			<div id="toolbar_element" class="withLeftBorder">
-				<div id="toolbar_settings_wrapper" class="subToolbar toolbar_btn tool_action toolbar_quiz toolbar_object toolbar_web" style="display:none" action="showSettings">
-					<img class="toolbar_icon" src="/images/toolbar/options2.png"/>
-					<p i18n-key="i.Options">Options</p>
+				<div id="toolbar_settings_wrapper" class="subToolbar toolbar_btn tool_action toolbar_hotspot toolbar_object toolbar_web" style="display:none" action="showElementSettings">
+					<img class="toolbar_icon" src="/images/toolbar/properties.png"/>
+					<p i18n-key="i.Properties">Properties</p>
 				</div>
 				<div class="subToolbar toolbar_btn tool_action toolbar_image" style="display:none" action="addLink">
 					<img class="toolbar_icon" src="/images/toolbar/addLink.png"/>
@@ -623,10 +621,39 @@
 		</div>
 	</div>
 
+	<!-- Hotspot Settings -->
+	<div style='display:none'>
+		<div id="hotspotSettings_fancybox" class="elSettings_fancybox">
+			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
+			<div class="new_elsettings_field">
+				<label>Hotspot ID:</label>
+				<input id="hotspotId" type="text" maxlength="8" readonly>
+			</div>
+			<div class="new_elsettings_field">
+				<label>Action when the hotspot is clicked:</label>
+				<select id="hotspotAction" name="hotspotAction">
+					<option value="none" selected>None</option>
+					<option value="goToScreen">Go to screen</option>
+					<option value="openView">Open view</option>
+					<option value="changeScreenBackground">Change screen background</option>
+					<option value="removeElement">Remove hotspot or zone</option>
+					<option value="solvePuzzle">Solve escape room puzzle</option>
+				</select>
+			</div>
+			<div class="new_elsettings_field goToScreenSettings" style='display:none'>
+				<label>Screen:</label>
+				<select id="hotspotScreen" name="hotspotScreen"></select>
+			</div>
+			<div class="elSettingsButtonsWrapper">
+				<button id="hotspotSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>
+			</div>
+		</div>
+	</div>
+
 	<!-- Object Settings -->
 	<div style='display:none'>
 		<div id="objectSettings_fancybox" class="elSettings_fancybox">
-			<p class="elsettings_fancybox_title" i18n-key="i.Options">Options</p>
+			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
 
 			<input type="hidden" name="elId">
 

@@ -70,6 +70,8 @@
 	padding-left: 8px;
 	width: auto;
 	float: left;
+	border-right: 1px rgba(255, 255, 255, 0.5) solid;
+	padding-right: 8px;
 	-webkit-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
 	-moz-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
 	box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
@@ -208,7 +210,20 @@ button.btn_toolbar.btn.btn-primary.btn-small:hover {
 }
 
 .toolbar_btn:hover, img.big_toolbar_icon:hover {
-	background-color: #326999;	
+	background-color: #326999;
+}
+
+section.hotspot_active div.tool_action[action='addHotspot'],  section.zone_active div.tool_action[action='addZone']{
+	background-color: #326999;
+}
+
+section.hotspot_active article[type='flashcard'] {
+	/*cursor: url("/images/icons/hotspot_cursor.png") 16 16, crosshair;*/
+	cursor: crosshair;
+}
+
+section.zone_active article[type='flashcard'] {
+	cursor: crosshair;
 }
 
 .toolbar_btn:active {
@@ -256,7 +271,7 @@ img.toolbar_btn {
     margin: 0px;
     color: white;
     text-align: center;
-    width: 58px;
+    width: 68px;
     position: relative;
     top: 2px;
 }

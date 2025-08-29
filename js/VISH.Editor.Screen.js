@@ -1,13 +1,33 @@
 VISH.Editor.Screen = (function(V,$,undefined){
 
 	var initialized = false;
-
-	//Point to the current subslide
+	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "ZONE".
+	var _hiddenLinkToInitHotspotSettings;
+	var screenData;
+	var currentHotspot;
 	var currentSubslide;
 
 	var init = function(){
-	};
+		screenData = {};
 
+		//Hotspot Settings
+		_hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
+		$(_hiddenLinkToInitHotspotSettings).fancybox({
+			'autoDimensions' : false,
+			'height': 400,
+			'width': 400,
+			'scrolling': 'no',
+			'showCloseButton': false,
+			'padding' : 0,
+			"onStart"  : function(data){
+				_onStartHotspotSettingsFancybox();
+			},
+			"onComplete" : function(data){
+			},
+			"onClosed"  : function(data){
+			}
+		});
+	};
 
 	/*
 	 * Add new screen to the scene
@@ -22,11 +42,258 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	};
 
 	var addHotspot = function(){
-		console.log("TO DO: Add Hotspot");
+		if(currentEditingMode === "HOTSPOT"){
+			_disableEditingMode("HOTSPOT");
+			currentEditingMode = "NONE";
+		} else {
+			currentEditingMode = "HOTSPOT";
+			_enableEditingMode("HOTSPOT");
+		}
 	};
 
 	var addZone = function(){
-		console.log("TO DO: Add Area");
+		if(currentEditingMode === "ZONE"){
+			_disableEditingMode("ZONE");
+			currentEditingMode = "NONE";
+		} else {
+			currentEditingMode = "ZONE";
+			_enableEditingMode("ZONE");
+		}
+	};
+
+	var _enableEditingMode = function(mode){
+		switch(mode){
+			case "HOTSPOT":
+				_disableEditingMode("ZONE");
+				$("#slides_panel").addClass("hotspot_active");
+				break;
+			case "ZONE":
+				_disableEditingMode("HOTSPOT");
+				$("#slides_panel").addClass("zone_active");
+				break;
+			case "NONE":
+				_disableEditingMode("HOTSPOT");
+				_disableEditingMode("ZONE");
+				break;
+		}
+	};
+
+	var _disableEditingMode = function(mode){
+		switch(mode){
+			case "HOTSPOT":
+				$("#slides_panel").removeClass("hotspot_active");
+				break;
+			case "ZONE":
+				$("#slides_panel").removeClass("zone_active");
+				break;
+			default:
+				break;
+		}
+	};
+
+	var onClick = function(event){
+		var $target = $(event.target);
+		if(currentEditingMode !== "NONE"){
+			if ($target.closest('article[type="flashcard"]').length === 0) {
+				//Click outside a screen
+				currentEditingMode = "NONE";
+				_enableEditingMode("NONE");
+			} else {
+				//Click inside a screen
+				switch(currentEditingMode){
+					case "HOTSPOT":
+						_onClickInHotspotMode(event);
+						break;
+					case "ZONE":
+						_onClickInZoneMode(event);
+						break;
+					default:
+						break;
+				}
+			}
+		} else {
+			if ($target.hasClass('hotspot')){
+				_onSelectHotspot($target);
+			}
+		}
+	};
+
+
+	/////
+	// Hotspot
+	/////
+
+	var _onClickInHotspotMode = function(event){
+		event.preventDefault();
+		event.stopPropagation();
+
+		var screen = V.Slides.getCurrentSlide();
+		var screenId = $(screen).attr("id");
+		var hotspotId = V.Utils.getId("id-");
+		var hotspotSize = 42;
+		var rect = screen.getBoundingClientRect();
+	    var x = event.clientX - rect.left - hotspotSize/2;
+	    var y = event.clientY - rect.top - hotspotSize/2;
+
+		var $hotspot = $('<img>', {
+			src: '/images/icons/hotspot.png',
+			class: 'hotspot',
+			hotspotid: hotspotId,
+			css: {
+				position: 'absolute',
+				left: x,
+				top: y,
+				width: (hotspotSize + "px"),
+				height: (hotspotSize + "px")
+			}
+		}).appendTo(screen);
+		_validateHotspotPosition($hotspot);
+
+		if(typeof screenData[screenId] === "undefined"){
+			screenData[screenId] = {
+				hotspots: {},
+				zones: {}
+			};
+		}
+		screenData[screenId].hotspots[hotspotId] = {settings: {}};
+		
+		$hotspot.draggable({
+			start: function(event, ui) {
+				_onSelectHotspot($hotspot);
+			},
+			stop: function(event, ui) {
+				_validateHotspotPosition($hotspot);
+			}
+		});
+
+		currentEditingMode = "NONE";
+		_enableEditingMode("NONE");
+	};
+
+	function _validateHotspotPosition($hotspot, margin = 4) {
+		const $screen = $hotspot.parent();
+
+		if (!$screen.is('article[type="flashcard"]')) {
+		  return;
+		}
+
+		if (!_fullyInside($screen, $hotspot, margin)) {
+			_moveInside($screen, $hotspot);
+		}
+	};
+
+	function _fullyInside($container, $el, margin = 0) {
+		const cw = $container.innerWidth();
+		const ch = $container.innerHeight();
+		const ew = $el.outerWidth();
+		const eh = $el.outerHeight();
+		const pos = $el.position();
+
+		return (
+			pos.left >= -margin &&
+			pos.top  >= -margin &&
+			(pos.left + ew) <= (cw + margin) &&
+			(pos.top  + eh) <= (ch + margin)
+		);
+	};
+
+	function _moveInside($container, $el, margin = 0) {
+		const cw = $container.innerWidth();
+		const ch = $container.innerHeight();
+		const ew = $el.outerWidth();
+		const eh = $el.outerHeight();
+		let { left, top } = $el.position();
+
+		left = Math.max(margin, Math.min(left, cw - ew - margin));
+		top  = Math.max(margin, Math.min(top,  ch - eh - margin));
+
+		//$el.css({ left, top });
+		$el.stop(true).animate({ left, top }, 1000);
+	};
+
+	var _onSelectHotspot = function($hotspot){
+		currentHotspot = $hotspot;
+		V.Editor.Tools.loadToolsForElement("hotspot");
+	};
+
+	var showHotspotSettings = function(){
+		$(_hiddenLinkToInitHotspotSettings).trigger("click");
+	};
+
+	var _onStartHotspotSettingsFancybox = function(){
+		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
+		var hotspotId = $(currentHotspot).attr("hotspotid");
+		var hotspotSettings = screenData[screenId].hotspots[hotspotId].settings;
+
+		$("#hotspotScreen").parent().hide();
+
+		$("#hotspotId").val(hotspotId);
+		if(typeof hotspotSettings.action === "string"){
+			$("#hotspotAction").val(hotspotSettings.action).trigger('change');
+		}
+
+		var $hotspotScreenSelect = $("#hotspotScreen");
+		$hotspotScreenSelect.empty();
+		$hotspotScreenSelect.append($('<option>', { value: "none", text: ("None") }))
+		$('article[type="flashcard"]').each(function(){
+			var screenId = $(this).attr('id');
+			var screenNumber = $(this).attr('slidenumber');
+			$hotspotScreenSelect.append($('<option>', { value: screenId, text: ("Screen " + screenNumber) }))
+		});
+		if(typeof hotspotSettings.screen === "string"){
+			$("#hotspotScreen").val(hotspotSettings.screen);
+		}
+	};
+
+	var onHotspotActionChange = function(event){
+		var option = event.target.value;
+		if(option === "goToScreen"){
+			$("#hotspotScreen").parent().show();
+		} else {
+			$("#hotspotScreen").parent().hide();
+		}
+		// switch(event.target.value){
+		// 	case "goToScreen":
+				
+		// 		break;
+		// 	case "changeScreenBackground":
+		// 		break;
+		// 	case "removeElement":
+		// 		break;
+		// 	case "solvePuzzle":
+		// 		break;
+		// 	case "none":
+		// 	default:
+		// 		break;
+		// }
+	};
+
+	var onHotspotSettingsDone = function(event){
+		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
+		var hotspotId = $(currentHotspot).attr("hotspotid");
+		var hotspotSettings = {};
+
+		hotspotSettings.action = $("#hotspotAction").val();
+		if($("#hotspotScreen").is(":visible")){
+			hotspotSettings.screen = $("#hotspotScreen").val();
+		}
+
+		screenData[screenId].hotspots[hotspotId].settings = hotspotSettings;
+		$.fancybox.close();
+	};
+
+
+	/////////
+	// Zones
+	////////
+
+	var _onClickInZoneMode = function(event){
+		event.preventDefault();
+		event.stopPropagation();
+		console.log("TO DO: Add Zone");
+
+		currentEditingMode = "NONE";
+		_enableEditingMode("NONE");
 	};
 
 	/*
@@ -492,15 +759,20 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	return {
 		init 							: init,
+		getDummy						: getDummy,
 		addScreen						: addScreen,
+		onBackgroundSelected 			: onBackgroundSelected,
 		addHotspot						: addHotspot,
 		addZone							: addZone,
+		onClick 						: onClick,
+		showHotspotSettings				: showHotspotSettings,
+		onHotspotSettingsDone			: onHotspotSettingsDone,
+		onHotspotActionChange			: onHotspotActionChange,
+
 		draw 							: draw,
 		getThumbnailURL 				: getThumbnailURL,
 		getDefaultThumbnailURL			: getDefaultThumbnailURL,
-		onBackgroundSelected 			: onBackgroundSelected,
 		getSlideHeader					: getSlideHeader,
-		getDummy						: getDummy,
 		onEnterSlideset					: onEnterSlideset,
 		onLeaveSlideset					: onLeaveSlideset,
 		openSlideset					: openSlideset,

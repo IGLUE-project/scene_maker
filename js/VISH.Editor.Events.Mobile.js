@@ -17,14 +17,9 @@ VISH.Editor.Events.Mobile = (function(V,$,undefined){
 		}
 		_bindedEditorMobileEventListeners = true;
 
-
 		//Events for mobile devices.
 		var device = V.Status.getDevice();
-		var isIphoneAndSafari = ((device.iPhone)&&(device.browser.name===V.Constant.SAFARI));
-		var clickDelegationBug = (isIphoneAndSafari);
-
 		if(_touchable){
-
 			//Enable touch events
 			V.Events.Touchable.bindTouchableEventListeners();
 

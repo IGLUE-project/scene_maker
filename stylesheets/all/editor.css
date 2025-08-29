@@ -2795,6 +2795,13 @@ img.excursionSelectedInCarrousel:active , img.smartcardSelectedInCarrousel:activ
 }
 
 
+
+/* Hotspots */
+
+img.hotspot.ui-draggable {
+	cursor: pointer;
+}
+
 /* Flashcards */
 
 div.change_bg_button {

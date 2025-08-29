@@ -294,6 +294,10 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		}
 	};
 
+	var loadToolsForElement = function(element){
+		_loadToolbarForElement(element);
+	};
+
 
    /*
 	* Element Toolbar
@@ -304,12 +308,7 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		var toolbarClass = "toolbar_" + type;
 		$("#toolbar_element").children().hide();
 		$("#toolbar_element").find("." + toolbarClass).css("display","inline-block");
-		if (type == "quiz") {
-			document.getElementById("toolbar_settings_wrapper").style.top = "-8px";
-		}
-		else{
-			document.getElementById("toolbar_settings_wrapper").style.top = "-4px";
-		}
+		document.getElementById("toolbar_settings_wrapper").style.top = "-4px";
 	};
 
 	var loadToolbarForObject = function(object){
@@ -317,7 +316,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 
 		switch(objectInfo.type){
 			case V.Constant.MEDIA.WEB:
-			case V.Constant.MEDIA.WEB_APP:
 				_loadToolbarForElement(V.Constant.MEDIA.WEB);
 				break;
 			default:
@@ -573,23 +571,26 @@ VISH.Editor.Tools = (function(V,$,undefined){
 
 
 	/* Element Settings */
-  	var showSettings = function(event){
-  		switch($(V.Editor.getCurrentArea()).attr("type")){
-  			case V.Constant.QUIZ:
-  				V.Editor.Quiz.showQuizSettings();
-  				break;
-  			case V.Constant.OBJECT:
-  				V.Editor.Object.showObjectSettings();
-  				break;
-  			default:
-  				break;
+  	var showElementSettings = function(target){
+  		var $target = $(target);
+ 		if ($target.hasClass("toolbar_hotspot")) {
+		    V.Editor.Screen.showHotspotSettings();
+		} else {
+  			//Element of a zone
+  			switch($(V.Editor.getCurrentArea()).attr("type")){
+  				case V.Constant.OBJECT:
+  					V.Editor.Object.showObjectSettings();
+  					break;
+  				default:
+  					break;
+  			}
   		}
   	};
-
 
 	return {		
 		init							: init,
 		loadToolsForSlide				: loadToolsForSlide,
+		loadToolsForElement				: loadToolsForElement,
 		loadToolsForZone				: loadToolsForZone,
 		loadToolbarForObject			: loadToolbarForObject,
 		cleanZoneTool 					: cleanZoneTool,
@@ -616,7 +617,7 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		hideZoneToolTip					: hideZoneToolTip,
 		setAllTooltipMargins			: setAllTooltipMargins,
 		changeSaveButtonStatus			: changeSaveButtonStatus,
-		showSettings 					: showSettings,
+		showElementSettings 			: showElementSettings,
 		exit							: exit
 	};
 
