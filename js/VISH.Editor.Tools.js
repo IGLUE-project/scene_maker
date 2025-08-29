@@ -7,7 +7,7 @@ VISH.Editor.Tools = (function(V,$,undefined){
 	/*
 	 * Toolbar is divided in three zones.
 	 * 1) Menu
-	 * 1) Presentation toolbar (always visible and updated when current slide changed)
+	 * 2) Presentation toolbar (always visible and updated when current slide changed)
 	 * 3) Element toolbar
 	 */
 
@@ -70,25 +70,18 @@ VISH.Editor.Tools = (function(V,$,undefined){
 
 		var type = $(slide).attr("type");
 		$(".toolbar_presentation_wrapper_slideTools:not(.toolbar_" + type + ")").hide();
-		$(".toolbar_presentation_wrapper_slideTools.toolbar_" + type).show();
-		$(".toolbar_presentation_wrapper_slideTools.toolbar_" + type).children().css("visibility","visible");
 
 		switch(type){
 			case V.Constant.STANDARD:
-				$("#toolbar_background").find(".toolbar_presentation_wrapper").addClass("toolbar_presentation_wrapper_disabled");
-
-				//If the slide contains only one element, automatically select the zone that contains it
-				// var zone = $(slide).children("div.vezone:has('.delete_content')");
-				// if($(zone).length === 1){
-				// 	//The slide contains only one element in the zone: zone
-				// 	V.Editor.selectArea($(zone));
-				// }
-
 				break;
 			case V.Constant.FLASHCARD:
-				break;
-			case V.Constant.VTOUR:
-				$("#toolbar_background_wrapper").children().css('visibility', 'hidden');
+				$("#toolbar_background_wrapper").show();
+				$("#toolbar_background_wrapper").children().css("visibility","visible");
+				if(typeof $(slide).attr("avatar") !== "undefined"){
+					$("#toolbar_hotspot_wrapper").show();
+				} else {
+					$("#toolbar_hotspot_wrapper").hide();
+				}
 				break;
 			default:
 				return;
@@ -98,110 +91,10 @@ VISH.Editor.Tools = (function(V,$,undefined){
 	var _cleanPresentationToolbar = function(){
 		//Enable all buttons
 		$(".toolbar_presentation_wrapper_slideTools").removeClass("toolbar_presentation_wrapper_disabled");
-		cleanZoneTools();
-	};
-
-	/*
-	 * Draft Mode: change publish button status
-	 */
-	var changePublishButtonStatus = function(status){
-		switch(status){
-			case "publish":
-				_enablePublishButton();
-				break;
-			case "publishing":
-				_enablePublishingButton();
-				break;
-			case "unpublish":
-				_enableUnpublishButton();
-				break;
-			case "unpublishing":
-				_enableUnpublishingButton();
-				break;
-			case "disabled":
-				_disablePublishButton();
-				break;
-			default:
-				return;
-		}
-	};
-
-	var _enablePublishButton = function(){
-		$("#waiting_overlay").hide();
-
-		$("#toolbar_publish_wrapper").removeClass("toolbar_presentation_wrapper_loading");
-		$("#toolbar_publish_wrapper").removeClass("toolbar_presentation_wrapper_disabled");
-		var icon = $("#toolbar_publish").find("i.icon-download-alt");
-		$(icon).removeClass("icon-rotate-90");
-		$(icon).addClass("icon-rotate-270");
-		$("#toolbar_publish").find("p.toolbar_presentation_title").html(V.I18n.getTrans("i.Publish"));
-		$("#toolbar_publish").attr("action","publish");
-
-		//Menu
-		var menuItem = $(".menu_option.menu_action.publishMenuOption");
-		$(menuItem).parent().removeClass("menu_item_disabled");
-		$(menuItem).find("span").html(V.I18n.getTrans("i.Publish"));
-		$(menuItem).attr("action","onPublishButtonClicked");
-	};
-
-	var _enablePublishingButton = function(){
-		$("#waiting_overlay").show();
-
-		$("#toolbar_publish_wrapper").addClass("toolbar_presentation_wrapper_loading");
-		$("#toolbar_publish_wrapper").addClass("toolbar_presentation_wrapper_disabled");
-		var icon = $("#toolbar_publish").find("i.icon-download-alt");
-		$(icon).removeClass("icon-rotate-90");
-		$(icon).addClass("icon-rotate-270");
-		$("#toolbar_publish").find("p.toolbar_presentation_title").html(V.I18n.getTrans("i.Publishing"));
-
-		//Menu
-		var menuItem = $(".menu_option.menu_action.publishMenuOption");
-		$(menuItem).parent().addClass("menu_item_disabled");
-		$(menuItem).find("span").html(V.I18n.getTrans("i.Publishing"));
-	};
-
-	var _enableUnpublishButton = function(){
-		$("#waiting_overlay").hide();
-
-		$("#toolbar_publish_wrapper").removeClass("toolbar_presentation_wrapper_loading");
-		$("#toolbar_publish_wrapper").removeClass("toolbar_presentation_wrapper_disabled");
-		var icon = $("#toolbar_publish").find("i.icon-download-alt");
-		$(icon).removeClass("icon-rotate-270");
-		$(icon).addClass("icon-rotate-90");
-		$("#toolbar_publish").find("p.toolbar_presentation_title").html(V.I18n.getTrans("i.Unpublish"));
-		$("#toolbar_publish").attr("action","unpublish");
-
-		//Menu
-		var menuItem = $(".menu_option.menu_action.publishMenuOption");
-		$(menuItem).parent().removeClass("menu_item_disabled");
-		$(menuItem).find("span").html(V.I18n.getTrans("i.Unpublish"));
-		$(menuItem).attr("action","onUnpublishButtonClicked");
-	};
-
-	var _enableUnpublishingButton = function(){
-		$("#waiting_overlay").hide();
-
-		$("#toolbar_publish_wrapper").addClass("toolbar_presentation_wrapper_disabled");
-		$("#toolbar_publish_wrapper").addClass("toolbar_presentation_wrapper_loading");
-		$("#toolbar_publish").find("p.toolbar_presentation_title").html(V.I18n.getTrans("i.Unpublishing"));
-
-		//Menu
-		var menuItem = $(".menu_option.menu_action.publishMenuOption");
-		$(menuItem).parent().addClass("menu_item_disabled");
-		$(menuItem).find("span").html(V.I18n.getTrans("i.Unpublishing"));
-	};
-
-	var _disablePublishButton = function(){
-		$("#waiting_overlay").hide();
-		
-		$("#toolbar_publish_wrapper").removeClass("toolbar_presentation_wrapper_loading");
-		$("#toolbar_publish_wrapper").addClass("toolbar_presentation_wrapper_disabled");
-		$("#toolbar_publish").find("p.toolbar_presentation_title").html(V.I18n.getTrans("i.Publish"));
-
-		//Menu
-		var menuItem = $(".menu_option.menu_action.publishMenuOption");
-		$(menuItem).parent().addClass("menu_item_disabled");
-		$(menuItem).find("span").html(V.I18n.getTrans("i.Publish"));
+		//cleanZoneTools
+		$(".menuselect_hide").hide();
+		$(".delete_content").hide();
+		_cleanElementToolbar();
 	};
 
 	/*
@@ -280,7 +173,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		}
 	};
 
-
    /*
 	* Zone Tools
 	*/
@@ -301,12 +193,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 			case "object":
 				var object = $(zone).find(".object_wrapper").children()[0];
 				loadToolbarForObject(object);
-				break;
-			case "snapshot":
-				_loadToolbarForElement("snapshot");
-				break;
-			case "quiz":
-				_loadToolbarForElement("quiz");
 				break;
 			case undefined:
 				//Add menuselect button and hide tooltips
@@ -390,12 +276,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		$(zone).attr("tooltip","false");
 	};
 
-	var cleanZoneTools = function(){
-		$(".menuselect_hide").hide();
-		$(".delete_content").hide();
-		_cleanElementToolbar();
-	};
-
 	var cleanZoneTool = function(zone){
 		_cleanElementToolbar();
 
@@ -459,45 +339,28 @@ VISH.Editor.Tools = (function(V,$,undefined){
 	* Presentation actions
     */
 
-  var displaySettings = function(){
+  	var displaySettings = function(){
 		V.Editor.Settings.displaySettings();
 	};
 
-  var save = function(){
+  	var save = function(){
 		V.Editor.Tools.Menu.onSaveButtonClicked();
-	};
-
-	var publish = function(){
-		V.Editor.Tools.Menu.onPublishButtonClicked();
-	};
-
-	var unpublish = function(){
-		V.Editor.Tools.Menu.onUnpublishButtonClicked();
 	};
 
 	var preview = function(){
 		V.Editor.Preview.preview();
 	};
 
-	var selectTheme = function(){
-		$("#hidden_button_to_launch_theme_fancybox").trigger("click");
-	};
-
-	var selectAnimation = function(){
-		$("#hidden_button_to_launch_animation_fancybox").trigger("click");
-	};
+   /*
+	* Slideset actions
+	*/
 
 	var changeBackground = function(){
 		$("#hidden_button_to_change_slide_background").trigger("click");
 	};
 
-	var changeVideo = function(){
-		V.Editor.EVideo.onChangeVideo();
-	};
-
-	var notifyTeacher = function(){
-		V.Editor.Tools.Menu.onSaveButtonClicked();
-		V.Editor.Tools.Menu.notifyTeacherClicked();
+	var deleteSlide = function(){
+		V.Editor.Slides.removeCurrentSlide();
 	};
 
    /*
@@ -718,7 +581,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		loadToolsForSlide				: loadToolsForSlide,
 		loadToolsForZone				: loadToolsForZone,
 		loadToolbarForObject			: loadToolbarForObject,
-		cleanZoneTools 					: cleanZoneTools,
 		cleanZoneTool 					: cleanZoneTool,
 		cleanToolbar					: cleanToolbar,
 		enableToolbar					: enableToolbar,
@@ -732,20 +594,14 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		zoomLess 						: zoomLess,
 		save 							: save,
 		displaySettings   				: displaySettings,
-		publish							: publish,
-		unpublish 						: unpublish,
-		notifyTeacher					: notifyTeacher,
 		preview 						: preview,
-		selectTheme						: selectTheme,
-		selectAnimation					: selectAnimation,
+		deleteSlide 					: deleteSlide,
 		changeBackground				: changeBackground,
-		changeVideo						: changeVideo,
 		addTooltipsToSlide				: addTooltipsToSlide,
 		addTooltipToZone				: addTooltipToZone,
 		showZoneToolTip					: showZoneToolTip,
 		hideZoneToolTip					: hideZoneToolTip,
 		setAllTooltipMargins			: setAllTooltipMargins,
-		changePublishButtonStatus		: changePublishButtonStatus,
 		changeSaveButtonStatus			: changeSaveButtonStatus,
 		showSettings 					: showSettings,
 		exit							: exit

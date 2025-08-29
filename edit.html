@@ -90,7 +90,6 @@
 	<script type="text/javascript" src="/js/VISH.Editor.Audio.HTML5.js"></script>
 	<script type="text/javascript" src="/js/VISH.Editor.Video.HTML5.js"></script>
 	<script type="text/javascript" src="/js/VISH.Editor.Image.js"></script>
-	<script type="text/javascript" src="/js/VISH.Editor.Image.Thumbnails.js"></script>
 	<script type="text/javascript" src="/js/VISH.Editor.Object.js"></script>
 	<script type="text/javascript" src="/js/VISH.Editor.Object.Repository.js"></script>
 	<script type="text/javascript" src="/js/VISH.Editor.Object.Web.js"></script>
@@ -122,12 +121,8 @@
 		<img src="/images/zonethumbs/image_hover.png" style="display:none"/>
 		<img src="/images/zonethumbs/object_hover.png" style="display:none"/>
 		<img src="/images/zonethumbs/video_hover.png" style="display:none"/>
-		<img src="/images/zonethumbs/quiz_hover.png" style="display:none"/>
 		<img src="/images/icons/ve_delete_hover.png" style="display:none"/>
 		<img src="/images/icons/delete_content_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle2_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle_hover_tp.png" style="display:none"/>
 		<img src="/images/vicons/ve_close.png" style="display:none"/>
 		<img src="/images/vicons/ve_close_hover.png" style="display:none"/>
 		<img src="/images/vicons/ve_close2.png" style="display:none"/>
@@ -232,18 +227,24 @@
 				</a>
 			</div>
 			<div id="toolbar_slide" class="withLeftBorder">
+				<div class="subToolbar toolbar_btn tool_action" action="deleteSlide">
+					<img class="toolbar_icon" src="/images/toolbar/delete.png"/>
+					<p i18n-key="i.Delete">Delete</p>
+				</div>
 				<a id="toolbar_background" class="tool_action" action="changeBackground" href="#">
-					<div id="toolbar_background_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_flashcard toolbar_VirtualTour" style='display:none'>
+					<div id="toolbar_background_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_flashcard" style='display:none'>
 						<button id="bgw_btn" type="button" class="btn btn-primary btn-small">
 							<i id="bgw_icon"class="icon-button icon-picture"></i>
 						</button>
 						<p class="toolbar_presentation_title" i18n-key="i.Background">Background</p>
 					</div>
 				</a>
-				<a id="toolbar_evideo" class="tool_action" action="changeVideo" href="#">
-					<div id="toolbar_evideo_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_enrichedvideo" style='display:none'>
-						<img class="big_toolbar_icon toolbar_web" src="/images/toolbar/change_evideo.png"/>
-						<p class="toolbar_presentation_title" i18n-key="i.Video">Video</p>
+				<a id="toolbar_hotspot" class="tool_action" action="addHotspot" href="#">
+					<div id="toolbar_hotspot_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_flashcard" style='display:none'>
+						<button id="bgw_btn" type="button" class="btn btn-primary btn-small">
+							<i id="bgw_icon"class="icon-button icon-picture"></i>
+						</button>
+						<p class="toolbar_presentation_title" i18n-key="i.Hotspot">Add image</p>
 					</div>
 				</a>
 			</div>

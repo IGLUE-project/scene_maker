@@ -244,8 +244,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			$(fc).attr("avatar", "url('"+contentToAdd+"')");
 			$(fc).find("div.change_bg_button").hide();
 
-			//Update thumbnails
 			V.Editor.Slides.updateThumbnail(fc);
+			V.Editor.Tools.loadToolsForSlide(fc);
 		}
 
 		$.fancybox.close();
@@ -308,7 +308,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	};
 
 	var getDummy = function(slidesetId,options){
-		return "<article id='"+slidesetId+"' type='"+V.Constant.FLASHCARD+"' slidenumber='"+options.slideNumber+"'><div class='delete_slide'></div><img class='help_in_slide help_in_flashcard' src='"+V.ImagesPath+"vicons/helptutorial_circle_blank.png'/><div class='change_bg_button'></div></article>";
+		return "<article id='"+slidesetId+"' type='"+V.Constant.FLASHCARD+"' slidenumber='"+options.slideNumber+"'><div class='change_bg_button'></div></article>";
 	};
 
 	var getCurrentSubslide = function(){
@@ -466,12 +466,10 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var _showSlideButtons = function(slide){
 		$(slide).find("div.delete_slide:first").show();
-		$(slide).find("img.help_in_slide:first").show();
 	};
 
 	var _hideSlideButtons = function(slide){
 		$(slide).find("div.delete_slide:first").hide();
-		$(slide).find("img.help_in_slide:first").hide();
 	};
 
 

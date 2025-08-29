@@ -1,6 +1,7 @@
 VISH.Editor.Slides = (function(V,$,undefined){
 
-	/* Hash Management */
+
+
 	var updateCurrentSlideFromHash = function(){
 		var slideNo = V.Utils.getSlideNumberFromHash();
 		if(slideNo){
@@ -378,6 +379,34 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		$('.slides').append(slide);
 	}
 
+	var removeCurrentSlide = function(){
+		var article_to_delete = V.Slides.getTargetSlide(); //current subslide or slideset
+
+		var options = {};
+		options.width = 375;
+		options.height = 130;
+		options.notificationIconSrc = V.Editor.Thumbnails.getThumbnailURL(article_to_delete);
+		options.notificationIconClass = "notificationIconDelete";
+		options.text = V.I18n.getTrans("i.areyousureNotification");
+		var button1 = {};
+		button1.text = V.I18n.getTrans("i.no");
+		button1.callback = function(){
+			$.fancybox.close();
+		}
+		var button2 = {};
+		button2.text = V.I18n.getTrans("i.delete");
+		button2.callback = function(){
+			if(V.Slides.isSubslide(article_to_delete)){
+				V.Editor.Slides.removeSubslide(article_to_delete);
+			} else {
+				V.Editor.Slides.removeSlide(V.Slides.getCurrentSlide());
+			}
+			$.fancybox.close();
+		}
+		options.buttons = [button1,button2];
+		V.Utils.showDialog(options);
+	};
+
 	var removeSlide = function(slide){
 		if(slide===null){
 			return;
@@ -494,6 +523,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		copySlideWithNumber		: copySlideWithNumber,
 		appendSlide				: appendSlide,
 		addSlide 				: addSlide,
+		removeCurrentSlide		: removeCurrentSlide,
 		removeSlide				: removeSlide,
 		addSubslide				: addSubslide,
 		appendSubslide			: appendSubslide,

@@ -20,24 +20,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 		if(!_bindedEditorEventListeners){
 
 			$(document).on('click', '#addScreenButton', V.Editor.Screen.addScreen);
-			//$(document).on('click', '#addSlideButton', V.Editor.Tools.Menu.insertSlide);
 			$(document).on('click', '#addSlideButtonOnSubslides', V.Editor.Tools.Menu.insertSubslide);
-			$(document).on('click', '#importButton', function(){
-				var firstEnabledId = $("#tab_pdfex,#tab_efile,#tab_presentations_repo").not(".disabled").attr("id");
-				switch(firstEnabledId){
-					case "tab_pdfex":
-						return V.Editor.Tools.Menu.insertPDFex();
-					case "tab_efile":
-						return V.Editor.Tools.Menu.insertEFile();
-					case "tab_epackage":
-						return V.Editor.Tools.Menu.insertPackage();
-					case "tab_presentations_repo":
-						return V.Editor.Tools.Menu.insertPresentation();
-					default:
-						return V.Editor.Tools.Menu.insertSlide();
-						break;
-				}
-			});
 
 			$(document).on('click', '#slideset_selected_img', V.Editor.Screen.onClickOpenSlideset);
 			
@@ -53,7 +36,6 @@ VISH.Editor.Events = (function(V,$,undefined){
 			$(document).on('click',':not(".selectable"):not(".preventNoselectable")', V.Editor.onNoSelectableClicked);
 			
 			$(document).on('click','.delete_content', V.Editor.onDeleteItemClicked);
-			$(document).on('click','.delete_slide', V.Editor.onDeleteSlideClicked);
 
 			$(document).on("click", ".change_bg_button", V.Editor.Tools.changeBackground);
 
