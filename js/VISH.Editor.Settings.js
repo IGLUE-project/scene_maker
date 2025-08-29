@@ -14,7 +14,7 @@ VISH.Editor.Settings = (function(V,$,undefined){
 			'padding': 0,
 			'hideOnOverlayClick': false,
 			'hideOnContentClick': false,
-			'showCloseButton': false,
+			'showCloseButton': true,
 			"onComplete"  : function(data){
 				$("#fancybox-wrap").css("margin-top", "20px");
 				_onDisplaySettings();

@@ -170,6 +170,12 @@
 							<img id="menuButton" src="/images/toolbar/menu_button.png"/>
 						</a>
 						<ul class="menu_option_main">
+							<li>
+								<a class="menu_option menu_action" action="displaySettings">
+									<i class="icon-button icon-cog"></i>
+									<span i18n-key="i.Settings">Settings</span>
+								</a>
+							</li>
  							<li>
 								<a class="menu_option menu_action" action="onSaveButtonClicked">
 									<i class="icon-button icon-save"></i>
@@ -183,70 +189,9 @@
 								</a>
 							</li>
 							<li>
-								<a class="menu_option menu_action publishMenuOption" action="onPublishButtonClicked">
-									<i class="icon-button icon-rotate-270 icon-download-alt"></i> 
-									<span i18n-key="i.Publish">Publish</span>
-								</a>
-							</li>
-							<li>
-								<a class="menu_option menu_action" action="insertSlide">
+								<a class="menu_option menu_action" action="addScreen">
 									<i class="icon-button icon-plus"></i> 
-									<span i18n-key="i.AddSlide">Add Slide</span>
-								</a>
-							</li>
-							<li id="vemenu_import">
-								<a class="menu_option expansive" href="#">
-									<i class="icon-button icon-rotate-180 icon-download-alt"></i>
-									<span i18n-key="i.Import">Import</span>
-								</a>
-								<ul>
-									<li>
-										<a class="menu_option menu_action subMenu" action="insertPDFex" i18n-key="i.PDFSlideshow">PDF Slideshow</a>
-									</li>
-									<li>
-										<a class="menu_option menu_action subMenu" action="insertPackage" i18n-key="i.ePackage">e-Learning Package</a>
-									</li>
-									<li class="liInsertJson">
-										<a class="menu_option menu_action" action="insertEFile" i18n-key="i.File">File</a>
-									</li>
-									<li>
-										<a class="menu_option menu_action" action="insertPresentation" i18n-key="i.Presentation">Excursion</a>
-									</li>
-								</ul>
-							</li>
-							<li id="vemenu_export">
-								<a class="menu_option expansive" href="#">
-									<i class="icon-button icon-rotate-360 icon-download-alt"></i>
-									<span i18n-key="i.Export">Export</span>
-								</a>
-								<ul>
-									<li>
-										<a class="menu_option menu_action subMenu" action="exportToJSON" i18n-key="i.toJSON">to JSON</a>
-									</li>
-									<li>
-										<a class="menu_option menu_action subMenu" action="exportToSCORM12" i18n-key="i.toSCORM12">to SCORM 1.2</a>
-									</li>
-									<li>
-										<a class="menu_option menu_action subMenu" action="exportToSCORM2004" i18n-key="i.toSCORM2004">to SCORM 2004</a>
-									</li>
-								</ul>
-							</li>
-							<li>
-								<a class="menu_option menu_action" action="displaySettings">
-									<i class="icon-button icon-cog"></i>
-									<span i18n-key="i.Settings">Settings</span>
-								</a>
-							</li>
-							<li>
-								<a class="menu_option menu_action" action="help">
-									<i class="icon-button icon-question"></i>
-									<span i18n-key="i.Help">Help</span>
-								</a>
-							</li>
-							<li>
-								<a class="menu_option menu_action" action="about">
-									<i class="icon-button icon-info"></i>
-									<span i18n-key="i.About">About</span>
+									<span i18n-key="i.AddScreen">Add Screen</span>
 								</a>
 							</li>
 							<li>
@@ -358,7 +303,7 @@
 					<a id="addSlideButtonOnSubslides" href="#">
 						<button type="button" class="btn btn-small slidesScrollbarButton">
 							<i class="icon-plus"></i>  
-							<span i18n-key="i.AddSlideMin">Add Slide</span>
+							<span i18n-key="i.AddView">Add View</span>
 						</button>
 					</a>
 				</div>
@@ -402,16 +347,6 @@
 		</div>
 	</div>
 
-	<div id="catalog_content" >
-		<div id="catalog_title">
-			<p i18n-key="i.CatalogueTitle">Catalogue</p>
-		</div>
-		<div id="catalog_body">
-			<select id="catalog_tags" size="11" multiple="multiple"></select>
-		</div>
-		<button id="catalog_done_button" type="button" class="button buttonfancy previewButton" i18n-key="i.Done">Done</button>
-	</div>
-
 	<!-- Import and Add slide fancybox -->
 	<div style='display:none'>
 		<div id='thumbcontent'>
@@ -419,19 +354,7 @@
 			<div class='fancy_tabs' id='thumcontent_tabs'>
 				<ul>
 					<li>
-						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_slides'); return false;" id="tab_slides" class="fancy_tab tabbable" i18n-key="i.Slide">Slide</a>
-					</li>
-					<li>
-						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_pdfex'); return false;" id="tab_pdfex" class="fancy_tab">PDF</a>
-					</li>
-					<li>
-						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_epackage'); return false;" id="tab_epackage" class="fancy_tab" i18n-key="i.Package">Package</a>
-					</li>
-					<li>
-						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_efile'); return false;" id="tab_efile" class="fancy_tab" i18n-key="i.File">File</a>
-					</li>
-					<li>
-						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_presentations_repo'); return false;" id="tab_presentations_repo" class="fancy_tab tabbable" i18n-key="i.Presentation">Excursion</a>
+						<a href="#" onclick="VISH.Editor.Utils.loadTab('tab_slides'); return false;" id="tab_slides" class="fancy_tab tabbable" i18n-key="i.View">View</a>
 					</li>
 				</ul>
 			</div> 
@@ -580,7 +503,6 @@
 
 	<!-- IMAGE -->
 	<a id="hidden_button_to_change_slide_background" href="#picture_fancybox" style="display:none"></a>
-	<a id="hidden_button_to_uploadThumbnail" href="#picture_fancybox" style="display:none"></a>
 
 	<div style='display:none'>
 		<div id="picture_fancybox" class="outer_box">
@@ -718,16 +640,6 @@
 
 		</div>
 	</div>
-
-	<!-- About screen -->
-	<ol id="about_screen" class="joyRideTipContent">
-		<li data-id="thumbcontent" class="about_fancybox tut_without_arrow" data-options="tipLocation:none">
-			<h2>Scene Maker</h2>
-			<p><span class="aboutfield" i18n-key="i.Version">Version</span>: <span id="VEversion"></span></p>
-			<p class="tut_withoutbottomspace"><span class="aboutfield" i18n-key="i.License">License</span>: <span>GNU Affero General Public License v3</span></p>
-			<p class="tut_withouttopspace"><span i18n-key="i.About2">Code available at</span> <a class="tut_tutlink" href="https://github.com/ging/vish_editor" target="_blank">https://github.com/ging/vish_editor</a>.</p>
-		</li>
-	</ol>
 
 	<iframe id="hiddenIframeForAjaxDownloads" style="border:0" iframeborder="0" frameborder="0" iframeelement.frameborder="0;"></iframe>
 

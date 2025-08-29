@@ -53,8 +53,8 @@
 }
 
 #toolbar_presentation {
-	padding-left: 8px;
-	min-width: 475px;
+	padding-left: 5px;
+	min-width: 245px;
 	float: left;
 	-webkit-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
 	-moz-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);

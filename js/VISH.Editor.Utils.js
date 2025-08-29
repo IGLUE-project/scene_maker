@@ -358,56 +358,6 @@ VISH.Editor.Utils = (function(V,$,undefined){
 		$("#" + tab_id).addClass("fancy_selected");
 		//hide previous help button
 		$(".help_in_fancybox").not("#"+ tab_id + "_help").hide();
-
-		//Submodule callbacks
-		switch (tab_id) {
-			case "tab_presentations_repo":
-				V.Editor.Presentation.Repository.beforeLoadTab();
-				break;
-			//Image
-			case "tab_pic_thumbnails":
-				V.Editor.Image.Thumbnails.beforeLoadTab();
-				break;
-			case "tab_pic_repo":
-				V.Editor.Image.Repository.beforeLoadTab();
-				break;
-			case "tab_pic_flikr":
-				V.Editor.Image.Flickr.beforeLoadTab();
-				break;
-			case "tab_pic_xwiki":
-				V.Editor.Image.XWiki.beforeLoadTab();
-				break;
-			case "tab_pic_europeana":
-				V.Editor.Image.Europeana.beforeLoadTab();
-				break;
-			case "tab_pic_lre":
-				V.Editor.Image.LRE.beforeLoadTab();
-				break;
-			//Video
-			case "tab_video_repo":
-				V.Editor.Video.Repository.beforeLoadTab();
-				break;
-			case "tab_video_youtube":
-				V.Editor.Video.Youtube.beforeLoadTab();
-				break;
-			//Audio
-			case "tab_audio_soundcloud":
-				V.Editor.Audio.Soundcloud.beforeLoadTab();
-				break;
-			//Objects
-			case "tab_object_repo":
-				V.Editor.Object.Repository.beforeLoadTab();
-				break;
-			case "tab_object_lre":
-				V.Editor.Object.LRE.beforeLoadTab();
-				break;
-			case "tab_live_resource":
-				V.Editor.Object.Live.beforeLoadTab();
-				break;
-			default:
-				break;
-		}
-
 		//show correct one
 		$("#"+ tab_id + "_help").show();
 
@@ -421,79 +371,22 @@ VISH.Editor.Utils = (function(V,$,undefined){
 			}
 		},0);
 
-		//Submodule callbacks	
+		//Submodule callbacks
 		switch (tab_id) {
 			case "tab_slides":
 				//templates and smartcards
 				break;
-			case "tab_presentations_repo":
-				V.Editor.Presentation.Repository.onLoadTab();
-				break;
 			//Image
-			case "tab_pic_thumbnails":
-				V.Editor.Image.Thumbnails.onLoadTab();
-				break;
 			case "tab_pic_from_url":
 				V.Editor.Image.onLoadTab("url");
-				break;
-			case "tab_pic_upload":
-				V.Editor.Image.onLoadTab("upload");
-				break;
-			case "tab_pic_repo":
-				V.Editor.Image.Repository.onLoadTab();
-				break;
-			case "tab_pic_flikr":
-				V.Editor.Image.Flickr.onLoadTab();
-				break;
-			case "tab_pic_xwiki":
-				V.Editor.Image.XWiki.onLoadTab();
-				break;
-			case "tab_pic_europeana":
-				V.Editor.Image.Europeana.onLoadTab();
-				break;
-			case "tab_pic_lre":
-				V.Editor.Image.LRE.onLoadTab();
 				break;
 			//Video
 			case "tab_video_from_url":
 				V.Editor.Video.onLoadTab();
 				break;
-			case "tab_video_repo":
-				V.Editor.Video.Repository.onLoadTab();
-				break;
-			case "tab_video_youtube":
-				V.Editor.Video.Youtube.onLoadTab();
-				break;
 			//Objects
 			case "tab_object_from_url":
 				V.Editor.Object.onLoadTab("url");
-				break;
-			case "tab_object_from_web":
-				V.Editor.Object.Web.onLoadTab();
-				break;
-			case "tab_object_snapshot":
-				V.Editor.Object.Snapshot.onLoadTab();
-				break;
-			case "tab_object_upload":
-				V.Editor.Object.onLoadTab("upload");
-				break;
-			case "tab_object_repo":
-				V.Editor.Object.Repository.onLoadTab();
-				break;
-			case "tab_object_lre":
-				V.Editor.Object.LRE.onLoadTab();
-				break;
-			case "tab_live_resource":
-				V.Editor.Object.Live.onLoadTab();
-				break;
-			case "tab_efile":
-				V.Editor.Presentation.File.onLoadTab();
-				break;
-			case "tab_pdfex":
-				V.Editor.PDFex.onLoadTab();
-				break;
-			case "tab_epackage":
-				V.Editor.EPackage.onLoadTab();
 				break;
 			default:
 				break;

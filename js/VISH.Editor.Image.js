@@ -12,7 +12,7 @@ VISH.Editor.Image = (function(V,$,undefined){
 		$("#" + urlDivId + " .previewButton").click(function(event){
 			if(V.Police.validateObject($("#" + urlInputId).val())[0]){
 				contentToAdd = V.Editor.Utils.autocompleteUrls($("#" + urlInputId).val());
-				V.Editor.Object.drawPreview(urlDivId, contentToAdd);
+				V.Editor.Object.drawPreview(urlDivId, contentToAdd, {"contentAddMode": contentAddMode});
 			}
 		});
 
@@ -83,9 +83,6 @@ VISH.Editor.Image = (function(V,$,undefined){
 	};
 	
 	var onLoadTab = function(tab){
-		if(tab=="upload"){
-			_onLoadUploadTab();
-		}
 		if(tab=="url"){
 			_onLoadURLTab();
 		}

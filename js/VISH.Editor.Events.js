@@ -146,25 +146,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 					V.Editor.setContentAddMode(V.Constant.NONE);
 				}
 			});
-
-			//Select theme fancybox
-			$("#hidden_button_to_launch_theme_fancybox").fancybox({
-				'autoDimensions' : false,
-				'width': 600,
-				'scrolling': 'no',
-				'height': 400,
-				'padding' : 0
-			});
-
-			//Select animation fancybox
-			$("#hidden_button_to_launch_animation_fancybox").fancybox({
-				'autoDimensions' : false,
-				'width': 600,
-				'scrolling': 'no',
-				'height': 400,
-				'padding' : 0
-			});
-
+			
 			//Loading fancybox
 			$("#fancyLoad").fancybox({
 				'type'		   : 'inline',
@@ -179,7 +161,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 				'overlayColor' : "#fff",
 				'showCloseButton'	: false,
 				'onComplete'  : function(data) {
-						V.Utils.Loader.prepareFancyboxForFullLoading();
+					V.Utils.Loader.prepareFancyboxForFullLoading();
 				},
 				'onClosed' : function(data) {
 				}
@@ -201,40 +183,40 @@ VISH.Editor.Events = (function(V,$,undefined){
 				}
 			});
 
-			//Fancybox to select presentation Thumbnail
-			$("#hidden_button_to_uploadThumbnail").fancybox({
-				'autoDimensions' : false,
-				'width': 800,
-				'scrolling': 'no',
-				'height': 600,
-				'padding' : 0,
-				"onStart"  : function(data) {
-					V.Editor.Image.setAddContentMode(V.Constant.THUMBNAIL);
+			// //Fancybox to select presentation Thumbnail
+			// $("#hidden_button_to_uploadThumbnail").fancybox({
+			// 	'autoDimensions' : false,
+			// 	'width': 800,
+			// 	'scrolling': 'no',
+			// 	'height': 600,
+			// 	'padding' : 0,
+			// 	"onStart"  : function(data) {
+			// 		V.Editor.Image.setAddContentMode(V.Constant.THUMBNAIL);
 
-					var firstEnabledId = $("#tab_pic_upload,#tab_pic_thumbnails").not(".disabled").attr("id");
-					switch(firstEnabledId){
-						case "tab_pic_upload":
-							V.Editor.Utils.loadTab('tab_pic_upload');
-							break;
-						case "tab_pic_thumbnails":
-							V.Editor.Utils.loadTab('tab_pic_thumbnails');
-							break;
-						default:
-							//Allow thumbnail by URL (the uniq possibility)
-							$("#tab_pic_from_url").show();
-							V.Editor.Utils.loadTab('tab_pic_from_url');
-							break;
-					}
-				},
-				"onClosed" : function(data){
-					if(V.Editor.Image.getAddContentMode()===V.Constant.THUMBNAIL){
-						setTimeout(function(){
-							V.Editor.Settings.displaySettings();
-						},100);
-					};
-					V.Editor.Image.setAddContentMode(V.Constant.NONE);
-				}
-			});
+			// 		var firstEnabledId = $("#tab_pic_upload,#tab_pic_thumbnails").not(".disabled").attr("id");
+			// 		switch(firstEnabledId){
+			// 			case "tab_pic_upload":
+			// 				V.Editor.Utils.loadTab('tab_pic_upload');
+			// 				break;
+			// 			case "tab_pic_thumbnails":
+			// 				V.Editor.Utils.loadTab('tab_pic_thumbnails');
+			// 				break;
+			// 			default:
+			// 				//Allow thumbnail by URL (the uniq possibility)
+			// 				$("#tab_pic_from_url").show();
+			// 				V.Editor.Utils.loadTab('tab_pic_from_url');
+			// 				break;
+			// 		}
+			// 	},
+			// 	"onClosed" : function(data){
+			// 		if(V.Editor.Image.getAddContentMode()===V.Constant.THUMBNAIL){
+			// 			setTimeout(function(){
+			// 				V.Editor.Settings.displaySettings();
+			// 			},100);
+			// 		};
+			// 		V.Editor.Image.setAddContentMode(V.Constant.NONE);
+			// 	}
+			// });
 
 			//Element Settings
 			$(document).on("click", "#objectSettingsDone", V.Editor.Object.onObjectSettingsDone);

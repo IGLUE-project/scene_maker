@@ -198,7 +198,7 @@ VISH.Editor.Object = (function(V,$,undefined){
 	//Preview generation for "load" and "upload" tabs
 	var previewBackground;
 	
-	var drawPreview = function(divId,src){
+	var drawPreview = function(divId,src,options){
 		previewBackground = $("#" + divId + " .previewimgbox").css("background-image");
 		$("#" + divId + " .previewimgbox").css("background-image","none");
 		$("#" + divId + " .previewimgbox img.imagePreview").remove();
@@ -206,6 +206,10 @@ VISH.Editor.Object = (function(V,$,undefined){
 			$("#" + divId + " .previewimgbox .objectPreview").remove();
 		}
 		var wrapper = $(renderObjectPreview(src));
+		if((options)&&(options.contentAddMode === V.Constant.FLASHCARD)){
+			$(wrapper).addClass("previewForScreen");
+		}
+		
 		$("#" + divId + " .previewimgbox").append(wrapper);
 		_loadSources(src,wrapper);
 		$("#" + divId + " .previewimgbox button").show();
@@ -215,9 +219,7 @@ VISH.Editor.Object = (function(V,$,undefined){
 		$("#" + divId + " .previewimgbox button").hide();
 		$("#" + divId + " .previewimgbox img.imagePreview").remove();
 		$("#" + divId + " .previewimgbox .objectPreview").remove();
-		if(previewBackground){
-			$("#" + divId + " .previewimgbox").css("background-image", previewBackground);
-		}
+		$("#" + divId + " .previewimgbox").css("background-image", "");
 	};
 	
 	var drawPreviewElement = function(){
@@ -359,12 +361,6 @@ VISH.Editor.Object = (function(V,$,undefined){
 					case V.Constant.MEDIA.WEB:
 						return V.Editor.Object.Web.generatePreviewWrapperForWeb(object);
 						break;
-					case V.Constant.MEDIA.SCORM_PACKAGE:
-						return V.Editor.Object.Scorm.generatePreviewWrapperForScorm(object);
-						break;
-					case V.Constant.MEDIA.WEB_APP:
-						return V.Editor.Object.Webapp.generatePreviewWrapper(object);
-						break;
 					default:
 						V.Debugging.log("Unrecognized object source type");
 						break;
@@ -378,13 +374,7 @@ VISH.Editor.Object = (function(V,$,undefined){
 				return _genericWrapperPreview(object);
 				break;
 			case V.Constant.WRAPPER.IFRAME:
-				if(objectType==V.Constant.MEDIA.SCORM_PACKAGE){
-					return V.Editor.Object.Scorm.generatePreviewWrapperForScorm(objectInfo.source);
-				} else if(objectType==V.Constant.MEDIA.WEB_APP){
-					return V.Editor.Object.Webapp.generatePreviewWrapper(objectInfo.source);
-				} else {
-					return _genericWrapperPreview(object);
-				}
+				return _genericWrapperPreview(object);
 				break;
 			case V.Constant.WRAPPER.VIDEO:
 				return V.Editor.Video.HTML5.renderVideoFromWrapper(object,{loadSources: false, poster: V.Video.HTML5.getDefaultPosterURL(), extraClasses: ["objectPreview"]});

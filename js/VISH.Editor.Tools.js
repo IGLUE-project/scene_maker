@@ -14,33 +14,6 @@ VISH.Editor.Tools = (function(V,$,undefined){
 	var init = function(){
 		cleanToolbar();
 
-		var presentationType = V.Editor.getPresentationType();
-		if(presentationType !== V.Constant.PRESENTATION){
-			disableToolbar();
-			return;
-		}
-
-		if (V.StudentMode===true){
-			//Student view modification in VEditor
-			var draft = V.Utils.getOptions().draft;
-			var notified = V.Utils.getOptions().notified;
-			var publish_button = $("#toolbar_publish_wrapper");
-
-			if(draft && notified){
-				publish_button.addClass("menu_item_disabled");
-				publish_button.children("p").html(V.I18n.getTrans("i.notified_teacher"));
-				publish_button.find("i").removeClass().addClass("icon-button icon-bell-alt");
-			} else if (draft) {
-				publish_button.children("p").html(V.I18n.getTrans("i.notify_teacher"));
-				publish_button.find("i").removeClass().addClass("icon-button icon-bell-alt");
-				$('#toolbar_publish').attr('action', 'notifyTeacher');
-			} else {
-				publish_button.addClass("menu_item_disabled");
-				publish_button.children("p").html(V.I18n.getTrans("i.Published"));
-				publish_button.find("i").removeClass().addClass("icon-button icon-cloud-upload");
-			}
-		}
-
 		if(!toolbarEventsLoaded){
 			//Add listeners to toolbar buttons
 			$.each($("#toolbar_wrapper a.tool_action, div.tool_action"), function(index, toolbarButton) {

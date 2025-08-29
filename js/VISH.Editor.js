@@ -151,14 +151,6 @@ VISH.Editor = (function(V,$,undefined){
 		V.Editor.Clipboard.init();
 		V.Editor.Events.init();
 		
-		//Init ViSH Editor Addons
-		if(options.addons){
-			V.Addons.init(options.addons);
-		}
-
-		//Clean hash
-		// V.Utils.cleanHash();
-
 		//Unload all objects
 		V.Editor.Utils.Loader.unloadAllObjects();
 
@@ -176,11 +168,9 @@ VISH.Editor = (function(V,$,undefined){
 
 		//Init settings
 		if((V.Configuration.getConfiguration().presentationSettings) && (!initialPresentation)){
-			V.Editor.Settings.displaySettings();
+			//TODO: REMOVE.
+			//V.Editor.Settings.displaySettings();
 		}
-
-		//Fill About screen
-		$("#VEversion").html(V.VERSION);
 
 		//Try to win focus
 		window.focus();
