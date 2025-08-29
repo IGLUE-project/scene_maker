@@ -78,11 +78,7 @@ VISH.Editor.Settings = (function(V,$,undefined){
 
 	var saveSettings = function(){
 		var settings = {};
-
-		settings.VEVersion = V.VERSION;
-		settings.type = V.Constant.PRESENTATION;
-
-		var draftPresentation = V.Editor.getDraftPresentation();
+		settings.SMVersion = V.VERSION;
 
 		var title = $('#presentation_details_input_title').val();
 		if((typeof title == "string")&&(title.trim()!="")){

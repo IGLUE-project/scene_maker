@@ -561,25 +561,60 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	/*
 	 * Used by VISH.Editor module to save the flashcard in the JSON
 	 */
-	var getSlideHeader = function(fc){
-		var slide = {};
-		slide.id = $(fc).attr('id');
-		slide.type = V.Constant.FLASHCARD;
+	var saveScreen = function(screenDOM){
+		var screen = {};
+		screen.id = $(screenDOM).attr('id');
+		screen.type = V.Constant.FLASHCARD;
 
-		var currentBackground = $(fc).css("background-image");
-		var dirtyAvatar = $(fc).attr("dirtyavatar");
-		if((currentBackground=="none")&&(dirtyAvatar)){
-			slide.background = dirtyAvatar;
-		} else {
-			slide.background = currentBackground;
+		var screenBackground = $(screenDOM).css("background-image");
+		if((screenBackground && screenBackground !== "none")){
+			screen.background = screenBackground;
 		}
-		
-		if(V.Slides.getCurrentSlide()===fc){
-			_savePoisToDom(fc);
+
+		if(typeof screenData[screen.id] !== "undefined"){
+			var hotspotsIds = Object.keys(screenData[screen.id].hotspots);
+			if(hotspotsIds.length > 0) {
+				screen.hotspots = [];
+				hotspotsIds.forEach(hotspotId => {
+				  var hotspotDOM = $("img.hotspot[hotspotid='" + hotspotId + "']");
+				  var hotspotPosition = $(hotspotDOM).position();
+				  var hotspotSettings = screenData[screen.id].hotspots[hotspotId].settings;
+				  console.log(hotspotId, hotspotSettings);
+				  screen.hotspots.push({
+				  	"id": hotspotId,
+				  	"x": hotspotPosition.left,
+				  	"y": hotspotPosition.top,
+				  	"settings": hotspotSettings
+				  });
+				});
+			}
+			if(Object.keys(screenData[screen.id].zones).length > 0) {
+				screen.zones = screenData[screen.id].zones;
+			}
 		}
-		slide.pois = _getPoisFromDoom(fc);
-		slide.slides = [];
-		return slide;
+
+
+		// "pois":[
+		// 			{
+		// 				"id":"article8_poi1",
+		// 				"x":"36.9",
+		// 				"y":"67.3",
+		// 				"slide_id":"article8_article1"
+		// 			},{
+		// 				"id":"article8_poi2",
+		// 				"x":"55.4",
+		// 				"y":"68.16",
+		// 				"slide_id":"article8_article2"
+		// 			},{
+		// 				"id":"article8_poi3",
+		// 				"x":"45.875",
+		// 				"y":"5.5",
+		// 				"slide_id":"article8_article3"
+		// 			}
+		// 		],
+
+		screen.slides = [];
+		return screen;
 	};
 
 	var getDummy = function(slidesetId,options){
@@ -768,11 +803,12 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		showHotspotSettings				: showHotspotSettings,
 		onHotspotSettingsDone			: onHotspotSettingsDone,
 		onHotspotActionChange			: onHotspotActionChange,
+		saveScreen						: saveScreen,
 
 		draw 							: draw,
 		getThumbnailURL 				: getThumbnailURL,
 		getDefaultThumbnailURL			: getDefaultThumbnailURL,
-		getSlideHeader					: getSlideHeader,
+		
 		onEnterSlideset					: onEnterSlideset,
 		onLeaveSlideset					: onLeaveSlideset,
 		openSlideset					: openSlideset,

@@ -1,12 +1,12 @@
 /**
- * ViSH Editor & Viewer
- * ViSH Editor is a HTML5 application to create web presentations in a simple and friendly way.
- * http://github.com/ging/vish_editor
+ * Scene Maker
+ * Scene Maker is a web application for creating web scenes for escape rooms in a simple and user-friendly way
+ * https://github.com/agordillo/scene_maker
  *
  * @module ViSH
  */
 var VISH = VISH || {};
 
-VISH.VERSION = '0.9.4';
-VISH.AUTHORS = 'GING';
-VISH.URL = "http://github.com/ging/vish_editor";
+VISH.VERSION = '0.0.1';
+VISH.AUTHORS = 'GING UPM';
+VISH.URL = "https://github.com/agordillo/scene_maker";

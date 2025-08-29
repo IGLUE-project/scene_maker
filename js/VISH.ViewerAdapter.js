@@ -131,25 +131,20 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 	var decideIfPageSwitcher = function(){
 		//Arrows
 		if(_showArrows){
-			if(V.Viewer.getPresentationType()===V.Constant.PRESENTATION){
-				if (V.Slides.getCurrentSubslide()!==null){
-					//Subslide active
-					$("#forward_arrow").hide();
+			if (V.Slides.getCurrentSubslide()!==null){
+				//Subslide active
+				$("#forward_arrow").hide();
+				$("#back_arrow").hide();
+			} else {
+				//No subslide
+				if(V.Slides.isCurrentFirstSlide()){
 					$("#back_arrow").hide();
 				} else {
-					//No subslide
-					if(V.Slides.isCurrentFirstSlide()){
-						$("#back_arrow").hide();
-					} else {
-						$("#back_arrow").show();
-					} 
-					//Always show
-					$("#forward_arrow").show();
-				}
-			} else if (V.Viewer.getPresentationType()===V.Constant.QUIZ_SIMPLE){
-				//Remove arrow for simple quizs
-				$("#forward_arrow").hide();
-			}
+					$("#back_arrow").show();
+				} 
+				//Always show
+				$("#forward_arrow").show();
+			} 
 		}
 
 		// Pager
@@ -180,13 +175,7 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 	};
 
 	var _defaultViewbar = function(){
-		var presentationType = V.Viewer.getPresentationType();
-		var slidesQuantity = V.Slides.getSlidesQuantity();
-		if((presentationType===V.Constant.QUIZ_SIMPLE)&&(slidesQuantity===1)){
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	};
 
 	///////////

@@ -463,17 +463,15 @@ VISH.Editor = (function(V,$,undefined){
 		//Save the presentation in JSON
 		var presentation = {};
 
-		//Save settings (metadata, theme, animation, ...)
+		//Save settings
 		presentation = V.Editor.Settings.saveSettings();
-
-		presentation = _saveEnvData(presentation);
 
 		//Slides of the presentation
 		presentation.slides = [];
 
 		//Load and show all objects
 		V.Editor.Utils.Loader.loadAllObjects();
-		$(".object_wrapper, .snapshot_wrapper").show();
+		$(".object_wrapper").show();
 
 		$('section.slides > article').each(function(index,slideDOM){
 			var slide = {};
@@ -482,8 +480,8 @@ VISH.Editor = (function(V,$,undefined){
 				slide = _saveStandardSlide(slideDOM,presentation,false);
 			} else {
 				V.Utils.addTempShown(slideDOM);
-				slide = V.Editor.Screen.getSlideHeader(slideDOM);
-				//Save subslides
+				slide = V.Editor.Screen.saveScreen(slideDOM);
+				//Save views
 				$(slideDOM).find("article").each(function(index,subslideDOM){
 					var subslide = _saveStandardSlide(subslideDOM,presentation,true);
 					slide.slides.push(subslide);
@@ -499,25 +497,9 @@ VISH.Editor = (function(V,$,undefined){
 		//Reload current slide objects
 		V.Editor.Utils.Loader.loadObjectsInEditorSlide(V.Slides.getCurrentSlide());
 
-		// V.Debugging.log("\n\nViSH Editor save the following presentation:\n");
-		// V.Debugging.log(JSON.stringify(presentation));
+		V.Debugging.log("\n\nScene Maker save the following scene:\n");
+		V.Debugging.log(JSON.stringify(presentation));
 
-		return presentation;
-	};
-
-	var _saveEnvData = function(presentation){
-		var originalPresentation = getDraftPresentation();
-		var envMetadata;
-		
-		if(originalPresentation && originalPresentation["vishMetadata"]){
-			envMetadata = originalPresentation["vishMetadata"];
-		} else {
-			envMetadata = {};
-		}
-		envMetadata["name"] = V.Status.getEnvironmentName();
-		envMetadata["draft"] = isPresentationDraft().toString();
-
-		presentation["vishMetadata"] = envMetadata;
 		return presentation;
 	};
 	
@@ -770,49 +752,9 @@ VISH.Editor = (function(V,$,undefined){
 	};
 
 	var getPresentationId = function(){
-		if(typeof V.PresentationId != "undefined"){
-			return V.PresentationId;
-		}
-
-		var draftPresentation = V.Editor.getDraftPresentation();
-		if((typeof draftPresentation != "undefined")&&(typeof draftPresentation["vishMetadata"] != "undefined")&&(typeof draftPresentation["vishMetadata"]["id"] != "undefined")){
-			V.PresentationId = draftPresentation["vishMetadata"]["id"];
-		}
 		return V.PresentationId;
 	};
 	
-	//////////////////
-	///  Notify Teacher
-	//////////////////
-
-	var notifyTeacher = function(){
-		if(typeof V.NotifyTeacherPath != "string"){
-			return;
-		}
-		var id = getPresentationId();
-
-		var data = {
-			"authenticity_token" : V.User.getToken(),
-			"user_data"			 : V.User.getUser(),
-			"excursion_data"	 : id
-		};
-
-		$.ajax({	
-			type  : "POST",
-			url     : V.NotifyTeacherPath,
-			data    : data,
-			success : function(data) {
-				var publish_button = $("#toolbar_publish_wrapper");
-				publish_button.addClass("menu_item_disabled");
-				publish_button.children("p").html(V.I18n.getTrans("i.notified_teacher"));
-				publish_button.find("i").removeClass().addClass("icon-button icon-exclamation");
-			},
-			error: function(data){
-				console.log('not done');
-			}
-		});
-	};
-
 	//////////////////
 	///  Getters and Setters
 	//////////////////
@@ -885,17 +827,6 @@ VISH.Editor = (function(V,$,undefined){
 	}
 
 	/*
-	 * Type can be "presentation" or "quiz_simple"
-	 */
-	var getPresentationType = function(){
-		if((!draftPresentation)||(!draftPresentation.type)){
-			return V.Constant.PRESENTATION;
-		}
-		return draftPresentation.type;
-	};
-
-
-	/*
 	 * Returns if the server has checked the presentation has a draft.
 	 */
 	var isPresentationDraft = function(){
@@ -915,18 +846,6 @@ VISH.Editor = (function(V,$,undefined){
 		} else {
 			//New presentation created, draft by default.
 			return true;
-		}
-	};
-
-	var hasBeenPublished = function(){
-		if(initialPresentation){
-			if(!isPresentationDraft()){
-				return true;
-			} else if((typeof draftPresentation["vishMetadata"] == "object")&&(draftPresentation["vishMetadata"]["released"]==="true")){
-				return true;
-			}
-		} else {
-			return false;
 		}
 	};
 
@@ -962,11 +881,9 @@ VISH.Editor = (function(V,$,undefined){
 		cleanArea				: cleanArea,
 		getCurrentContainer		: getCurrentContainer,
 		setCurrentContainer		: setCurrentContainer,
-		getPresentationType		: getPresentationType,
 		getDraftPresentation	: getDraftPresentation,
 		getPresentationId		: getPresentationId,
 		isPresentationDraft		: isPresentationDraft,
-		hasBeenPublished		: hasBeenPublished,
 		hasBeenSaved			: hasBeenSaved,
 		getContentAddMode		: getContentAddMode,
 		setContentAddMode		: setContentAddMode,
@@ -974,7 +891,6 @@ VISH.Editor = (function(V,$,undefined){
 		isZoneEmpty				: isZoneEmpty,
 		savePresentation		: savePresentation,
 		sendPresentation		: sendPresentation,
-		notifyTeacher 			: notifyTeacher, 
 		setCurrentArea			: setCurrentArea,
 		selectArea				: selectArea,
 		onSlideEnterEditor 		: onSlideEnterEditor,

@@ -29,22 +29,11 @@ VISH.Constant.LARGE = "large";
 VISH.Constant.THUMBNAIL = "thumbnail";
 VISH.Constant.NONE = "none";
 VISH.Constant.UNKNOWN = 'Unknown';
-VISH.Constant.AGE_RANGE_MIN = 0;
-VISH.Constant.AGE_RANGE_MAX = 0;
-VISH.Constant.AGE_RANGE = VISH.Constant.AGE_RANGE_MIN + " - " + VISH.Constant.AGE_RANGE_MAX;
-VISH.Constant.DIFFICULTY = 0;
-
-//Presentation types
-VISH.Constant.PRESENTATION = "presentation";
-VISH.Constant.QUIZ_SIMPLE = "quiz_simple";
 
 //Slide types
 VISH.Constant.STANDARD = "standard";
 VISH.Constant.SLIDESET = "slideset";
 VISH.Constant.FLASHCARD = "flashcard";
-VISH.Constant.VTOUR = "VirtualTour";
-VISH.Constant.EVIDEO = "enrichedvideo";
-VISH.Constant.GAME = "game";
 
 //Element types
 VISH.Constant.TEXT = "text";
@@ -52,8 +41,6 @@ VISH.Constant.IMAGE = "image";
 VISH.Constant.AUDIO = "audio";
 VISH.Constant.VIDEO = "video";
 VISH.Constant.OBJECT = "object";
-VISH.Constant.SNAPSHOT = "snapshot";
-VISH.Constant.APPLET = "applet";
 VISH.Constant.QUIZ = "quiz";
 
 //Media types
@@ -69,9 +56,6 @@ VISH.Constant.MEDIA.WEB = "web";
 VISH.Constant.MEDIA.JSON = "json";
 VISH.Constant.MEDIA.DOC = "doc";
 VISH.Constant.MEDIA.PPT = "ppt";
-VISH.Constant.MEDIA.SCORM_PACKAGE = "scormpackage";
-VISH.Constant.MEDIA.WEB_APP = "webapp";
-VISH.Constant.MEDIA.IMS_QTI_QUIZ = "IMS_QTI_QUIZ";
 
 //Wrapper types
 VISH.Constant.WRAPPER = {};
@@ -81,18 +65,6 @@ VISH.Constant.WRAPPER.IFRAME = "IFRAME";
 VISH.Constant.WRAPPER.VIDEO = "VIDEO";
 VISH.Constant.WRAPPER.AUDIO = "AUDIO";
 
-//Subtypes
-VISH.Constant.QZ_TYPE = {};
-VISH.Constant.QZ_TYPE.OPEN = "openAnswer";
-VISH.Constant.QZ_TYPE.MCHOICE = "multiplechoice";
-VISH.Constant.QZ_TYPE.TF = "truefalse";
-VISH.Constant.QZ_TYPE.SORTING = "sorting";
-
-//Quiz
-VISH.Constant.QZ_MODE = {};
-VISH.Constant.QZ_MODE.SELFA = "selfA";
-VISH.Constant.QZ_MODE.RT = "realTime";
-
 //Text
 VISH.Constant.TextDefault = 12;
 VISH.Constant.TextBase = 12;
@@ -101,14 +73,6 @@ VISH.Constant.TextBase = 12;
 VISH.Constant.Clipboard = {};
 VISH.Constant.Clipboard.Slide = "slide";
 VISH.Constant.Clipboard.LocalStorageStack = "VishEditorClipboardStack";
-
-//Themes
-VISH.Constant.Themes = {};
-VISH.Constant.Themes.Default = "theme1";
-
-//Animations
-VISH.Constant.Animations = {};
-VISH.Constant.Animations.Default = "animation1";
 
 //Events
 VISH.Constant.Event = {};
@@ -150,20 +114,6 @@ VISH.Constant.Event.Touchable.onShiftLeft = "onShiftLeft";
 //Storage
 VISH.Constant.Storage = {};
 VISH.Constant.Storage.Device = "Device";
-
-//VirtualTour
-VISH.Constant.VTour = {};
-VISH.Constant.VTour.DEFAULT_MAP = "roadmap";
-VISH.Constant.VTour.ROADMAP = "roadmap";
-VISH.Constant.VTour.SERVICES = {};
-VISH.Constant.VTour.SERVICES.GMaps = "Google Maps";
-
-//EVideo
-VISH.Constant.EVideo = {};
-VISH.Constant.EVideo.Status = {};
-VISH.Constant.EVideo.Status.Ended = 0;
-VISH.Constant.EVideo.Status.Playing = 1;
-VISH.Constant.EVideo.Status.Paused = 2;
 
 //Keys
 VISH.Constant.INTRO = 13;

@@ -178,22 +178,11 @@ VISH.Viewer = (function(V,$,undefined){
 		return current_presentation;
 	};
 
-	var getPresentationType = function(){
-		var cPresentation = getCurrentPresentation();
-		if(typeof cPresentation == "object"){
-			return cPresentation.type;
-		} else {
-			return undefined;
-		}
-	};
-
-
 	return {
 		init 						: init, 
 		getOptions					: getOptions,
 		updateSlideCounter			: updateSlideCounter,
 		getCurrentPresentation		: getCurrentPresentation,
-		getPresentationType			: getPresentationType,
 		onSlideEnterViewer			: onSlideEnterViewer,
 		onSlideLeaveViewer			: onSlideLeaveViewer
 	};
