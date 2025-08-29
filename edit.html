@@ -227,7 +227,7 @@
 				</a>
 			</div>
 			<div id="toolbar_slide" class="withLeftBorder">
-				<div class="subToolbar toolbar_btn tool_action" action="deleteSlide">
+				<div class="subToolbar toolbar_btn tool_action toolbar_standard toolbar_flashcard" action="deleteSlide">
 					<img class="toolbar_icon" src="/images/toolbar/delete.png"/>
 					<p i18n-key="i.Delete">Delete</p>
 				</div>
@@ -239,14 +239,14 @@
 						<p class="toolbar_presentation_title" i18n-key="i.Background">Background</p>
 					</div>
 				</a>
-				<a id="toolbar_hotspot" class="tool_action" action="addHotspot" href="#">
-					<div id="toolbar_hotspot_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_flashcard" style='display:none'>
-						<button id="bgw_btn" type="button" class="btn btn-primary btn-small">
-							<i id="bgw_icon"class="icon-button icon-picture"></i>
-						</button>
-						<p class="toolbar_presentation_title" i18n-key="i.Hotspot">Add image</p>
-					</div>
-				</a>
+				<div class="subToolbar toolbar_btn tool_action toolbar_flashcard" action="addHotspot">
+					<img class="toolbar_icon" src="/images/toolbar/add_hotspot.png"/>
+					<p i18n-key="i.AddHotspot">Add image</p>
+				</div>
+				<div class="subToolbar toolbar_btn tool_action toolbar_flashcard" action="addZone">
+					<img class="toolbar_icon" src="/images/toolbar/add_zone.png"/>
+					<p i18n-key="i.AddZone">Add zone</p>
+				</div>
 			</div>
 			<div id="toolbar_element" class="withLeftBorder">
 				<div id="toolbar_settings_wrapper" class="subToolbar toolbar_btn tool_action toolbar_quiz toolbar_object toolbar_web" style="display:none" action="showSettings">

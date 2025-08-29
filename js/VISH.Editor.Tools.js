@@ -70,6 +70,7 @@ VISH.Editor.Tools = (function(V,$,undefined){
 
 		var type = $(slide).attr("type");
 		$(".toolbar_presentation_wrapper_slideTools:not(.toolbar_" + type + ")").hide();
+		$("#toolbar_slide .toolbar_btn.tool_action:not(.toolbar_" + type + ")").hide();
 
 		switch(type){
 			case V.Constant.STANDARD:
@@ -78,9 +79,11 @@ VISH.Editor.Tools = (function(V,$,undefined){
 				$("#toolbar_background_wrapper").show();
 				$("#toolbar_background_wrapper").children().css("visibility","visible");
 				if(typeof $(slide).attr("avatar") !== "undefined"){
-					$("#toolbar_hotspot_wrapper").show();
+					$("div.tool_action[action='addHotspot']").show();
+					$("div.tool_action[action='addZone']").show();
 				} else {
-					$("#toolbar_hotspot_wrapper").hide();
+					$("div.tool_action[action='addHotspot']").hide();
+					$("div.tool_action[action='addZone']").hide();
 				}
 				break;
 			default:
@@ -363,6 +366,14 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		V.Editor.Slides.removeCurrentSlide();
 	};
 
+	var addHotspot = function(){
+		V.Editor.Screen.addHotspot();
+	};
+
+	var addZone = function(){
+		V.Editor.Screen.addZone();
+	};
+
    /*
 	* Element actions
 	*/
@@ -597,6 +608,8 @@ VISH.Editor.Tools = (function(V,$,undefined){
 		preview 						: preview,
 		deleteSlide 					: deleteSlide,
 		changeBackground				: changeBackground,
+		addHotspot						: addHotspot,
+		addZone							: addZone,
 		addTooltipsToSlide				: addTooltipsToSlide,
 		addTooltipToZone				: addTooltipToZone,
 		showZoneToolTip					: showZoneToolTip,

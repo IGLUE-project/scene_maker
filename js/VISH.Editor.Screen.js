@@ -21,6 +21,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$.fancybox.close();
 	};
 
+	var addHotspot = function(){
+		console.log("TO DO: Add Hotspot");
+	};
+
+	var addZone = function(){
+		console.log("TO DO: Add Area");
+	};
+
 	/*
 	* Methods from VISH.Editor.Flashcard
 	*/
@@ -485,6 +493,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	return {
 		init 							: init,
 		addScreen						: addScreen,
+		addHotspot						: addHotspot,
+		addZone							: addZone,
 		draw 							: draw,
 		getThumbnailURL 				: getThumbnailURL,
 		getDefaultThumbnailURL			: getDefaultThumbnailURL,
