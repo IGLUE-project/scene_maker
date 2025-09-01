@@ -22,7 +22,7 @@
 	-ms-user-select:none;
 }
 
-#toolbar_menu , #toolbar_presentation, #toolbar_slide, #toolbar_element {
+#toolbar_menu, #toolbar_presentation, #toolbar_slide, #toolbar_element {
 	display: inline-block;
 	height: 58px;
 	min-height: 50px;
@@ -70,7 +70,6 @@
 	padding-left: 8px;
 	width: auto;
 	float: left;
-	border-right: 1px rgba(255, 255, 255, 0.5) solid;
 	padding-right: 8px;
 	-webkit-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
 	-moz-box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.05);
@@ -79,6 +78,14 @@
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-ms-user-select: none;
+}
+
+#toolbar_slide.toolbar_slide_screen {
+	border-right: 1px rgba(255, 255, 255, 0.5) solid;
+}
+
+#toolbar_slide.toolbar_slide_view {
+	border-right: none;
 }
 
 #toolbar_element {

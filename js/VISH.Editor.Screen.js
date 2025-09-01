@@ -106,6 +106,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		switch(mode){
 			case "HOTSPOT":
 				$("#slides_panel").removeClass("hotspot_active");
+				currentHotspot = undefined;
 				break;
 			case "ZONE":
 				$("#slides_panel").removeClass("zone_active");
@@ -440,10 +441,24 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		return currentSubslide;
 	};
 
-	var setCurrentSubslide = function(newSubslide){
+	var _setCurrentSubslide = function(newSubslide){
 		currentSubslide = newSubslide;
 	};
 
+	var setCurrentHotspot = function(newHotspot){
+		currentHotspot = newHotspot;
+	};
+
+	var deleteCurrentHotspot = function(){
+		var $hotspot = $(currentHotspot);
+		var hotspotId = $hotspot.attr("hotspotid");
+		$hotspot.remove();
+		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
+		delete screenData[screenId].hotspots[hotspotId];
+		currentHotspot = undefined;
+		V.Editor.Tools.cleanToolbar();
+	};
+	
 	var getSubslidesQuantity = function(slideset){
 		return $(slideset).children("article").length;
 	};
@@ -539,7 +554,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			closeSlideset(slideset);
 		}
 
-		setCurrentSubslide(subslide);
+		_setCurrentSubslide(subslide);
 		_showSubslide(subslide);
 		V.Editor.Thumbnails.selectSubslideThumbnail($(subslide).attr("slidenumber"));
 		V.Slides.triggerEnterEventById($(subslide).attr("id"));
@@ -561,7 +576,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	};
 
 	var closeSubslide = function(subslide){
-		setCurrentSubslide(null);
+		_setCurrentSubslide(null);
 		V.Editor.Thumbnails.selectSubslideThumbnail(null);
 		_hideSubslide(subslide);
 		V.Slides.triggerLeaveEventById($(subslide).attr("id"));
@@ -581,6 +596,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		addZone							: addZone,
 		onClick 						: onClick,
 		showHotspotSettings				: showHotspotSettings,
+		setCurrentHotspot				: setCurrentHotspot,
+		deleteCurrentHotspot			: deleteCurrentHotspot,
 		onHotspotSettingsDone			: onHotspotSettingsDone,
 		onHotspotActionChange			: onHotspotActionChange,
 		saveScreen						: saveScreen,

@@ -224,13 +224,13 @@
 					</div>
 				</a>
 			</div>
-			<div id="toolbar_slide" class="withLeftBorder">
+			<div id="toolbar_slide">
 				<!-- <div class="subToolbar toolbar_btn tool_action toolbar_standard toolbar_flashcard" action="deleteSlide">
 					<img class="toolbar_icon" src="/images/toolbar/delete.png"/>
 					<p i18n-key="i.Delete">Delete</p>
 				</div> -->
 				<a id="toolbar_background" class="tool_action" action="changeBackground" href="#">
-					<div id="toolbar_background_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools withLeftBorder toolbar_flashcard" style='display:none'>
+					<div id="toolbar_background_wrapper" class="subToolbar toolbar_btn toolbar_presentation_wrapper_slideTools toolbar_flashcard" style='display:none'>
 						<button id="bgw_btn" type="button" class="btn btn-primary btn-small">
 							<i id="bgw_icon"class="icon-button icon-picture"></i>
 						</button>
@@ -246,10 +246,14 @@
 					<p i18n-key="i.AddZone">Add zone</p>
 				</div>
 			</div>
-			<div id="toolbar_element" class="withLeftBorder">
+			<div id="toolbar_element">
 				<div id="toolbar_settings_wrapper" class="subToolbar toolbar_btn tool_action toolbar_hotspot toolbar_object toolbar_web" style="display:none" action="showElementSettings">
 					<img class="toolbar_icon" src="/images/toolbar/properties.png"/>
 					<p i18n-key="i.Properties">Properties</p>
+				</div>
+				<div class="subToolbar toolbar_btn tool_action toolbar_hotspot" action="deleteHotspot">
+					<img class="toolbar_icon" src="/images/toolbar/delete.png"/>
+					<p i18n-key="i.Delete">Delete</p>
 				</div>
 				<div class="subToolbar toolbar_btn tool_action toolbar_image" style="display:none" action="addLink">
 					<img class="toolbar_icon" src="/images/toolbar/addLink.png"/>
@@ -271,7 +275,7 @@
 					<img class="toolbar_icon" src="/images/toolbar/zoomMore.png"/>
 					<p i18n-key="i.Zoom+">Zoom+</p>
 				</div>
-				<div id="toolbar_text" class='toolbar_text toolbar_quiz' style="display:none"></div>
+				<div id="toolbar_text" class='toolbar_text' style="display:none"></div>
 			</div>
 			<a id="toolbar_exit_btn" class="tool_action" action="exit" href="#">
 				<div id="toolbar_exit">
