@@ -503,11 +503,15 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	};
 
 	var beforeRemoveSlideset = function(slideset){
-		onLeaveSlideset(slideset);
+		if(V.Slides.getCurrentSlide() === slideset){
+			onLeaveSlideset(slideset);
+		}
 	};
 
 	var beforeRemoveSubslide = function(slideset,subslide){
-		closeSubslide(subslide);
+		if(V.Slides.getCurrentSubslide() === subslide){
+			closeSubslide(subslide);
+		}
 	};
 
 	var afterCreateSubslide = function(slideset,subslide){

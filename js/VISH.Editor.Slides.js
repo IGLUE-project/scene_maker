@@ -179,11 +179,11 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		V.Slides.setSlides($('section.slides > article'));
 
 		//Update scrollbar params and counters
-		$("#slides_list").find("div.wrapper_barbutton:has(img[slidenumber])").each(function(index,div){
+		$("#slides_list").find("div.wrapper_slidethumbnail:has(img[slidenumber])").each(function(index,div){
 			var slideNumber = index+1;
 			var p = $(div).find("p.ptext_barbutton");
 			$(p).html(slideNumber);
-			var img = $(div).find("img.image_barbutton");
+			var img = $(div).find("img.image_slidethumbnail");
 			$(img).attr("slidenumber",slideNumber);
 		});
 
@@ -380,14 +380,37 @@ VISH.Editor.Slides = (function(V,$,undefined){
 	}
 
 	var removeCurrentSlide = function(){
-		var article_to_delete = V.Slides.getTargetSlide(); //current subslide or slideset
+		_removeSlide(V.Slides.getTargetSlide());
+	};
+
+	var onDeleteScreenClicked = function(event){
+		var slideNumber = $(event.target).prev("img").attr("slidenumber");
+		var slideToDelete = $("article[type='flashcard'][slidenumber='" + slideNumber + "']")[0];
+		_removeSlide(slideToDelete);
+	};
+
+	var onDeleteSubslideClicked = function(event){
+		var currentScreen = V.Slides.getCurrentSlide();
+		var slideNumber = $(event.target).prev("img").attr("slidenumber");
+		var slideToDelete = $(currentScreen).find("article[type='standard'][slidenumber='" + slideNumber + "']")[0];
+		_removeSlide(slideToDelete);
+	};
+
+	var _removeSlide = function(slideToDelete){
+		console.log("HERE");
+		var removeSubslide = V.Slides.isSubslide(slideToDelete);
 
 		var options = {};
 		options.width = 375;
 		options.height = 130;
-		options.notificationIconSrc = V.Editor.Thumbnails.getThumbnailURL(article_to_delete);
+		options.notificationIconSrc = V.Editor.Thumbnails.getThumbnailURL(slideToDelete);
 		options.notificationIconClass = "notificationIconDelete";
-		options.text = V.I18n.getTrans("i.areyousureNotification");
+		if(removeSubslide===true){
+			options.text = V.I18n.getTrans("i.areYouSureDeleteView");
+		} else {
+			options.text = V.I18n.getTrans("i.areYouSureDeleteScreen");
+		}
+
 		var button1 = {};
 		button1.text = V.I18n.getTrans("i.no");
 		button1.callback = function(){
@@ -396,10 +419,10 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		var button2 = {};
 		button2.text = V.I18n.getTrans("i.delete");
 		button2.callback = function(){
-			if(V.Slides.isSubslide(article_to_delete)){
-				V.Editor.Slides.removeSubslide(article_to_delete);
+			if(removeSubslide){
+				_removeSubslide(slideToDelete);
 			} else {
-				V.Editor.Slides.removeSlide(V.Slides.getCurrentSlide());
+				_removeScreen(slideToDelete);
 			}
 			$.fancybox.close();
 		}
@@ -407,7 +430,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		V.Utils.showDialog(options);
 	};
 
-	var removeSlide = function(slide){
+	var _removeScreen = function(slide){
 		if(slide===null){
 			return;
 		}
@@ -416,27 +439,57 @@ VISH.Editor.Slides = (function(V,$,undefined){
 			V.Editor.Screen.beforeRemoveSlideset(slide);
 		}
 
-		var removing_current_slide = false;
-		if(V.Slides.getCurrentSlide() === slide){
-			removing_current_slide = true;
-		}
+		var slideToDeleteNumber = $(slide).attr("slidenumber");
+		var currentSlideNumber = V.Slides.getCurrentSlideNumber();
 
 		$(slide).remove();
-		if(removing_current_slide){
-			if((V.Slides.getCurrentSlideNumber()===1)&&(V.Slides.getSlidesQuantity()>1)){
+
+		if(slideToDeleteNumber <= currentSlideNumber){
+			if((currentSlideNumber-1) > 0) {
+				V.Slides.setCurrentSlideNumber(currentSlideNumber-1);
+			} else if (V.Slides.getSlidesQuantity()>1){
 				V.Slides.setCurrentSlideNumber(1);
-			} else {
-				V.Slides.setCurrentSlideNumber(V.Slides.getCurrentSlideNumber()-1);
 			}
 		}
+
 		V.Slides.updateSlides();
 		V.Editor.Thumbnails.redrawThumbnails(function(){
-			if(typeof V.Slides.getCurrentSlide() != "undefined"){
+			if(typeof V.Slides.getCurrentSlide() !== "undefined"){
 				V.Editor.Thumbnails.selectThumbnail(V.Slides.getCurrentSlideNumber());
 				V.Editor.Thumbnails.moveThumbnailsToSlide(V.Slides.getCurrentSlideNumber());
 				V.Slides.triggerEnterEventById($(V.Slides.getCurrentSlide()).attr("id"));
 			}
 		});
+	};
+
+	var _removeSubslide = function(subslide){
+		if(typeof subslide !== "object"){
+			return;
+		}
+
+		var screen = $(subslide).parent();
+		var currentSubslide = V.Slides.getCurrentSubslide();
+		var removingCurrentSubslide = (currentSubslide === subslide);
+		V.Editor.Screen.beforeRemoveSubslide(screen,subslide);
+		$(subslide).remove();
+
+		//Update subslide counters
+		var subslides = $(screen).find("article");
+		$(subslides).each(function(index,subslide){
+			$(subslide).attr("slidenumber",index+1);
+		});	
+
+		V.Editor.Thumbnails.drawSlidesetThumbnails(subslides,function(){
+			//Subslides Thumbnails drawed succesfully
+			if(removingCurrentSubslide === false){
+				V.Editor.Thumbnails.selectSubslideThumbnail($(currentSubslide).attr("slidenumber"));
+			}
+		});
+
+		//After remove a subslide, load screen if the current subslide was deleted
+		if(removingCurrentSubslide){
+			V.Editor.Screen.openSlideset(screen);
+		}
 	};
 
 	//////////////
@@ -461,37 +514,6 @@ VISH.Editor.Slides = (function(V,$,undefined){
 	var appendSubslide = function(slideset,subslide){
 		$(slideset).append(subslide);
 	}
-
-	var removeSubslide = function(subslide){
-		if(typeof subslide !== "object"){
-			return;
-		}
-
-		var slideset = $(subslide).parent();
-		V.Editor.Screen.beforeRemoveSubslide(slideset,subslide);
-		$(subslide).remove();
-
-		//Update subslide counters
-		var subslides = $(slideset).find("article");
-		$(subslides).each(function(index,subslide){
-			$(subslide).attr("slidenumber",index+1);
-		});	
-
-		V.Editor.Thumbnails.drawSlidesetThumbnails(subslides,function(){
-			//Subslides Thumbnails drawed succesfully
-		});
-
-		//After remove a subslide, load slideset
-		V.Editor.Screen.openSlideset(slideset);
-	};
-
-	var removeSlideKeyboard = function(){
-		if(V.Editor.Screen.getCurrentSubslide()!=null){
-			removeSubslide(V.Editor.Screen.getCurrentSubslide());
-		} else {
-			removeSlide(V.Slides.getCurrentSlide());
-		}
-	};
 
 	var updateThumbnail = function(slide){
 		var slideThumbnail = V.Editor.Thumbnails.getThumbnailForSlide(slide);
@@ -524,11 +546,11 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		appendSlide				: appendSlide,
 		addSlide 				: addSlide,
 		removeCurrentSlide		: removeCurrentSlide,
-		removeSlide				: removeSlide,
 		addSubslide				: addSubslide,
 		appendSubslide			: appendSubslide,
-		removeSubslide			: removeSubslide,
-		removeSlideKeyboard		: removeSlideKeyboard,
+		removeCurrentSlide		: removeCurrentSlide,
+		onDeleteScreenClicked	: onDeleteScreenClicked,
+		onDeleteSubslideClicked	: onDeleteSubslideClicked,
 		updateThumbnail			: updateThumbnail,
 		copyTextAreasOfSlide	: copyTextAreasOfSlide,
 		forwardOneSubslide		: forwardOneSubslide,

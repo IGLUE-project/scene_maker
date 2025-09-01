@@ -15,7 +15,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 	var lastSelectedSubslideThumbnail = undefined;
 	
 	var init = function(){
-	}
+	};
 	 
 	var redrawThumbnails = function(successCallback){
 		redrawThumbnailsCallback = successCallback;
@@ -34,7 +34,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			var defaultURL = getDefaultThumbnailURL(s);
 			if(srcURL){
 				slideElements += 1;
-				imagesArray.push($("<img id='slideThumbnail" + slideElements + "' class='image_barbutton' slideNumber='" + slideElements + "' action='goToSlide' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
+				imagesArray.push($("<img id='slideThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' action='goToSlide' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
 				imagesArrayTitles.push(slideElements);
 			}
     	});
@@ -55,15 +55,16 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		if(isSlideset){
 			V.Editor.Screen.onThumbnailLoadFail(slide);
 		}
-	}
+	};
 
 	var _onImagesLoaded = function(){
 		//Add class to title elements and events
-		$("#" + thumbnailsDivId).find("img.image_barbutton").each(function(index,img){
+		$("#" + thumbnailsDivId).find("img.image_slidethumbnail").each(function(index,img){
 			//Add class to title
 			var imgContainer = $(img).parent();
-			$(imgContainer).addClass("wrapper_barbutton");
+			$(imgContainer).addClass("wrapper_slidethumbnail");
 			$(imgContainer).addClass("preventNoselectable");
+			$(imgContainer).append("<div class='delete_slide delete_screen'></div>");
 			var p = $(imgContainer).find("p");
 			$(p).addClass("ptext_barbutton");
 
@@ -82,12 +83,12 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		//Create scrollbar
 		$("#" + thumbnailsDivId).show();
 		V.Editor.Scrollbar.createScrollbar(thumbnailsDivId, options);
-	}
+	};
 	
 	var _afterCreateSlidesScrollbar = function(){
 		//Add sortable
 		$("#" + thumbnailsDivId).sortable({
-			items: 'div.wrapper_barbutton:has(img[action="goToSlide"])',
+			items: 'div.wrapper_slidethumbnail:has(img[action="goToSlide"])',
 			change: function(event, ui) {
 				//Do nothing
 			},
@@ -97,7 +98,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			stop: function(event, ui) {
 				var dragElement = ui.item;
 
-				var img = $(ui.item).find("img.image_barbutton[slidenumber]");
+				var img = $(ui.item).find("img.image_slidethumbnail[slidenumber]");
 				if(isNaN($(img).attr("slidenumber"))){
 					return;
 				}
@@ -106,7 +107,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 				var destPosition;
 
 				//Detect destPosition
-				$("#slides_list").find("img.image_barbutton[slidenumber]").each(function(index,item){
+				$("#slides_list").find("img.image_slidethumbnail[slidenumber]").each(function(index,item){
 					var beforeIndex = parseInt($(item).attr("slidenumber"));
 					var afterIndex = index+1;
 
@@ -131,7 +132,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			redrawThumbnailsCallback();
 			redrawThumbnailsCallback = undefined;
 		}
-	}
+	};
 
 	var _onClickSlideElement = function(event){
 		switch($(event.target).attr("action")){
@@ -141,16 +142,16 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			default:
 			  return;
 		}
-	}
+	};
 
 	/**
 	* Function to select the thumbnail
 	*/
 	var selectThumbnail = function(no){
-		$("#slides_list img.image_barbutton").removeClass("selectedSlideThumbnail");
-		$("#slides_list img.image_barbutton[slideNumber=" + no + "]").addClass("selectedSlideThumbnail");
-		$("#slides_list div.wrapper_barbutton").removeClass("selectedThumbnailBackground");
-		$("#slides_list img.image_barbutton[slideNumber=" + no + "]").parent("div.wrapper_barbutton").addClass("selectedThumbnailBackground");
+		$("#slides_list img.image_slidethumbnail").removeClass("selectedSlideThumbnail");
+		$("#slides_list img.image_slidethumbnail[slideNumber=" + no + "]").addClass("selectedSlideThumbnail");
+		$("#slides_list div.wrapper_slidethumbnail").removeClass("selectedThumbnailBackground");
+		$("#slides_list img.image_slidethumbnail[slideNumber=" + no + "]").parent("div.wrapper_slidethumbnail").addClass("selectedThumbnailBackground");
 
 
 		var advance = ((lastSelectedSlideThumbnail===undefined)||(no > lastSelectedSlideThumbnail));
@@ -166,27 +167,27 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 	};
 
 	var moveThumbnailsToSlide = function(slideNumber){
-		var element = $("img.image_barbutton[slideNumber=" + slideNumber + "]");
+		var element = $("img.image_slidethumbnail[slideNumber=" + slideNumber + "]");
 		V.Editor.Scrollbar.goToElement(thumbnailsDivId,element);
-	}
+	};
 
 	var moveThumbnailsToSubslide = function(slideNumber){
-		var element = $("#subslides_list img.image_barbutton[slideNumber=" + slideNumber + "]").parent();
+		var element = $("#subslides_list img.image_slidethumbnail[slideNumber=" + slideNumber + "]").parent();
 		V.Editor.Scrollbar.goToElement(slidesetThumbnailsDivId,element);
-	}
+	};
   
 	var getThumbnailForSlide = function(slide){
 		if(V.Slides.isSubslide(slide)){
 			return _getThumbnailForSubslide(slide);
 		}
 		var slidenumber = $(slide).attr("slidenumber");
-		return $("#slides_list img.image_barbutton[slideNumber=" + slidenumber + "]");
-	}
+		return $("#slides_list img.image_slidethumbnail[slideNumber=" + slidenumber + "]");
+	};
 
 	var _getThumbnailForSubslide = function(subslide){
 		var slidenumber = $(subslide).attr("slidenumber");
-		return $("#subslides_list img.image_barbutton[slideNumber=" + slidenumber + "]");
-	}
+		return $("#subslides_list img.image_slidethumbnail[slideNumber=" + slidenumber + "]");
+	};
 
 	var getThumbnailURL = function(slide){
 		var thumbnailURL;
@@ -245,16 +246,14 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		var slideElements = 0;
 
 		$(subslides).each(function(index,s){
-
 			if($(s).attr('type')!==V.Constant.STANDARD){
 				V.Debugging.log("Subslide must be of standard type");
 				return true; //Continue
 			}
-
 			var srcURL = getThumbnailURL(s);
 			var defaultURL = getDefaultThumbnailURL(s);
 			slideElements += 1;
-			imagesArray.push($("<img id='subslideThumbnail" + slideElements + "' class='image_barbutton' slideNumber='" + slideElements + "' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
+			imagesArray.push($("<img id='subslideThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
 			imagesArrayTitles.push(String.fromCharCode(64+slideElements));
     	});
 
@@ -268,12 +267,12 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 	var _onSlidesetThumbnailsImagesLoaded = function(){
 		//Add class to title elements and events
-		$("#" + slidesetThumbnailsDivId).find("img.image_barbutton").each(function(index,img){
+		$("#" + slidesetThumbnailsDivId).find("img.image_slidethumbnail").each(function(index,img){
 			//Add class to title
 			var imgContainer = $(img).parent();
-			$(imgContainer).addClass("wrapper_barbutton");
-			var p = $(imgContainer).find("p");
-			$(p).addClass("ptext_barbutton");
+			$(imgContainer).addClass("wrapper_slidethumbnail");
+			$(imgContainer).append("<div class='delete_slide delete_subslide'></div>");
+			$(imgContainer).find("p").addClass("ptext_barbutton");
 
 			//Add events to imgs
 			$(img).click(function(event){
@@ -295,20 +294,20 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			drawSlidesetThumbnailsCallback();
 			drawSlidesetThumbnailsCallback = undefined;
 		}
-	}
+	};
 
 	var _onClickSubslideElement = function(event){
 		var subslideNumber = $(event.target).attr("slideNumber");
 		V.Editor.Screen.openSubslideWithNumber(subslideNumber);
-	}
+	};
 
 	var selectSubslideThumbnail = function(no){
-		$("#subslides_list img.image_barbutton").removeClass("selectedSubslideThumbnail");
+		$("#subslides_list img.image_slidethumbnail").removeClass("selectedSubslideThumbnail");
 		if(no===null){
 			//Used to unselect all subslide thumbnails
 			return;
 		}
-		$("#subslides_list img.image_barbutton[slideNumber=" + no + "]").addClass("selectedSubslideThumbnail");
+		$("#subslides_list img.image_slidethumbnail[slideNumber=" + no + "]").addClass("selectedSubslideThumbnail");
 
 		var advance = ((lastSelectedSubslideThumbnail===undefined)||(no > lastSelectedSubslideThumbnail));
 		lastSelectedSubslideThumbnail = no;

@@ -34,6 +34,8 @@ VISH.Editor.Events = (function(V,$,undefined){
 			$(document).on('click','.selectable', V.Editor.onSelectableClicked);
 			$(document).on('click',':not(".selectable"):not(".preventNoselectable")', V.Editor.onNoSelectableClicked);
 			
+			$(document).on('click','.delete_screen', V.Editor.Slides.onDeleteScreenClicked);
+			$(document).on('click','.delete_subslide', V.Editor.Slides.onDeleteSubslideClicked);
 			$(document).on('click','.delete_content', V.Editor.onDeleteItemClicked);
 
 			$(document).on("click", ".change_bg_button", V.Editor.Tools.changeBackground);
@@ -318,7 +320,7 @@ VISH.Editor.Events = (function(V,$,undefined){
 		    break;
 		case 46: //Supr key
 			if(V.Editor.Slides.isSlideFocused()){
-				V.Editor.Slides.removeSlideKeyboard();
+				V.Editor.Slides.removeCurrentSlide();
 			}
 			break;	
 		}
