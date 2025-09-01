@@ -281,8 +281,6 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			});
 		});
 
-		V.Editor.Screen.beforeCreateSlidesetThumbnails();
-
 		var options = new Array();
 		options['horizontalScroll'] = true;
 		options['callback'] = _afterCreateSubslidesScrollbar;
@@ -293,45 +291,6 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 	}
 
 	var _afterCreateSubslidesScrollbar = function(){
-		// //Add sortable
-		
-		// $( "#" + thumbnailsDivId).sortable({
-		// 	items: 'div.wrapper_barbutton:has(img[action="goToSlide"])',
-		// 	change: function(event, ui) {
-		// 		//Do nothing
-		// 	},
-		// 	start: function(event, ui) { 
-		// 		//Do nothing
-		// 	},
-		// 	stop: function(event, ui) {
-		// 		var dragElement = ui.item;
-
-		// 		var img = $(ui.item).find("img.image_barbutton[slidenumber]");
-		// 		if(isNaN($(img).attr("slidenumber"))){
-		// 			return;
-		// 		}
-
-		// 		var orgPosition = parseInt($(img).attr("slidenumber"));
-		// 		var destPosition;
-
-		// 		//Detect destPosition
-		// 		$("#slides_list").find("img.image_barbutton[slidenumber]").each(function(index,item){
-		// 			var beforeIndex = parseInt($(item).attr("slidenumber"));
-		// 			var afterIndex = index+1;
-
-		// 			if((beforeIndex===orgPosition)&&(beforeIndex!=afterIndex)){
-		// 				destPosition = afterIndex;
-		// 			}
-
-		// 		});
-
-		// 		// V.Debugging.log("Org position: " + orgPosition);
-		// 		// V.Debugging.log("Dest position: " + destPosition);
-
-		// 		V.Editor.Slides.moveSlideTo(orgPosition, destPosition);
-		// 	}
-		// });
-
 		if(typeof drawSlidesetThumbnailsCallback == "function"){
 			drawSlidesetThumbnailsCallback();
 			drawSlidesetThumbnailsCallback = undefined;

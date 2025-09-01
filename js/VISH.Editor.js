@@ -42,7 +42,7 @@ VISH.Editor = (function(V,$,undefined){
 		$("#waiting_overlay").show();
 
 		V.Editing = true;
-		$("body").addClass("ViSHEditorBody");
+		$("body").addClass("SceneMakerBody");
 
 		V.Debugging.init(options);
 

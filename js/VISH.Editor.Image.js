@@ -3,7 +3,6 @@ VISH.Editor.Image = (function(V,$,undefined){
 	var contentToAdd = null;
 	var contentAddMode = V.Constant.NONE;
 
-	var uploadDivId = "tab_pic_upload_content";
 	var urlDivId = "tab_pic_from_url_content";
 	var urlInputId = "picture_url";
 	
