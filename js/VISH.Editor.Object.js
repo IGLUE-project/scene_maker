@@ -471,13 +471,6 @@ VISH.Editor.Object = (function(V,$,undefined){
 			$(wrapperTag).attr('style', zoomInStyle);
 			V.ObjectPlayer.adjustDimensionsAfterZoom($(wrapperTag));
 		}
-
-		var objectTypeAttr = $(wrapperTag).attr('objecttype');
-		if(objectTypeAttr == V.Constant.MEDIA.SCORM_PACKAGE){
-			V.Editor.Object.Scorm.afterDrawSCORM(wrapperTag);
-		} else if(objectTypeAttr == V.Constant.MEDIA.WEB_APP){
-			V.Editor.Object.Webapp.afterDraw(wrapperTag);
-		}
 	};
 
 	/////////////////

@@ -450,13 +450,34 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	};
 
 	var deleteCurrentHotspot = function(){
-		var $hotspot = $(currentHotspot);
-		var hotspotId = $hotspot.attr("hotspotid");
-		$hotspot.remove();
-		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
-		delete screenData[screenId].hotspots[hotspotId];
-		currentHotspot = undefined;
-		V.Editor.Tools.cleanToolbar();
+		var options = {};
+		options.width = 375;
+		options.height = 130;
+		//options.notificationIconSrc = V.Editor.Thumbnails.getThumbnailURL(slideToDelete);
+		//options.notificationIconClass = "notificationIconDelete";
+		options.text = V.I18n.getTrans("i.areYouSureDeleteHotspot");
+
+		var button1 = {};
+		button1.text = V.I18n.getTrans("i.no");
+		button1.callback = function(){
+			$.fancybox.close();
+		}
+		var button2 = {};
+		button2.text = V.I18n.getTrans("i.delete");
+		button2.callback = function(){
+			//Delete current hotspot
+			var $hotspot = $(currentHotspot);
+			var hotspotId = $hotspot.attr("hotspotid");
+			$hotspot.remove();
+			var screenId = $(V.Slides.getCurrentSlide()).attr("id");
+			delete screenData[screenId].hotspots[hotspotId];
+
+			currentHotspot = undefined;
+			V.Editor.Tools.cleanToolbar();
+			$.fancybox.close();
+		}
+		options.buttons = [button1,button2];
+		V.Utils.showDialog(options);
 	};
 	
 	var getSubslidesQuantity = function(slideset){

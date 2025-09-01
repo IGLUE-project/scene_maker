@@ -397,7 +397,6 @@ VISH.Editor.Slides = (function(V,$,undefined){
 	};
 
 	var _removeSlide = function(slideToDelete){
-		console.log("HERE");
 		var removeSubslide = V.Slides.isSubslide(slideToDelete);
 
 		var options = {};
@@ -470,6 +469,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		var screen = $(subslide).parent();
 		var currentSubslide = V.Slides.getCurrentSubslide();
 		var removingCurrentSubslide = (currentSubslide === subslide);
+
 		V.Editor.Screen.beforeRemoveSubslide(screen,subslide);
 		$(subslide).remove();
 
@@ -497,7 +497,7 @@ VISH.Editor.Slides = (function(V,$,undefined){
 	//////////////
 
 	var addSubslide = function(slideset,subslide){ 
-		var subslide = $(subslide).css("display","none");
+		var subslide = $(subslide).css("display","none")[0];
 		appendSubslide(slideset,subslide);
 		V.Editor.Tools.addTooltipsToSlide(subslide);
 
