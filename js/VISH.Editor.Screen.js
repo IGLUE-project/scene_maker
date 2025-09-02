@@ -157,7 +157,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 		var screen = V.Slides.getCurrentSlide();
 		var screenId = $(screen).attr("id");
-		var hotspotId = V.Utils.getId("id-");
+		var hotspotId = V.Utils.getId("hotspot-");
 		var hotspotSize = 42;
 		var rect = screen.getBoundingClientRect();
 	    var x = event.clientX - rect.left - hotspotSize/2;
@@ -182,6 +182,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		if(typeof height !== "number"){
 			height = 42;
 		}
+
+		var rotationAngle = parseFloat(rotationAngle);
 		if (typeof rotationAngle !== "number" || isNaN(rotationAngle) || rotationAngle < 0 || rotationAngle > 360) {
 			rotationAngle = 0;
 		}
@@ -190,7 +192,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		var $hotspot = $('<img>', {
 			src: imgURL,
 			class: 'hotspot',
-			hotspotid: hotspotId,
+			id: hotspotId,
 			css: {
 				position: 'absolute',
 				left: x,
@@ -209,6 +211,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			};
 		}
 		screenData[screenId].hotspots[hotspotId] = {};
+		screenData[screenId].hotspots[hotspotId].lockAspectRatio = lockAspectRatio;
 		
 		$hotspot.draggable({
 			start: function(event, ui) {
@@ -273,7 +276,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	var _onStartHotspotSettingsFancybox = function(){
 		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
 		var $hotspot = $(currentHotspot);
-		var hotspotId = $hotspot.attr("hotspotid");
+		var hotspotId = $hotspot.attr("id");
 		var hotspotSettings = screenData[screenId].hotspots[hotspotId];
 
 		//ID
@@ -329,11 +332,50 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		  });
 		});
 
-		$("div.hotspotActionParamsGoToScreen select").each(function() {
+		$("div.hotspotActionParamsScreen select").each(function() {
 			var $select = $(this);
 			$select.empty();
 			$select.append($('<option>', { value: "none", text: ("Undefined") }))
 			$.each(currentOptionsScreens, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+
+		//Fill action template with current views
+		var currentOptionsViews = [];
+		$(V.Slides.getCurrentSlide()).children("article").each(function() {
+		  var $view = $(this);
+		  currentOptionsViews.push({
+		    value: $view.attr('id'),
+		    text: ("View " + $view.attr('slidenumber'))
+		  });
+		});
+
+		$("div.hotspotActionParamsView select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$.each(currentOptionsViews, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+
+		//Fill action template with current element ids (hotspots and zones)
+		var currentOptionsElementIds = [];
+		//Hotspots
+		$('img.hotspot').each(function() {
+		  var $hotspot = $(this);
+		  currentOptionsElementIds.push({
+		    value: $hotspot.attr('id'),
+		    text: $hotspot.attr('id')
+		  });
+		});
+
+		$("div.hotspotActionParamsElementId select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$.each(currentOptionsElementIds, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
 		});
@@ -347,8 +389,20 @@ VISH.Editor.Screen = (function(V,$,undefined){
 					$actionWrapper.find("select.hotspotActionType").val(hotspotAction.actionType).trigger('change');
 					if(typeof hotspotAction.actionParams !== "undefined"){
 						if(typeof hotspotAction.actionParams.screen === "string"){
-							var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsGoToScreen select");
+							var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsScreen select");
 							$actionParamsScreenSelect.val(hotspotAction.actionParams.screen);
+						}
+						if(typeof hotspotAction.actionParams.view === "string"){
+							var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
+							$actionParamsViewSelect.val(hotspotAction.actionParams.view);
+						}
+						if(typeof hotspotAction.actionParams.url === "string"){
+							var $actionParamsURLInput = $actionWrapper.find("div.hotspotActionParamsURL input");
+							$actionParamsURLInput.val(hotspotAction.actionParams.url);
+						}
+						if(typeof hotspotAction.actionParams.elementId === "string"){
+							var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
+							$actionParamsElementIdSelect.val(hotspotAction.actionParams.elementId);
 						}
 					}
 				}
@@ -416,14 +470,38 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	var onHotspotActionChange = function(event){
 		var option = event.target.value;
 		var $actionWrapperDiv = $(event.target).closest("div.hotspotActionWrapper");
-		var $selectScreenWrapper = $actionWrapperDiv.find("div.hotspotActionParamsGoToScreen")
-		var $selectScreen = $selectScreenWrapper.find("select")
+		var $selectScreenWrapper = $actionWrapperDiv.find("div.hotspotActionParamsScreen");
+		var $selectScreen = $selectScreenWrapper.find("select");
+		var $selectViewWrapper = $actionWrapperDiv.find("div.hotspotActionParamsView");
+		var $selectView = $selectViewWrapper.find("select");
+		var $inputURLWrapper = $actionWrapperDiv.find("div.hotspotActionParamsURL");
+		var $inputURL = $inputURLWrapper.find("input");
+		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
+		var $selectElementId = $selectElementIdWrapper.find("select");
 		
-		if(option === "goToScreen"){
+		if((option === "goToScreen")||(option === "changeScreenImage")){
 			$selectScreen.prop("selectedIndex", 0);
 			$selectScreenWrapper.show();
 		} else {
 			$selectScreenWrapper.hide();
+		}
+		if(option === "openView"){
+			$selectView.prop("selectedIndex", 0);
+			$selectViewWrapper.show();
+		} else {
+			$selectViewWrapper.hide();
+		}
+		if(option === "changeScreenImage"){
+			$inputURL.val("");
+			$inputURLWrapper.show();
+		} else {
+			$inputURLWrapper.hide();
+		}
+		if(option === "removeElement"){
+			$selectElementId.prop("selectedIndex", 0);
+			$selectElementIdWrapper.show();
+		} else {
+			$selectElementIdWrapper.hide();
 		}
 		// switch(event.target.value){
 		// 	case "goToScreen":
@@ -444,7 +522,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	var onHotspotSettingsDone = function(event){
 		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
 		var $hotspot = $(currentHotspot);
-		var hotspotId = $hotspot.attr("hotspotid");
+		var hotspotId = $hotspot.attr("id");
 		var hotspotSettings = {};
 
 		//Hotspot image
@@ -493,9 +571,21 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			var actionType = $actionWrapper.find("select.hotspotActionType").val();
 			if(actionType !== "none"){
 				var action = {actionType: actionType, actionParams: {}};
-				var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsGoToScreen select");
+				var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsScreen select");
 				if($actionParamsScreenSelect.is(":visible")){
-					action.actionParams["screen"] = $actionParamsScreenSelect.val();
+					action.actionParams.screen = $actionParamsScreenSelect.val();
+				}
+				var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
+				if($actionParamsViewSelect.is(":visible")){
+					action.actionParams.view = $actionParamsViewSelect.val();
+				}
+				var $actionParamsURLInput = $actionWrapper.find("div.hotspotActionParamsURL input");
+				if($actionParamsURLInput.is(":visible")){
+					action.actionParams.url = $actionParamsURLInput.val();
+				}
+				var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
+				if($actionParamsElementIdSelect.is(":visible")){
+					action.actionParams.elementId = $actionParamsElementIdSelect.val();
 				}
 				if (Object.keys(action.actionParams).length === 0) {
 					delete action.actionParams;
@@ -594,7 +684,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			if(hotspotsIds.length > 0) {
 				screen.hotspots = [];
 				hotspotsIds.forEach(hotspotId => {
-				  var hotspotDOM = $("img.hotspot[hotspotid='" + hotspotId + "']");
+				  var hotspotDOM = $("img.hotspot[id='" + hotspotId + "']");
 				  var hotspotPosition = $(hotspotDOM).position();
 				  var hotspotSettings = screenData[screen.id].hotspots[hotspotId];
 				  //console.log(hotspotId, hotspotSettings);
@@ -658,7 +748,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		button2.callback = function(){
 			//Delete current hotspot
 			var $hotspot = $(currentHotspot);
-			var hotspotId = $hotspot.attr("hotspotid");
+			var hotspotId = $hotspot.attr("id");
 			$hotspot.remove();
 			var screenId = $(V.Slides.getCurrentSlide()).attr("id");
 			delete screenData[screenId].hotspots[hotspotId];

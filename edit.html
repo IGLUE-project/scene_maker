@@ -367,11 +367,17 @@
 					<div class="tab_slides_templates">
 						<p class="select_text" i18n-key="i.Templates">Templates</p>
 						<div class="templateselectlist">
-							<div class='slidethumb templatethumb' template='1'>
-								<img src='/images/templatesthumbs/blank.png' id="t1" />
+							<div class='slidethumb templatethumb' template='10'>
+								<img src='/images/templatesthumbs/blank.png' id="t10" />
 							</div>
 							<div class='slidethumb templatethumb' template='2'>
 								<img src='/images/templatesthumbs/blank.png' id="t2" />
+							</div>
+							<div class='slidethumb templatethumb' template='18'>
+								<img src='/images/templatesthumbs/blank.png' id="t18" />
+							</div>
+							<div class='slidethumb templatethumb' template='19'>
+								<img src='/images/templatesthumbs/blank.png' id="t19" />
 							</div>
 							<div class='slidethumb templatethumb' template='3'>
 								<img src='/images/templatesthumbs/blank.png' id="t3" />
@@ -417,15 +423,6 @@
 							</div>
 							<div class='slidethumb templatethumb' template='13'>
 								<img src='/images/templatesthumbs/blank.png' id="t13" />
-							</div>
-							<div class='slidethumb templatethumb' template='10'>
-								<img src='/images/templatesthumbs/blank.png' id="t10" />
-							</div>
-							<div class='slidethumb templatethumb' template='18'>
-								<img src='/images/templatesthumbs/blank.png' id="t18" />
-							</div>
-							<div class='slidethumb templatethumb' template='19'>
-								<img src='/images/templatesthumbs/blank.png' id="t19" />
 							</div>
 						</div>
 					</div>
@@ -691,13 +688,25 @@
 								<option value="none" i18n-key="i.HotspotActionTypeNone">Undefined</option>
 								<option value="goToScreen" i18n-key="i.HotspotActionTypeGoToScreen">Go to screen</option>
 								<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
-								<option value="changeScreenBackground" i18n-key="i.HotspotActionTypeChangeScreenImage">Change screen background</option>
+								<option value="changeScreenImage" i18n-key="i.HotspotActionTypeChangeScreenImage">Change screen background</option>
 								<option value="removeElement" i18n-key="i.HotspotActionTypeRemoveElement">Remove hotspot or zone</option>
 								<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
 							</select>
 						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsGoToScreen" style='display:none'>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsScreen" style='display:none'>
 							<label i18n-key="i.HotspotActionParamsScreen">Screen:</label>
+							<select></select>
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsView" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsView">View:</label>
+							<select></select>
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsURL" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsURL">Image URL:</label>
+							<input type="text">
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsElementId" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsElementId">Element ID:</label>
 							<select></select>
 						</div>
 					</div>

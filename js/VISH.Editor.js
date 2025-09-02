@@ -591,40 +591,6 @@ VISH.Editor = (function(V,$,undefined){
 					}
 					//Save subtype
 					element.subtype = V.Object.getObjectInfo(myObject).type;
-				} else if (element.type === V.Constant.QUIZ) {
-					var quizJSON = VISH.Editor.Quiz.save(div);
-					element.quiztype = quizJSON.quizType;
-					element.selfA = quizJSON.selfA;
-					element.question = quizJSON.question;
-					if(typeof quizJSON.choices != "undefined"){
-						element.choices = quizJSON.choices;
-					}
-					if(typeof quizJSON.answer != "undefined"){
-						element.answer = quizJSON.answer;
-					}
-					if(quizJSON.extras){
-						element.extras = quizJSON.extras;
-					}
-					slide.containsQuiz = true;
-				} else if(element.type === V.Constant.SNAPSHOT){
-					var snapshotWrapper = $(div).find(".snapshot_wrapper");
-					var snapshotIframe = $(snapshotWrapper).children()[0];
-					$(snapshotIframe).removeAttr("style");
-					element.body   = V.Utils.getOuterHTML(snapshotIframe);
-					element.style  = V.Editor.Utils.getStylesInPercentages($(div),snapshotWrapper);
-
-					//Save scrolls
-					var scrollTopAttr = $(snapshotWrapper).attr("scrollTop");
-					if(typeof scrollTopAttr !== "undefined"){
-						element.scrollTop = scrollTopAttr;
-						element.scrollLeft = $(snapshotWrapper).attr("scrollLeft");
-					} else {
-						//Fallback. Ideally never execute
-						//It only works for visible slides, otherwise returns 0,0
-						element.scrollTop = $(snapshotWrapper).scrollTop();
-						element.scrollLeft = $(snapshotWrapper).scrollLeft();
-					}
-					element.subtype = V.Constant.MEDIA.WEB;
 				} else if(typeof element.type == "undefined"){
 					//Empty element
 				}
@@ -632,27 +598,6 @@ VISH.Editor = (function(V,$,undefined){
 				slide.elements.push(element);
 			}
 		});
-
-		if(slide.containsQuiz){
-			//Before save a slide with quiz
-			//Add a presentation to answer the quiz in live mode
-			var quizSlide = $.extend(true, {}, slide);
-			quizSlide.type = V.Constant.QUIZ_SIMPLE;
-			//Build a presentation Wrapper
-			var quizPresentation = {};
-			quizPresentation.title = presentation.title;
-			quizPresentation.description = presentation.description;
-			quizPresentation.author = presentation.author;
-			quizPresentation.type = V.Constant.QUIZ_SIMPLE;
-			quizPresentation.theme = presentation.theme;
-			quizPresentation.slides = [quizSlide];
-
-			for(var k=0; k<slide.elements.length; k++){
-				if(slide.elements[k].type===V.Constant.QUIZ){
-					slide.elements[k].quiz_simple_json = quizPresentation;
-				}
-			}
-		}
 
 		V.Utils.removeTempShown(slideDOM);
 		

@@ -86,6 +86,7 @@ VISH.Locales = {
 		"i.HotspotActionTypeRemoveElement"		: "Remove hotspot or zone",
 		"i.HotspotActionTypeSolvePuzzle"		: "Solve escape room puzzle",
 		"i.HotspotActionParamsScreen"			: "Screen",
+		"i.HotspotActionParamsView"				: "View",
 		"i.HotspotNewAction"					: "Add action",
 		"i.Image"					: "Image",
 		"i.Images"					: "Images",
