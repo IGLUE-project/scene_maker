@@ -79,7 +79,7 @@ VISH.Locales = {
 		"i.HotspotRotation"			: "Rotation angle (°):",
 		"i.HotspotActions"			: "Actions to perform when the hotspot is clicked",
 		"i.HotspotActionType"		: "Action:",
-		"i.HotspotActionTypeNone"	: "None",
+		"i.HotspotActionTypeNone"	: "Undefined",
 		"i.HotspotActionTypeGoToScreen"			: "Go to screen",
 		"i.HotspotActionTypeOpenView"			: "Open view",
 		"i.HotspotActionTypeChangeScreenImage"	: "Change screen image",

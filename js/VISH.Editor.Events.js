@@ -169,10 +169,12 @@ VISH.Editor.Events = (function(V,$,undefined){
 			$(document).on("blur", "#hotspotImageURL", V.Editor.Screen.checkHotspotImageURLPreview);
 			$(document).on("input", "#hotspotSizeWidth", V.Editor.Screen.onInputHotspotSizeWidth);
 			$(document).on("input", "#hotspotSizeHeight", V.Editor.Screen.onInputHotspotSizeHeight);
-			$(document).on("change", "#hotspotAction", V.Editor.Screen.onHotspotActionChange);
+			$(document).on("click", "#hotspotNewAction", V.Editor.Screen.onHotspotNewAction);
+			$(document).on("click", "div.delete_action", V.Editor.Screen.onHotspotDeleteAction);
+			$(document).on("change", "select.hotspotActionType", V.Editor.Screen.onHotspotActionChange);
 			$(document).on("click", "#hotspotSettingsDone", V.Editor.Screen.onHotspotSettingsDone);
 		
-			//Element
+			//Element settings
 			$(document).on("click", "#objectSettingsDone", V.Editor.Object.onObjectSettingsDone);
 			
 			//onbeforeunload event

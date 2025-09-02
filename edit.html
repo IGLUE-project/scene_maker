@@ -629,74 +629,79 @@
 	<div style='display:none'>
 		<div id="hotspotSettings_fancybox" class="elSettings_fancybox">
 			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
-			<div class="new_hotspot_settings_field">
-				<label i18n-key="i.HotspotID">Hotspot ID:</label>
-				<input id="hotspotId" type="text" maxlength="8" readonly>
-			</div>
-			<div class="new_hotspot_settings_field">
-				<p i18n-key="i.HotspotImage">Image</p>
-				<div id="HotspotImageSourceWrapper" class="hotspot_settings_element_wrapper">
-					<label i18n-key="i.HotspotImageSource">Source:</label>
-					<select id="hotspotImageSource">
-						<option value="gallery" i18n-key="i.HotspotImageSourceGallery" selected>Gallery</option>
-						<option value="url" i18n-key="i.HotspotImageSourceURL">URL</option>
-					</select>
+			<div id="hotspotSettings_wrapper">
+				<div class="new_hotspot_settings_field new_hotspot_settings_field_first">
+					<label i18n-key="i.HotspotID">Hotspot ID:</label>
+					<input id="hotspotId" type="text" maxlength="8" readonly>
 				</div>
-				<div id="hotspotImageGallery">
-					<img src="/images/icons/hotspot.png">
-					<img src="/images/hotspotgallery/arrow.png">
-					<img src="/images/hotspotgallery/pin.png">
-					<img src="/images/hotspotgallery/keypad_standard.png">
-					<img src="/images/hotspotgallery/keypad_retro.png">
-					<img src="/images/hotspotgallery/keypad_futuristic.png">
+				<div class="new_hotspot_settings_field">
+					<p i18n-key="i.HotspotImage">Image</p>
+					<div id="HotspotImageSourceWrapper" class="hotspot_settings_element_wrapper">
+						<label i18n-key="i.HotspotImageSource">Source:</label>
+						<select id="hotspotImageSource">
+							<option value="gallery" i18n-key="i.HotspotImageSourceGallery" selected>Gallery</option>
+							<option value="url" i18n-key="i.HotspotImageSourceURL">URL</option>
+						</select>
+					</div>
+					<div id="hotspotImageGallery">
+						<img src="/images/icons/hotspot.png">
+						<img src="/images/hotspotgallery/arrow.png">
+						<img src="/images/hotspotgallery/pin.png">
+						<img src="/images/hotspotgallery/keypad_standard.png">
+						<img src="/images/hotspotgallery/keypad_retro.png">
+						<img src="/images/hotspotgallery/keypad_futuristic.png">
+					</div>
+					<div id="hotspotImageURLWrapper" class="hotspot_settings_element_wrapper" style='display:none'>
+						<label i18n-key="i.HotspotImageURL">URL:</label>
+						<input id="hotspotImageURL" type="text">
+					</div>
+					<div id="hotspotImageURLPreviewWrapper" class="hotspot_settings_element_wrapper" style='display:none'></div>
 				</div>
-				<div id="hotspotImageURLWrapper" class="hotspot_settings_element_wrapper" style='display:none'>
-					<label i18n-key="i.HotspotImageURL">URL:</label>
-					<input id="hotspotImageURL" type="text">
-				</div>
-				<div id="hotspotImageURLPreviewWrapper" class="hotspot_settings_element_wrapper" style='display:none'></div>
-			</div>
-			<div class="new_hotspot_settings_field">
-				<p i18n-key="i.HotspotSize">Size</p>
-				<input type="hidden" id="hotspotAspectRatio">
-				<div id="HotspotAspectRatioWrapper" class="hotspot_settings_element_wrapper">
-					<label i18n-key="i.HotspotLockAspectRatio">Maintain aspect ratio:</label>
-					<input id="hotspotLockAspectRatio" type="checkbox" checked>
-				</div>
-				<div id="HotspotSizeWidthWrapper" class="hotspot_settings_element_wrapper">
-					<label i18n-key="i.HotspotSizeWidth">Width:</label>
-					<input id="hotspotSizeWidth" type="number" value="42" step="1">
-				</div>
-				<div id="HotspotSizeHeightWrapper" class="hotspot_settings_element_wrapper">
-					<label i18n-key="i.HotspotSizeHeight">Height:</label>
-					<input id="hotspotSizeHeight" type="number" value="42" step="1">
-				</div>
-			</div>
-			<div class="new_hotspot_settings_field">
-				<label i18n-key="i.HotspotRotation">Rotation angle (°):</label>
-				<input type="number" id="hotspotRotation" min="0" max="360" value="0" step="1">
-			</div>
-			<div class="new_hotspot_settings_field new_hotspot_settings_field_last">
-				<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
-				<div class="hotspotActionWrapper hotspotActionWrapperFirst hotspot_settings_element_wrapper">
-					<label i18n-key="i.HotspotActionType">Action:</label>
-					<select class="hotspotActionType">
-						<option value="none" i18n-key="i.HotspotActionTypeNone" selected>None</option>
-						<option value="goToScreen" i18n-key="i.HotspotActionTypeGoToScreen">Go to screen</option>
-						<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
-						<option value="changeScreenBackground" i18n-key="i.HotspotActionTypeChangeScreenImage">Change screen background</option>
-						<option value="removeElement" i18n-key="i.HotspotActionTypeRemoveElement">Remove hotspot or zone</option>
-						<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
-					</select>
-					<div class="new_elsettings_field hotspot_settings_element_wrapper hotspotActionParamsGoToScreen" style='display:none'>
-						<label i18n-key="i.HotspotActionParamsScreen">Screen:</label>
-						<select></select>
+				<div class="new_hotspot_settings_field">
+					<p i18n-key="i.HotspotSize">Size</p>
+					<input type="hidden" id="hotspotAspectRatio">
+					<div id="HotspotAspectRatioWrapper" class="hotspot_settings_element_wrapper">
+						<label i18n-key="i.HotspotLockAspectRatio">Maintain aspect ratio:</label>
+						<input id="hotspotLockAspectRatio" type="checkbox" checked>
+					</div>
+					<div id="HotspotSizeWidthWrapper" class="hotspot_settings_element_wrapper">
+						<label i18n-key="i.HotspotSizeWidth">Width:</label>
+						<input id="hotspotSizeWidth" type="number" value="42" step="1">
+					</div>
+					<div id="HotspotSizeHeightWrapper" class="hotspot_settings_element_wrapper">
+						<label i18n-key="i.HotspotSizeHeight">Height:</label>
+						<input id="hotspotSizeHeight" type="number" value="42" step="1">
 					</div>
 				</div>
-				<button id="hotspotNewAction" type="button" class="button">
-					<i class="icon-plus"></i> 
-					<span i18n-key="i.HotspotNewAction">Add action</span> 
-				</button>
+				<div class="new_hotspot_settings_field">
+					<label i18n-key="i.HotspotRotation">Rotation angle (°):</label>
+					<input type="number" id="hotspotRotation" min="0" max="360" value="0" step="1">
+				</div>
+				<div class="new_hotspot_settings_field new_hotspot_settings_field_last">
+					<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
+					<button id="hotspotNewAction" type="button" class="button">
+						<i class="icon-plus"></i> 
+						<span i18n-key="i.HotspotNewAction">Add action</span> 
+					</button>
+					<div class="hotspotActionWrapper hotspotActionWrapperTemplate" style='display:none'>
+						<div class="delete_action"></div>
+						<div class="hotspot_settings_element_wrapper">
+							<label i18n-key="i.HotspotActionType">Action:</label>
+							<select class="hotspotActionType">
+								<option value="none" i18n-key="i.HotspotActionTypeNone">Undefined</option>
+								<option value="goToScreen" i18n-key="i.HotspotActionTypeGoToScreen">Go to screen</option>
+								<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
+								<option value="changeScreenBackground" i18n-key="i.HotspotActionTypeChangeScreenImage">Change screen background</option>
+								<option value="removeElement" i18n-key="i.HotspotActionTypeRemoveElement">Remove hotspot or zone</option>
+								<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
+							</select>
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsGoToScreen" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsScreen">Screen:</label>
+							<select></select>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="elSettingsButtonsWrapper">
 				<button id="hotspotSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>

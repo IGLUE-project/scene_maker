@@ -314,24 +314,45 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			$("#hotspotRotation").val(0);
 		}
 		
-		//Screen
-		$("#hotspotScreen").parent().hide();
-		var $hotspotScreenSelect = $("#hotspotScreen");
-		$hotspotScreenSelect.empty();
-		$hotspotScreenSelect.append($('<option>', { value: "none", text: ("None") }))
-		$('article[type="flashcard"]').each(function(){
-			var screenId = $(this).attr('id');
-			var screenNumber = $(this).attr('slidenumber');
-			$hotspotScreenSelect.append($('<option>', { value: screenId, text: ("Screen " + screenNumber) }))
+		//Actions
+
+		//Remove prior actions
+		$("div.hotspotActionWrapper:not(.hotspotActionWrapperTemplate)").remove();
+
+		//Fill action template with current screens
+		var currentOptionsScreens = [];
+		$('article[type="flashcard"]').each(function() {
+		  var $screen = $(this);
+		  currentOptionsScreens.push({
+		    value: $screen.attr('id'),
+		    text: ("Screen " + $screen.attr('slidenumber'))
+		  });
 		});
 
+		$("div.hotspotActionParamsGoToScreen select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$.each(currentOptionsScreens, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+
+		//Fill properties with hotspotSettings
 		if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
-			if(typeof hotspotSettings.actions[0].actionType === "string"){
-				$("#hotspotAction").val(hotspotSettings.actions[0].actionType).trigger('change');
-				if((typeof hotspotSettings.actions[0].actionParams !== "undefined")&&(typeof hotspotSettings.actions[0].actionParams.screen === "string")){
-					$("#hotspotScreen").val(hotspotSettings.actions[0].actionParams.screen);
+			for(var i=0; i<hotspotSettings.actions.length; i++){
+				var hotspotAction = hotspotSettings.actions[i];
+				if((typeof hotspotAction.actionType === "string")&&(hotspotAction.actionType !== "none")){
+					var $actionWrapper = onHotspotNewAction();
+					$actionWrapper.find("select.hotspotActionType").val(hotspotAction.actionType).trigger('change');
+					if(typeof hotspotAction.actionParams !== "undefined"){
+						if(typeof hotspotAction.actionParams.screen === "string"){
+							var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsGoToScreen select");
+							$actionParamsScreenSelect.val(hotspotAction.actionParams.screen);
+						}
+					}
 				}
-			}
+			}	
 		}
 	};
 
@@ -382,12 +403,27 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		}
 	};
 
+	var onHotspotNewAction = function(){
+		var $actionWrapperDiv = $(".hotspotActionWrapperTemplate").clone().removeClass("hotspotActionWrapperTemplate").show();
+		$("#hotspotNewAction").closest(".new_hotspot_settings_field").append($actionWrapperDiv);
+		return $actionWrapperDiv;
+	};
+
+	var onHotspotDeleteAction = function(event){
+		$(event.target).closest(".hotspotActionWrapper").remove();
+	};
+
 	var onHotspotActionChange = function(event){
 		var option = event.target.value;
+		var $actionWrapperDiv = $(event.target).closest("div.hotspotActionWrapper");
+		var $selectScreenWrapper = $actionWrapperDiv.find("div.hotspotActionParamsGoToScreen")
+		var $selectScreen = $selectScreenWrapper.find("select")
+		
 		if(option === "goToScreen"){
-			$("#hotspotScreen").parent().show();
+			$selectScreen.prop("selectedIndex", 0);
+			$selectScreenWrapper.show();
 		} else {
-			$("#hotspotScreen").parent().hide();
+			$selectScreenWrapper.hide();
 		}
 		// switch(event.target.value){
 		// 	case "goToScreen":
@@ -451,13 +487,22 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 		//Hotspot actions
 		var actions = [];
-		var actionType = $("#hotspotAction").val();
-		if(actionType !== "none"){
-			actions[0] = {actionType: $("#hotspotAction").val()};
-			if($("#hotspotScreen").is(":visible")){
-				actions[0].actionParams = {screen: $("#hotspotScreen").val()};
+
+		$("div.hotspotActionWrapper").each(function(index, element) {
+			var $actionWrapper = $(this);
+			var actionType = $actionWrapper.find("select.hotspotActionType").val();
+			if(actionType !== "none"){
+				var action = {actionType: actionType, actionParams: {}};
+				var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsGoToScreen select");
+				if($actionParamsScreenSelect.is(":visible")){
+					action.actionParams["screen"] = $actionParamsScreenSelect.val();
+				}
+				if (Object.keys(action.actionParams).length === 0) {
+					delete action.actionParams;
+				}
+				actions.push(action);
 			}
-		}
+		});
 
 		if(actions.length > 0){
 			hotspotSettings.actions = actions;
@@ -765,6 +810,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		showHotspotSettings				: showHotspotSettings,
 		setCurrentHotspot				: setCurrentHotspot,
 		deleteCurrentHotspot			: deleteCurrentHotspot,
+		onHotspotNewAction				: onHotspotNewAction,
+		onHotspotDeleteAction			: onHotspotDeleteAction,
 		onHotspotActionChange			: onHotspotActionChange,
 		onHotspotImageSourceChange		: onHotspotImageSourceChange,
 		onClickHotspotImageGallery		: onClickHotspotImageGallery,
