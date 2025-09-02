@@ -56,7 +56,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			if (Array.isArray(screenJSON.hotspots)) {
 				$(screenJSON.hotspots).each(function(index,hotspot){
 					 V.Utils.registerId(hotspot.id);
-					_drawHotspot(screenJSON.id,hotspot.id,hotspot.x,hotspot.y);
+					_drawHotspot(screenJSON.id,hotspot.id,hotspot.x,hotspot.y,hotspot.width,hotspot.height,hotspot.image);
 					if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
 						screenData[screenJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
 					}
@@ -169,12 +169,17 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		_enableEditingMode("NONE");
 	};
 
-	var _drawHotspot = function(screenId,hotspotId,x,y,imgURL){
+	var _drawHotspot = function(screenId,hotspotId,x,y,width,height,imgURL){
+		if(typeof width !== "number"){
+			width = 42;
+		}
+		if(typeof height !== "number"){
+			height = 42;
+		}
 		if(typeof imgURL !== "string"){
 			imgURL = defaultHotspotImg;
 		}
 		var screen = $("#"+screenId);
-		var hotspotSize = 42;
 		var $hotspot = $('<img>', {
 			src: imgURL,
 			class: 'hotspot',
@@ -183,8 +188,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				position: 'absolute',
 				left: x,
 				top: y,
-				width: (hotspotSize + "px"),
-				height: (hotspotSize + "px")
+				width: (width + "px"),
+				height: (height + "px")
 			}
 		}).appendTo(screen);
 		_validateHotspotPosition($hotspot);
@@ -267,17 +272,29 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$("#hotspotId").val(hotspotId);
 
 		//Image
-		var hotspotImage = $hotspot.attr("src");
+		var hotspotImageSource = $hotspot.attr("src");
 		//Check if image belongs to gallery
-		var imgGallery = $("#hotspotImageGallery").find("img[src='" + hotspotImage + "']")[0];
+		var imgGallery = $("#hotspotImageGallery").find("img[src='" + hotspotImageSource + "']")[0];
 		if(typeof imgGallery === "undefined"){
 			//Image does not belong to the gallery
-			$("#hotspotImageURL").val(hotspotImage);
+			$("#hotspotImageURL").val(hotspotImageSource);
 			$("#hotspotImageSource").val("url").trigger("change");
 		} else {
 			$(imgGallery).addClass("selected");
 			$("#hotspotImageSource").val("gallery").trigger("change");
 		}
+
+		//Size
+		if(typeof screenData[screenId].hotspots[hotspotId].lockAspectRatio === "boolean"){
+			$("#hotspotLockAspectRatio").prop("checked", screenData[screenId].hotspots[hotspotId].lockAspectRatio);
+		}
+		
+		var hotspotWidth = $hotspot.width();
+		var hotspotHeight = $hotspot.height();
+		var hotspotAspectRatio = Math.round((hotspotWidth/hotspotHeight) * 100) / 100;
+		$("#hotspotSizeWidth").val(hotspotWidth);
+		$("#hotspotSizeHeight").val(hotspotHeight);
+		$("#hotspotAspectRatio").val(hotspotAspectRatio);
 		
 		//Screen
 		$("#hotspotScreen").parent().hide();
@@ -330,6 +347,23 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$img.addClass("selected");
 	};
 
+
+	var onInputHotspotSizeWidth = function(event){
+		var lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
+		if(lockAspectRatio){
+			var aspectRatio = parseFloat($("#hotspotAspectRatio").val());
+			$("#hotspotSizeHeight").val($("#hotspotSizeWidth").val()/aspectRatio);
+		}
+	};
+
+	var onInputHotspotSizeHeight = function(event){
+		var lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
+		if(lockAspectRatio){
+			var aspectRatio = parseFloat($("#hotspotAspectRatio").val());
+			$("#hotspotSizeWidth").val($("#hotspotSizeHeight").val()*aspectRatio);
+		}
+	};
+
 	var onHotspotActionChange = function(event){
 		var option = event.target.value;
 		if(option === "goToScreen"){
@@ -380,6 +414,17 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$hotspot.attr("src", hotspotImg);
 
 		//Hotspot size
+
+		//Size
+		hotspotSettings.lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
+		var hotspotWidth = $("#hotspotSizeWidth").val();
+		var hotspotHeight = $("#hotspotSizeHeight").val();
+		if(hotspotWidth > 0){
+			$hotspot.width(hotspotWidth);
+		}
+		if(hotspotHeight > 0){
+			$hotspot.height(hotspotHeight);
+		}
 
 		//Hotspot rotation
 
@@ -491,7 +536,10 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				  	"id": hotspotId,
 				  	"x": hotspotPosition.left,
 				  	"y": hotspotPosition.top,
-				  	"image": hotspotDOM.attr("src")
+				  	"image": hotspotDOM.attr("src"),
+				  	"width": hotspotDOM.width(),
+				  	"height": hotspotDOM.height(),
+				  	"lockAspectRatio": hotspotSettings.lockAspectRatio
 				  };
 
 				  if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
@@ -699,6 +747,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		onHotspotImageSourceChange		: onHotspotImageSourceChange,
 		onClickHotspotImageGallery		: onClickHotspotImageGallery,
 		checkHotspotImageURLPreview		: checkHotspotImageURLPreview,
+		onInputHotspotSizeWidth			: onInputHotspotSizeWidth,
+		onInputHotspotSizeHeight		: onInputHotspotSizeHeight,
 		onHotspotSettingsDone			: onHotspotSettingsDone,
 		saveScreen						: saveScreen,
 		getThumbnailURL 				: getThumbnailURL,

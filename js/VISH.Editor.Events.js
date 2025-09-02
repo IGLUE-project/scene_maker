@@ -167,6 +167,8 @@ VISH.Editor.Events = (function(V,$,undefined){
 			$(document).on("change", "#hotspotImageSource", V.Editor.Screen.onHotspotImageSourceChange);
 			$(document).on("click", "#hotspotImageGallery img", V.Editor.Screen.onClickHotspotImageGallery);
 			$(document).on("blur", "#hotspotImageURL", V.Editor.Screen.checkHotspotImageURLPreview);
+			$(document).on("input", "#hotspotSizeWidth", V.Editor.Screen.onInputHotspotSizeWidth);
+			$(document).on("input", "#hotspotSizeHeight", V.Editor.Screen.onInputHotspotSizeHeight);
 			$(document).on("change", "#hotspotAction", V.Editor.Screen.onHotspotActionChange);
 			$(document).on("click", "#hotspotSettingsDone", V.Editor.Screen.onHotspotSettingsDone);
 		
