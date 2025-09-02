@@ -2548,34 +2548,6 @@ background-color: #326999;
 	margin-bottom: -24px;
 }
 
-.publishNotificationIcon {
-	width: 50px !important;
-	height: 42px !important;
-}
-
-#tab_audio_soundcloud{
-	height: 29px !important;
-}
-
-#efile_preview_button {
-	float: left !important;
-	display: none;
-	margin-top: 1.5%;
-}
-
-#efile_input {
-	display: inline-block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 16px;
-	background: 5px 50% no-repeat;
-	margin-top: 2%;
-	margin-left: 2%;
-	margin-right: 2%;
-	position: relative;
-	float: left;
-	color: #656565;
-}
-
 
 /* Element Settings */
 
@@ -2633,8 +2605,62 @@ div.disableSettingsField {
 	color: #aaa;
 }
 
-#exportQuizToIMSQTI, #exportQuizToMoodleXML {
-	cursor: pointer;
+/* Hotspot Settings */
+
+div.new_hotspot_settings_field {
+	margin-left: 10px;
+	margin-top: 25px;
+}
+
+div > div.new_hotspot_settings_field:not(.new_hotspot_settings_field_last) {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+}
+
+div.hotspot_settings_element_wrapper {
+	margin-bottom: 5px;
+	display: flex;
+  	align-items: center;
+  	gap: 5px;
+}
+
+div.hotspot_settings_element_wrapper label {
+	white-space: nowrap;
+}
+
+div.hotspot_settings_element_wrapper input[type="text"] {
+	flex: 1;                 
+  	min-width: 0;
+  	padding: 4px 8px;
+}
+
+#hotspotId{
+	background: #ddd;
+	pointer-events: none;
+}
+
+#hotspotImageGallery {
+	display: flex;
+	width: 100%;
+	gap: 5px;
+}
+
+#hotspotImageGallery img {
+  cursor: pointer;
+}
+
+#hotspotImageGallery img, #hotspotImageURLPreviewWrapper img {
+  flex:1;
+  min-width: 0;
+  max-width: 80px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border: 1px solid white;
+}
+
+#hotspotImageGallery img.selected {
+  border: 1px solid black;
 }
 
 
@@ -2781,7 +2807,6 @@ body.SceneMakerBody #page-fullscreen {
   margin-left: 0;
   margin-bottom: -16px;
 }
-
 
 /* Change the shadow of the fancyboxes*/
 #fancybox-outer {

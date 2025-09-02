@@ -6,6 +6,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	var screenData;
 	var currentHotspot;
 	var currentSubslide;
+	var defaultHotspotImg;
 
 	var init = function(){
 		screenData = {};
@@ -27,6 +28,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			"onClosed"  : function(data){
 			}
 		});
+
+		defaultHotspotImg = V.ImagesPath + "icons/hotspot.png";
 	};
 
 	/*
@@ -168,7 +171,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var _drawHotspot = function(screenId,hotspotId,x,y,imgURL){
 		if(typeof imgURL !== "string"){
-			imgURL = '/images/icons/hotspot.png';
+			imgURL = defaultHotspotImg;
 		}
 		var screen = $("#"+screenId);
 		var hotspotSize = 42;
@@ -256,13 +259,28 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var _onStartHotspotSettingsFancybox = function(){
 		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
-		var hotspotId = $(currentHotspot).attr("hotspotid");
+		var $hotspot = $(currentHotspot);
+		var hotspotId = $hotspot.attr("hotspotid");
 		var hotspotSettings = screenData[screenId].hotspots[hotspotId];
 
-		$("#hotspotScreen").parent().hide();
-
+		//ID
 		$("#hotspotId").val(hotspotId);
 
+		//Image
+		var hotspotImage = $hotspot.attr("src");
+		//Check if image belongs to gallery
+		var imgGallery = $("#hotspotImageGallery").find("img[src='" + hotspotImage + "']")[0];
+		if(typeof imgGallery === "undefined"){
+			//Image does not belong to the gallery
+			$("#hotspotImageURL").val(hotspotImage);
+			$("#hotspotImageSource").val("url").trigger("change");
+		} else {
+			$(imgGallery).addClass("selected");
+			$("#hotspotImageSource").val("gallery").trigger("change");
+		}
+		
+		//Screen
+		$("#hotspotScreen").parent().hide();
 		var $hotspotScreenSelect = $("#hotspotScreen");
 		$hotspotScreenSelect.empty();
 		$hotspotScreenSelect.append($('<option>', { value: "none", text: ("None") }))
@@ -280,6 +298,36 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				}
 			}
 		}
+	};
+
+	var onHotspotImageSourceChange = function(event){
+		var option = event.target.value;
+		if(option === "gallery"){
+			$("#hotspotImageGallery").show();
+			$("#hotspotImageURLWrapper").hide();
+			$("#hotspotImageURL").val("");
+			checkHotspotImageURLPreview();
+		} else if(option === "url"){
+			$("#hotspotImageGallery").hide();
+			$("#hotspotImageURLWrapper").show();
+			checkHotspotImageURLPreview();
+		}
+	};
+
+	var checkHotspotImageURLPreview = function(){
+		var $hotspotImageURLPreviewWrapper = $("#hotspotImageURLPreviewWrapper");
+		var imgUrl = $("#hotspotImageURL").val();
+		if((typeof imgUrl === "string")&&(imgUrl.trim() !== "")){
+			$hotspotImageURLPreviewWrapper.html("<img src='" + imgUrl + "'>").show();
+		} else {
+			$hotspotImageURLPreviewWrapper.html("").hide();
+		}
+	};
+
+	var onClickHotspotImageGallery = function(event){
+		var $img = $(event.target);
+		$img.siblings("img").removeClass("selected");
+		$img.addClass("selected");
 	};
 
 	var onHotspotActionChange = function(event){
@@ -307,9 +355,35 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var onHotspotSettingsDone = function(event){
 		var screenId = $(V.Slides.getCurrentSlide()).attr("id");
-		var hotspotId = $(currentHotspot).attr("hotspotid");
+		var $hotspot = $(currentHotspot);
+		var hotspotId = $hotspot.attr("hotspotid");
 		var hotspotSettings = {};
 
+		//Hotspot image
+		var hotspotImg;
+		switch($("#hotspotImageSource").val()){
+			case "gallery":
+				var $selectedGalleryImg = $("#hotspotImageGallery img.selected");
+				if ($selectedGalleryImg.length) {
+					hotspotImg = $selectedGalleryImg.attr("src");
+				}
+				break;
+			case "url":
+				hotspotImg = $("#hotspotImageURL").val();
+				break;
+			default:
+				break;
+		}
+		if(typeof hotspotImg !== "string"){
+			hotspotImg = defaultHotspotImg;
+		}
+		$hotspot.attr("src", hotspotImg);
+
+		//Hotspot size
+
+		//Hotspot rotation
+
+		//Hotspot actions
 		var actions = [];
 		var actionType = $("#hotspotAction").val();
 		if(actionType !== "none"){
@@ -392,7 +466,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	////////////////////
 
 	/*
-	 * Used by VISH.Editor module to save the flashcard in the JSON
+	 * Used by VISH.Editor module to save the screen in the JSON
 	 */
 	var saveScreen = function(screenDOM){
 		var screen = {};
@@ -417,7 +491,9 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				  	"id": hotspotId,
 				  	"x": hotspotPosition.left,
 				  	"y": hotspotPosition.top,
+				  	"image": hotspotDOM.attr("src")
 				  };
+
 				  if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
 				  	hotspotJSON.actions = hotspotSettings.actions;
 				  }
@@ -619,13 +695,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		showHotspotSettings				: showHotspotSettings,
 		setCurrentHotspot				: setCurrentHotspot,
 		deleteCurrentHotspot			: deleteCurrentHotspot,
-		onHotspotSettingsDone			: onHotspotSettingsDone,
 		onHotspotActionChange			: onHotspotActionChange,
+		onHotspotImageSourceChange		: onHotspotImageSourceChange,
+		onClickHotspotImageGallery		: onClickHotspotImageGallery,
+		checkHotspotImageURLPreview		: checkHotspotImageURLPreview,
+		onHotspotSettingsDone			: onHotspotSettingsDone,
 		saveScreen						: saveScreen,
-
 		getThumbnailURL 				: getThumbnailURL,
 		getDefaultThumbnailURL			: getDefaultThumbnailURL,
-		
 		onEnterSlideset					: onEnterSlideset,
 		onLeaveSlideset					: onLeaveSlideset,
 		openSlideset					: openSlideset,

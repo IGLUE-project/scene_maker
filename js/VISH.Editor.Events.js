@@ -163,9 +163,14 @@ VISH.Editor.Events = (function(V,$,undefined){
 				}
 			});
 
-			//Element Settings
-			$(document).on("click", "#hotspotSettingsDone", V.Editor.Screen.onHotspotSettingsDone);
+			//Hotspot Settings
+			$(document).on("change", "#hotspotImageSource", V.Editor.Screen.onHotspotImageSourceChange);
+			$(document).on("click", "#hotspotImageGallery img", V.Editor.Screen.onClickHotspotImageGallery);
+			$(document).on("blur", "#hotspotImageURL", V.Editor.Screen.checkHotspotImageURLPreview);
 			$(document).on("change", "#hotspotAction", V.Editor.Screen.onHotspotActionChange);
+			$(document).on("click", "#hotspotSettingsDone", V.Editor.Screen.onHotspotSettingsDone);
+		
+			//Element
 			$(document).on("click", "#objectSettingsDone", V.Editor.Object.onObjectSettingsDone);
 			
 			//onbeforeunload event
