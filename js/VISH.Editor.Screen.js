@@ -56,7 +56,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			if (Array.isArray(screenJSON.hotspots)) {
 				$(screenJSON.hotspots).each(function(index,hotspot){
 					 V.Utils.registerId(hotspot.id);
-					_drawHotspot(screenJSON.id,hotspot.id,hotspot.x,hotspot.y,hotspot.width,hotspot.height,hotspot.image);
+					_drawHotspot(screenJSON.id,hotspot.id,hotspot.x,hotspot.y,hotspot.image,hotspot.lockAspectRatio,hotspot.width,hotspot.height,hotspot.rotationAngle);
 					if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
 						screenData[screenJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
 					}
@@ -169,16 +169,23 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		_enableEditingMode("NONE");
 	};
 
-	var _drawHotspot = function(screenId,hotspotId,x,y,width,height,imgURL){
+	var _drawHotspot = function(screenId,hotspotId,x,y,imgURL,lockAspectRatio,width,height,rotationAngle){
+		if(typeof imgURL !== "string"){
+			imgURL = defaultHotspotImg;
+		}
+		if(typeof lockAspectRatio !== "boolean"){
+			lockAspectRatio = true;
+		}
 		if(typeof width !== "number"){
 			width = 42;
 		}
 		if(typeof height !== "number"){
 			height = 42;
 		}
-		if(typeof imgURL !== "string"){
-			imgURL = defaultHotspotImg;
+		if (typeof rotationAngle !== "number" || isNaN(rotationAngle) || rotationAngle < 0 || rotationAngle > 360) {
+			rotationAngle = 0;
 		}
+
 		var screen = $("#"+screenId);
 		var $hotspot = $('<img>', {
 			src: imgURL,
@@ -189,7 +196,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				left: x,
 				top: y,
 				width: (width + "px"),
-				height: (height + "px")
+				height: (height + "px"),
+				transform: "rotate(" + rotationAngle + "deg)"
 			}
 		}).appendTo(screen);
 		_validateHotspotPosition($hotspot);
@@ -272,6 +280,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$("#hotspotId").val(hotspotId);
 
 		//Image
+		//Reset gallery
+		$("#hotspotImageGallery img").removeClass("selected");
 		var hotspotImageSource = $hotspot.attr("src");
 		//Check if image belongs to gallery
 		var imgGallery = $("#hotspotImageGallery").find("img[src='" + hotspotImageSource + "']")[0];
@@ -295,6 +305,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$("#hotspotSizeWidth").val(hotspotWidth);
 		$("#hotspotSizeHeight").val(hotspotHeight);
 		$("#hotspotAspectRatio").val(hotspotAspectRatio);
+		
+		//Rotation
+		var rotationAngle = $hotspot.attr("rotationAngle");
+		if (!isNaN(rotationAngle) && rotationAngle >= 0 && rotationAngle <= 360) {
+			$("#hotspotRotation").val(rotationAngle);
+		} else {
+			$("#hotspotRotation").val(0);
+		}
 		
 		//Screen
 		$("#hotspotScreen").parent().hide();
@@ -414,8 +432,6 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$hotspot.attr("src", hotspotImg);
 
 		//Hotspot size
-
-		//Size
 		hotspotSettings.lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
 		var hotspotWidth = $("#hotspotSizeWidth").val();
 		var hotspotHeight = $("#hotspotSizeHeight").val();
@@ -427,6 +443,11 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		}
 
 		//Hotspot rotation
+		var rotationAngle = parseFloat($("#hotspotRotation").val());
+		if (!isNaN(rotationAngle) && rotationAngle >= 0 && rotationAngle <= 360) {
+		  	$hotspot.attr("rotationAngle",rotationAngle);
+			$hotspot.css("transform", "rotate(" + rotationAngle + "deg)");
+		}
 
 		//Hotspot actions
 		var actions = [];
@@ -539,7 +560,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				  	"image": hotspotDOM.attr("src"),
 				  	"width": hotspotDOM.width(),
 				  	"height": hotspotDOM.height(),
-				  	"lockAspectRatio": hotspotSettings.lockAspectRatio
+				  	"lockAspectRatio": hotspotSettings.lockAspectRatio,
+				  	"rotationAngle": hotspotDOM.attr("rotationAngle")
 				  };
 
 				  if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
