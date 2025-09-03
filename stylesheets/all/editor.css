@@ -2617,6 +2617,10 @@ div.new_hotspot_settings_field {
 	margin-top: 10px;
 }
 
+div.new_hotspot_settings_field label, div.new_hotspot_settings_field p, div.new_hotspot_settings_field input, div.new_hotspot_settings_field select {
+	font-size: 14px;
+}
+
 div.new_hotspot_settings_field.new_hotspot_settings_field_first {
 	margin-top: 5px;
 }

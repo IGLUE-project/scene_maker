@@ -53,18 +53,14 @@ VISH.Editor.Preview = (function(V,$,undefined){
 			slideNumberToPreview =  options["slideNumberToPreview"];
 		}
 
-		if(typeof V.PreviewPresentationPath != "undefined"){
-			$("#preview_action").attr("href", V.PreviewPresentationPath + "#" + slideNumberToPreview);
+		if(typeof V.PreviewPath != "undefined"){
+			$("#preview_action").attr("href", V.PreviewPath + "#" + slideNumberToPreview);
 		}
 
 		if((!options)||(!options["presentationJSON"])||(typeof options["presentationJSON"] != "object")){
 			presentationPreview = V.Editor.savePresentation();
 		} else {
 			presentationPreview = options["presentationJSON"];
-		}
-
-		if((options)&&(options["insertMode"])&&(typeof options["insertMode"] == "boolean")){
-			presentationPreview.insertMode = options["insertMode"];
 		}
 	};
 

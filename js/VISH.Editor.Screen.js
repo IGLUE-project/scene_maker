@@ -10,6 +10,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var init = function(){
 		screenData = {};
+		defaultHotspotImg = V.ImagesPath + "icons/hotspot.png";
 
 		//Hotspot Settings
 		_hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
@@ -29,7 +30,28 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			}
 		});
 
-		defaultHotspotImg = V.ImagesPath + "icons/hotspot.png";
+		//Fill action template with current puzzles
+		var nPuzzles = V.Editor.getOptions().nPuzzles;
+
+		if((typeof nPuzzles === "number")&&(nPuzzles > 0)){
+			var currentOptionsPuzzles = [];
+			for(var inp = 0; inp < nPuzzles; inp++){
+				var nPuzzle = (inp+1);
+				currentOptionsPuzzles.push({
+					value: nPuzzle,
+					text: (V.I18n.getTrans("i.PuzzleOption", {number: nPuzzle}))
+				});
+			}
+		}
+
+		$("div.hotspotActionWrapperTemplate div.hotspotActionParamsPuzzle select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: V.I18n.getTrans("i.Unspecified") }))
+			$.each(currentOptionsPuzzles, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
 	};
 
 	/*
@@ -193,6 +215,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			src: imgURL,
 			class: 'hotspot',
 			id: hotspotId,
+			rotationAngle: rotationAngle,
 			css: {
 				position: 'absolute',
 				left: x,
@@ -328,14 +351,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		  var $screen = $(this);
 		  currentOptionsScreens.push({
 		    value: $screen.attr('id'),
-		    text: ("Screen " + $screen.attr('slidenumber'))
+		    text: (V.I18n.getTrans("i.ScreenOption", {number: $screen.attr('slidenumber')}))
 		  });
 		});
 
 		$("div.hotspotActionParamsScreen select").each(function() {
 			var $select = $(this);
 			$select.empty();
-			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$select.append($('<option>', { value: "none", text: V.I18n.getTrans("i.Unspecified") }))
 			$.each(currentOptionsScreens, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
@@ -347,14 +370,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		  var $view = $(this);
 		  currentOptionsViews.push({
 		    value: $view.attr('id'),
-		    text: ("View " + $view.attr('slidenumber'))
+		    text: (V.I18n.getTrans("i.ViewOption", {number: $view.attr('slidenumber')}))
 		  });
 		});
 
 		$("div.hotspotActionParamsView select").each(function() {
 			var $select = $(this);
 			$select.empty();
-			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$select.append($('<option>', { value: "none", text: V.I18n.getTrans("i.Unspecified") }))
 			$.each(currentOptionsViews, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
@@ -374,7 +397,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		$("div.hotspotActionParamsElementId select").each(function() {
 			var $select = $(this);
 			$select.empty();
-			$select.append($('<option>', { value: "none", text: ("Undefined") }))
+			$select.append($('<option>', { value: "none", text: V.I18n.getTrans("i.Unspecified") }))
 			$.each(currentOptionsElementIds, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
@@ -403,6 +426,10 @@ VISH.Editor.Screen = (function(V,$,undefined){
 						if(typeof hotspotAction.actionParams.elementId === "string"){
 							var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
 							$actionParamsElementIdSelect.val(hotspotAction.actionParams.elementId);
+						}
+						if(typeof hotspotAction.actionParams.puzzle === "string"){
+							var $actionParamsPuzzleSelect = $actionWrapper.find("div.hotspotActionParamsPuzzle select");
+							$actionParamsPuzzleSelect.val(hotspotAction.actionParams.puzzle);
 						}
 					}
 				}
@@ -478,6 +505,8 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		var $inputURL = $inputURLWrapper.find("input");
 		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
 		var $selectElementId = $selectElementIdWrapper.find("select");
+		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.hotspotActionParamsPuzzle");
+		var $selectPuzzle = $selectPuzzleWrapper.find("select");
 		
 		if((option === "goToScreen")||(option === "changeScreenImage")){
 			$selectScreen.prop("selectedIndex", 0);
@@ -503,20 +532,12 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		} else {
 			$selectElementIdWrapper.hide();
 		}
-		// switch(event.target.value){
-		// 	case "goToScreen":
-				
-		// 		break;
-		// 	case "changeScreenBackground":
-		// 		break;
-		// 	case "removeElement":
-		// 		break;
-		// 	case "solvePuzzle":
-		// 		break;
-		// 	case "none":
-		// 	default:
-		// 		break;
-		// }
+		if(option === "solvePuzzle"){
+			$selectPuzzle.prop("selectedIndex", 0);
+			$selectPuzzleWrapper.show();
+		} else {
+			$selectPuzzleWrapper.hide();
+		}
 	};
 
 	var onHotspotSettingsDone = function(event){
@@ -586,6 +607,10 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
 				if($actionParamsElementIdSelect.is(":visible")){
 					action.actionParams.elementId = $actionParamsElementIdSelect.val();
+				}
+				var $actionParamsPuzzleSelect = $actionWrapper.find("div.hotspotActionParamsPuzzle select");
+				if($actionParamsPuzzleSelect.is(":visible")){
+					action.actionParams.puzzle = $actionParamsPuzzleSelect.val();
 				}
 				if (Object.keys(action.actionParams).length === 0) {
 					delete action.actionParams;
