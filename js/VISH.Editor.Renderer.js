@@ -15,7 +15,7 @@ VISH.Editor.Renderer = (function(V,$,undefined){
 
 		var slides = presentation.slides;
 		for(var i=0;i<slides.length;i++){
-			var slideNumber = V.Slides.getSlidesQuantity()+1;
+			var slideNumber = i+1;
 			var type = slides[i].type;
 			
 			if(type===V.Constant.STANDARD){
@@ -48,8 +48,7 @@ VISH.Editor.Renderer = (function(V,$,undefined){
 
 		if(!renderOptions.subslide){
 			V.Editor.Slides.appendSlide(scaffold);
-			V.Slides.updateSlides();
-			V.Slides.lastSlide();  //important to get the browser to draw everything
+			V.Slides.goToLastScreen();  //important to get the browser to draw everything
 		} else {
 			//Render subslide
 			V.Editor.Slides.appendSubslide(renderOptions.slidesetDOM,scaffold);
@@ -122,8 +121,7 @@ VISH.Editor.Renderer = (function(V,$,undefined){
 
 		if(scaffold){
 			V.Editor.Slides.appendSlide(scaffold);
-			V.Slides.updateSlides();
-			V.Slides.lastSlide();  //important to get the browser to draw everything
+			V.Slides.goToLastScreen();  //important to get the browser to draw everything
 
 			//Get slideset in DOM
 			var slidesetId = $(scaffold).attr("id");

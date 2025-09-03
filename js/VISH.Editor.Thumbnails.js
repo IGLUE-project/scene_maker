@@ -34,7 +34,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 			var defaultURL = getDefaultThumbnailURL(s);
 			if(srcURL){
 				slideElements += 1;
-				imagesArray.push($("<img id='slideThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' action='goToSlide' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
+				imagesArray.push($("<img id='slideThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' action='goToScreen' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
 				imagesArrayTitles.push(slideElements);
 			}
     	});
@@ -50,7 +50,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 	 
 	var _onImageError = function(image){
 		var slideNumber = $(image).attr("slidenumber");
-		var slide = V.Slides.getSlideWithNumber(slideNumber);
+		var slide = V.Slides.getScreenWithNumber(slideNumber);
 		var isSlideset = V.Slideset.isSlideset(slide);
 		if(isSlideset){
 			V.Editor.Screen.onThumbnailLoadFail(slide);
@@ -88,7 +88,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 	var _afterCreateSlidesScrollbar = function(){
 		//Add sortable
 		$("#" + thumbnailsDivId).sortable({
-			items: 'div.wrapper_slidethumbnail:has(img[action="goToSlide"])',
+			items: 'div.wrapper_slidethumbnail:has(img[action="goToScreen"])',
 			change: function(event, ui) {
 				//Do nothing
 			},
@@ -136,8 +136,8 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 	var _onClickSlideElement = function(event){
 		switch($(event.target).attr("action")){
-			case "goToSlide":
-				V.Slides.goToSlide($(event.target).attr("slideNumber"));
+			case "goToScreen":
+				V.Slides.goToScreenWithNumber($(event.target).attr("slidenumber"));
 				break;
 			default:
 			  return;
@@ -155,7 +155,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 		var advance = ((lastSelectedSlideThumbnail===undefined)||(no > lastSelectedSlideThumbnail));
 		lastSelectedSlideThumbnail = no;
-		var slide = V.Slides.getSlideWithNumber(no);
+		var slide = V.Slides.getScreenWithNumber(no);
 		if(!isThumbnailVisible(slide)){
 			if(advance){
 				moveThumbnailsToSlide(Math.max(no-5,1));
@@ -310,7 +310,7 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 
 		var advance = ((lastSelectedSubslideThumbnail===undefined)||(no > lastSelectedSubslideThumbnail));
 		lastSelectedSubslideThumbnail = no;
-		var subslide = V.Slides.getSubslideWithNumber(V.Slides.getCurrentSlide(),no);
+		var subslide = V.Slides.getViewWithNumber(V.Slides.getCurrentScreen(),no);
 		if(!isThumbnailVisible(subslide)){
 			if(advance){
 				moveThumbnailsToSubslide(Math.max(no-7,1));

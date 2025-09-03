@@ -66,14 +66,12 @@ VISH.Viewer = (function(V,$,undefined){
 
 	var _initAferRenderPresentation = function(options,presentation){
 		V.Video.HTML5.setMultimediaEvents();
-		V.Slides.updateCurrentSlideFromHash();
-		//we have to update slides AFTER load theme and before anything
-		//This way we prevent undesired behaviours 
-		V.Slides.updateSlides();
+		V.Slides.updateCurrentScreenId();
+		//V.Slides.updateSlides();
 		V.ViewerAdapter.init(options); //Also init texts
 
-		if(V.Slides.getCurrentSlideNumber()>0){
-			V.Slides.triggerEnterEventById($(V.Slides.getCurrentSlide()).attr("id"));
+		if(V.Slides.getCurrentScreenNumber()>0){
+			V.EventsNotifier.notifyEvent(V.Constant.Event.onEnterScreen,{screenId: V.Slides.getCurrentScreenId()});
 		}
 
 		if(!V.Status.isExternalDomain()){
@@ -102,9 +100,7 @@ VISH.Viewer = (function(V,$,undefined){
 
 		var timeToLoadObjects = 500;
 
-		if(!isSubslide){
-			V.ViewerAdapter.decideIfPageSwitcher();
-		} else {
+		if(isSubslide){
 			timeToLoadObjects = 1000;
 		}
 
@@ -158,20 +154,6 @@ VISH.Viewer = (function(V,$,undefined){
 		}
 	};
 	
-	/**
-	 * function to update the number that indicates what slide is diplayed
-	 * with this format: 1/12 2/12
-	 */
-	var updateSlideCounter = function(){
-		var number_of_slides = V.Slides.getSlides().length;
-		var slide_number = V.Slides.getCurrentSlideNumber();
-		if(number_of_slides===0){
-			slide_number = 0;
-		}
-		$("#slide-counter-input").val(slide_number);
-		$("#slide-counter-span").html("/" + number_of_slides);
-	};
-	
 	var getCurrentPresentation = function(){
 		return current_presentation;
 	};
@@ -179,7 +161,6 @@ VISH.Viewer = (function(V,$,undefined){
 	return {
 		init 						: init, 
 		getOptions					: getOptions,
-		updateSlideCounter			: updateSlideCounter,
 		getCurrentPresentation		: getCurrentPresentation,
 		onSlideEnterViewer			: onSlideEnterViewer,
 		onSlideLeaveViewer			: onSlideLeaveViewer

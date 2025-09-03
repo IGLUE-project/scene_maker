@@ -891,19 +891,10 @@ VISH.Utils = (function(V,undefined){
 
 	/* Hash Management */
 
-	var getSlideNumberFromHash = function(){
+	var getScreenNumberFromHash = function(){
 		try {
-			if(getOptions()["readHashFromParent"]===true){
-				var location = window.parent.location;
-			} else {
-				var location = window.location;
-			}
-
-			if(typeof location == "undefined"){
-				return;
-			}
-
-			var sNumber = Math.max(1,Math.min(V.Slides.getSlidesQuantity(),parseInt(location.hash.split("?")[0].split("#").pop())));
+			var location = window.location;
+			var sNumber = parseInt(location.hash.split("?")[0].split("#").pop());
 			if(isNaN(sNumber)){
 				return undefined;
 			} else {
@@ -1244,7 +1235,7 @@ VISH.Utils = (function(V,undefined){
 		cleanHash					: cleanHash,
 		removeHashFromUrlString		: removeHashFromUrlString,
 		getHashParams				: getHashParams,
-		getSlideNumberFromHash		: getSlideNumberFromHash,
+		getScreenNumberFromHash		: getScreenNumberFromHash,
 		checkAnimationsFinish		: checkAnimationsFinish,
 		fomatTimeForMPlayer			: fomatTimeForMPlayer,
 		delayFunction 				: delayFunction,

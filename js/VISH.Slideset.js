@@ -111,11 +111,21 @@ VISH.Slideset = (function(V,$,undefined){
 						}
 					}
 					break;	
-				case "changeScreenImage":
-					//TODO
+				case "changeScreen":
+					if((action.actionParams)&&(typeof action.actionParams.screen === "string")&&(typeof action.actionParams.screenReplacement === "string")){
+						var screenId = action.actionParams.screen;
+						var screenReplacementId = action.actionParams.screenReplacement;
+						_replaceScreen(screenId,screenReplacementId);
+					}
 					break;
 				case "removeElement":
-					//TODO
+					if((action.actionParams)&&(typeof action.actionParams.elementId === "string")){
+						var elementId = action.actionParams.elementId;
+						var $element = $("#" + elementId);
+						if ($element.length > 0) {
+							$element.remove();
+						}
+					}
 					break;
 				case "solvePuzzle":
 					//TODO
@@ -126,13 +136,53 @@ VISH.Slideset = (function(V,$,undefined){
 		});
 	};
 
+	var _replaceScreen = function(screenId,screenReplacementId){
+
+		console.log("V.Slides.getCurrentSlide()",V.Slides.getCurrentSlide());
+
+		var $screen = $("#" + screenId);
+		var $screenReplacement = $("#" + screenReplacementId);
+		if (($screen.length !== 1)||($screenReplacement.length !== 1)) {
+			return;
+		}
+		console.log("_replaceScreen",screenId,screenReplacementId);
+
+		//Change ids
+		$screenReplacement.attr("id","replaceScreenTmpId");
+		$screen.attr("id",screenReplacementId);
+		$screenReplacement.attr("id",screenId);
+
+		//Change slide numbers
+		var slideNumberScreenReplacement = $screenReplacement.attr("slidenumber");
+		$screenReplacement.attr("slidenumber",$screen.attr("slidenumber"));
+		$screen.attr("slidenumber",slideNumberScreenReplacement);
+
+		//Change subslide ids
+		_changeViewsIds($screenReplacement);
+		_changeViewsIds($screen);
+
+		//Refresh
+		console.log("V.Slides.getCurrentSlide() 2",V.Slides.getCurrentSlide());
+		V.Slides.goToSlide(V.Slides.getCurrentSlide());
+	};
+
+	var _changeViewsIds = function($screen){
+		var screenId = $screen.attr("id");
+		$screen.find("article[type='standard']").each(function(index, view) {
+			var oldId = $(this).attr("id");
+			var suffix = oldId.split('_')[1];
+			var newId = screenId + '_' + suffix;
+			$(this).attr("id",newId);
+		});
+	};
+
 	var onEnterSlideset = function(slideset){
 		//Look for opened subslides
 		var openSubslides = $(slideset).children("article.show_in_smartcard");
 		if(openSubslides.length===1){
 			var openSubslide = openSubslides[0];
 			var subSlideId = $(openSubslide).attr("id");
-			V.Slides.triggerEnterEventById(subSlideId);
+			V.EventsNotifier.notifyEvent(V.Constant.Event.onEnterScreen,{screenId: subSlideId});
 		}
 	};
 
@@ -142,40 +192,12 @@ VISH.Slideset = (function(V,$,undefined){
 		if(openSubslides.length===1){
 			var openSubslide = openSubslides[0];
 			var subSlideId = $(openSubslide).attr("id");
-			V.Slides.triggerLeaveEventById(subSlideId);
+			V.EventsNotifier.notifyEvent(V.Constant.Event.onLeaveScreen,{screenId: subSlideId});
 		}
 	};
 
 	var afterSetupSize = function(increaseW,increaseH){
-/*		var fcArrowIncrease;
-		if(increase >= 1){
-			fcArrowIncrease = V.ViewerAdapter.getPonderatedIncrease(increase,0.1);
-		} else {
-			fcArrowIncrease = V.ViewerAdapter.getPonderatedIncrease(increase,0.8);
-		}
-
-		//Update arrows
-		//Use geometric formulas to properly allocate the arrows after setup size
-		//This way, arrows always point to the same spot
-		for(var fckey in flashcards) {
-			var fc = flashcards[fckey];
-			var arrows = fc.arrows;
-			$(arrows).each(function(index,arrow){
-				var orgX = arrow.x * 8;
-				var newWidth = 50*fcArrowIncrease;
-				var newLeft = increase * orgX + 25 *(increase - fcArrowIncrease);
-
-				var orgY = arrow.y * 6;
-				var newHeight = 40*fcArrowIncrease;
-				var newTop = increase * orgY + 40 * 0.8 * (increase - fcArrowIncrease);
-
-				var arrowDom = $("#"+arrow.id);
-				$(arrowDom).css("left",newLeft+"px");
-				$(arrowDom).width(newWidth+"px");
-				$(arrowDom).css("top",newTop+"px");
-				$(arrowDom).height(newHeight+"px");
-			});
-		}*/
+		//TODO
 	};
 
 	///////////////
@@ -186,58 +208,6 @@ VISH.Slideset = (function(V,$,undefined){
 		var close_slide_id = event.target.id.substring(5); //the id is close3
 		V.Slides.closeSubslide(close_slide_id,true);
 	};
-
-
-
-	/** Methods from V.Flashcard */
-
-/*	var loadEvents = function(){
-		var device = V.Status.getDevice();
-		var isIphoneAndSafari = ((device.iPhone)&&(device.browser.name===V.Constant.SAFARI));
-		if(isIphoneAndSafari){
-			//Fix for Iphone With Safari
-			V.EventsNotifier.registerCallback(V.Constant.Event.Touchable.onSimpleClick,_onSimpleClickEvent);
-		} else {
-			$(document).on("click", '.fc_poi', _onFlashcardPoiClicked);
-		}
-	};
-
-	var _onSimpleClickEvent = function(params){
-		var event = params.event;
-		var target = event.target;
-		if($(target).hasClass("fc_poi")){
-			event.preventDefault();
-			var poiId = target.id;
-			_onFlashcardPoiSelected(poiId);
-		}
-	};
-
-	var unloadEvents = function(){
-		var device = V.Status.getDevice();
-		var isIphoneAndSafari = ((device.iPhone)&&(device.browser.name===V.Constant.SAFARI));
-		if(isIphoneAndSafari){
-			V.EventsNotifier.unRegisterCallback(V.Constant.Event.Touchable.onSimpleClick, _onSimpleClickEvent);
-		} else {
-			$(document).off('click', '.fc_poi');
-		}
-	};*/
-
-	/*
-	 * Events
-	 */
-/*	var _onFlashcardPoiClicked = function(event){
-		_onFlashcardPoiSelected($(event.target).attr("id"));
-	};
-
-	var _onFlashcardPoiSelected = function(poiId){
-		if((typeof pois != "undefined")&&(typeof pois[poiId] != "undefined")){
-			var poiJSON = pois[poiId];
-			if(typeof poiJSON != "undefined"){
-				V.Slides.openSubslide(poiJSON.slide_id,true);
-			}
-		}
-	};*/
-
 
 
 	return {

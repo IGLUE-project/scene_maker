@@ -2,14 +2,9 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 
 	//Viewbar
 	var _showViewbar;
-	//Arrows
-	var _showArrows;
 
 	//Full Screen
 	var _fsButton;
-
-	//Close button
-	var _closeButton;
 
 	//Internals
 	var _initialized = false;
@@ -31,77 +26,18 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 		_lastWidth = -1;
 		_lastHeight = -1;
 
-		_showViewbar = _defaultViewbar();
-		_showArrows = true;
 		_fsButton = V.FullScreen.canFullScreen();
-
-		//Close button false by default
-		_closeButton = false;
-
-		//Mobiles
-		if(V.Status.getDevice().mobile){
-			if(!V.Status.isEmbed()){
-				_closeButton = (options)&&(options["comeBackUrl"]);
-			}
-		}
-
-		//Mobile and Tablets
-		if(!V.Status.getDevice().desktop){
-			_showArrows = false;
-		}
-
-		//Uniq mode
-		if(V.Status.getIsUniqMode()){
-			_showViewbar = false;
-			_showArrows = false;
-		}
-
-
-		//////////////
-		//Restrictions
-		/////////////
-
 		//No fs for preview
 		_fsButton = _fsButton && (!V.Status.isPreview());
-
 
 		////////////////
 		//Init interface
 		///////////////
 
-		if(_showViewbar){
-			V.Viewer.updateSlideCounter();
-			$("#viewbar").show();
-		} else {
-			$("#viewbar").hide();
-		}
-
-		if(!_showArrows){
-			$("#back_arrow").hide();
-			$("#forward_arrow").hide();
-		};
+		$("#viewbar").show();
 
 		if(V.Status.isPreview()){
 			$("div#viewerpreview").show();
-		}
-
-		if(V.Status.isPreviewInsertMode()){
-			$("#selectSlidesBar").show();
-			$("#viewbar").css("bottom",$("#selectSlidesBar").height()+"px");
-			$("#viewbar").css("border-bottom","none");
-			V.SlidesSelector.init();
-		}
-
-		//Watermark
-		if((options)&&(typeof options.watermarkURL == "string")){
-			if((V.Status.isExternalSite())&&(!V.Status.isPreviewInsertMode())){
-				$("#embedWatermark").parent().attr("href",options.watermarkURL);
-				$("#embedWatermark").show();
-			}
-		}
-
-		if(_closeButton){
-			$("button#closeButton").show();
 		}
 
 		//Init fullscreen
@@ -115,67 +51,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 		//Update interface and init texts
 		updateInterface();
 		V.Text.init();
-	};
-
-
-	///////////////
-	// PAGER
-	//////////////
-
-	/**
-	 * Function to hide/show the page-switchers buttons and arrows
-	 * hide the left one if on first slide
-	 * hide the right one if on last slide -> always show it, it will show the recommendations if on last slide
-	 * show both otherwise
-	 */
-	var decideIfPageSwitcher = function(){
-		//Arrows
-		if(_showArrows){
-			if (V.Slides.getCurrentSubslide()!==null){
-				//Subslide active
-				$("#forward_arrow").hide();
-				$("#back_arrow").hide();
-			} else {
-				//No subslide
-				if(V.Slides.isCurrentFirstSlide()){
-					$("#back_arrow").hide();
-				} else {
-					$("#back_arrow").show();
-				} 
-				//Always show
-				$("#forward_arrow").show();
-			} 
-		}
-
-		// Pager
-		if(V.Slides.isCurrentFirstSlide()){
-			$("#page-switcher-start").addClass("disabledarrow");
-		} else {
-			$("#page-switcher-start").removeClass("disabledarrow");
-		}
-		if(V.Slides.isCurrentLastSlide()){
-			$("#page-switcher-end").addClass("disabledarrow");
-		} else {
-			$("#page-switcher-end").removeClass("disabledarrow");
-		}
-		
-	};
-
-
-	///////////
-	// ViewBar
-	///////////
-
-	var _decideIfViewBarShow = function(){
-		if(_showViewbar){
-			$("#viewbar").show();
-		} else {
-			$("#viewbar").hide();
-		}
-	};
-
-	var _defaultViewbar = function(){
-		return true;
 	};
 
 	///////////
@@ -320,8 +195,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 			$("#embedWatermark").width($("#embedWatermark").height()*2.7);
 		}
 
-		decideIfPageSwitcher();
-
 		updateFancyboxAfterSetupSize(increase,increaseW);
 
 		//Texts callbacks
@@ -388,15 +261,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 		$(fccontentDivs).height("100%");
 	};
 
-	/*
-	 * Show close button if is appropiate
-	 */
-	var decideIfCloseButton = function(){
-		if(_closeButton){
-			$("#closeButton").show();
-		}
-	};
-
 	var getDimensionsForResizedButton = function(increase,originalWidth,aspectRatio){
 		var originalWidth = originalWidth || 23;
 		var aspectRatio = aspectRatio || 1;
@@ -423,8 +287,6 @@ VISH.ViewerAdapter = (function(V,$,undefined){
 	return {
 		init 							: init,
 		updateInterface 				: updateInterface,
-		decideIfPageSwitcher			: decideIfPageSwitcher,
-		decideIfCloseButton				: decideIfCloseButton,
 		updateFancyboxAfterSetupSize	: updateFancyboxAfterSetupSize,
 		getDimensionsForResizedButton	: getDimensionsForResizedButton,
 		getPonderatedIncrease 			: getPonderatedIncrease,

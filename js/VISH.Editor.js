@@ -88,7 +88,6 @@ VISH.Editor = (function(V,$,undefined){
 		V.Object.init();
 		V.Editor.Dummies.init();
 		V.EventsNotifier.init();
-		V.Flashcard.init();
 		V.Slideset.init();
 		V.Editor.Screen.init();
 		V.Renderer.init();
@@ -121,19 +120,10 @@ VISH.Editor = (function(V,$,undefined){
 	};
 	
 	var _initAferPresentationLoaded = function(options,presentation){
-		if(initialPresentation){
-			//Set current slide
-			var slideFromHash = V.Utils.getSlideNumberFromHash();
-			if(slideFromHash){
-				V.Slides.setCurrentSlideNumber(slideFromHash);
-			} else {
-				V.Slides.setCurrentSlideNumber(1);
-			}
-		}
-		V.Slides.updateSlides();
+		V.Slides.updateCurrentScreenId();
 		V.Editor.Thumbnails.redrawThumbnails(function(){
-			V.Editor.Thumbnails.selectThumbnail(V.Slides.getCurrentSlideNumber());
-			V.Editor.Thumbnails.moveThumbnailsToSlide(V.Slides.getCurrentSlideNumber());
+			V.Editor.Thumbnails.selectThumbnail(V.Slides.getCurrentScreenNumber());
+			V.Editor.Thumbnails.moveThumbnailsToSlide(V.Slides.getCurrentScreenNumber());
 		});
 		
 		if(initialPresentation){
@@ -157,16 +147,14 @@ VISH.Editor = (function(V,$,undefined){
 		//Unload all objects
 		V.Editor.Utils.Loader.unloadAllObjects();
 
-		//Enter in currentSlide (this will cause that objects will be shown)
-		if(V.Slides.getCurrentSlideNumber()>0){
-			V.Slides.triggerEnterEventById($(V.Slides.getCurrentSlide()).attr("id"));
-		}
-
-		//Add the first slide
+		//Add the first screen
 		if(!initialPresentation){
 			var screen = V.Editor.Screen.getDummy(V.Utils.getId("article"),{slideNumber:1});
 			V.Editor.Slides.addSlide(screen);
-			V.Slides.goToSlide(1);
+			V.Slides.goToScreen(1);
+		} else {
+			//Load first screen
+			V.Slides.goToScreen(V.Slides.getCurrentScreenId());
 		}
 
 		//Init settings
@@ -413,12 +401,10 @@ VISH.Editor = (function(V,$,undefined){
 	/**
 	* Function called when entering slide in editor, we have to show the objects
 	*/
-	var onSlideEnterEditor = function(e){
-		var slide = $(e.target);
+	var onSlideEnterEditor = function(id){
+		console.log("onSlideEnterEditor",id);
 
-		//Prevent parent to trigger onSlideEnterEditor
-		//Use to prevent slidesets to be called when enter in one of their subslides
-		e.stopPropagation();
+		var slide = $("#" + id);
 
 		if(V.Slideset.isSlideset(slide)){
 			V.Editor.Screen.onEnterSlideset(slide);
@@ -431,7 +417,7 @@ VISH.Editor = (function(V,$,undefined){
 			},500);
 		}
 
-		V.Editor.Thumbnails.selectThumbnail(V.Slides.getCurrentSlideNumber());
+		V.Editor.Thumbnails.selectThumbnail(V.Slides.getCurrentScreenNumber());
 		cleanArea();
 		V.Editor.Tools.loadToolsForSlide(slide);
 	};
@@ -439,10 +425,8 @@ VISH.Editor = (function(V,$,undefined){
 	/**
 	* Function called when leaving slide in editor, we have to hide the objects
 	*/
-	var onSlideLeaveEditor = function(e){
-		var slide = $(e.target);
-
-		e.stopPropagation();
+	var onSlideLeaveEditor = function(id){
+		var slide = $("#" + id);
 
 		if(V.Slideset.isSlideset(slide)){
 			V.Editor.Screen.onLeaveSlideset(slide);
