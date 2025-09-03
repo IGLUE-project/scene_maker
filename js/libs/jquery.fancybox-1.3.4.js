@@ -317,11 +317,9 @@
 		},
 
 		_show = function() {
-
 			//onShow fancybox is called before show a fancybox
 			//Clean Fancybox
 			$("#fancybox-outer").css("background", "white");
-  			$('.joyride-close-tip').click();
 
   			//Original code
 			var pos, equal;
@@ -930,15 +928,13 @@
 
 	// Note: within an iframe use - parent.$.fancybox.close();
 	$.fancybox.close = function() {
-		//XXX modified by KIKE first remove the walkthrough if open
-  		$('.joyride-close-tip').click();
 		if (busy || wrap.is(':hidden')) {
 			return;
 		}
 
 		busy = true;
 
-		if (currentOpts && false === currentOpts.onCleanup(currentArray, currentIndex, currentOpts)) {
+		if (currentOpts && ((typeof currentOpts.onCleanup !== "function")||(false === currentOpts.onCleanup(currentArray, currentIndex, currentOpts)))) {
 			busy = false;
 			return;
 		}

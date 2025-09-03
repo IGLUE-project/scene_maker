@@ -89,6 +89,7 @@ VISH.Editor = (function(V,$,undefined){
 		V.Editor.Dummies.init();
 		V.EventsNotifier.init();
 		V.Flashcard.init();
+		V.Slideset.init();
 		V.Editor.Screen.init();
 		V.Renderer.init();
 		V.Slides.init();
@@ -216,8 +217,7 @@ VISH.Editor = (function(V,$,undefined){
 			V.Editor.Slides.addSlide(slide);
 
 		} else if(slideMode===V.Constant.SLIDESET){
-			//Add a new subslide to a slideset (flashcard or virtual tour)
-
+			//Add a new subslide to a slideset
 			var slideset = V.Slides.getCurrentSlide();
 
 			//Add a subslide (slide[type='standard']) to a slideset

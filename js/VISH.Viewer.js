@@ -5,14 +5,12 @@ VISH.Viewer = (function(V,$,undefined){
 	//Pointer to the current presentation
 	var current_presentation;
 
-
 	/**
-	 * Function to initialize the Viewer, saves the slides object and init the presentation with it
-	 * options is a hash with params and options from the server.
+	 * Function to initialize the Viewer
 	 */
 	var init = function(options, presentation){
 		V.Editing = false;
-		$("body").addClass("ViSHViewerBody");
+		$("body").addClass("SceneMakerViewerBody");
 		
 		initOptions = (typeof options == "object") ? options : {};
 
@@ -31,7 +29,7 @@ VISH.Viewer = (function(V,$,undefined){
 		V.Utils.init();
 		V.I18n.init(initOptions,presentation);
 
-		V.Debugging.log("\n\nViSH Viewer init with presentation:\n"); 
+		V.Debugging.log("\n\nScene Maker init with scene:\n"); 
 		V.Debugging.log(JSON.stringify(presentation));
 
 		presentation = V.Utils.fixPresentation(presentation);

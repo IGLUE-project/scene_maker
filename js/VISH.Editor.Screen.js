@@ -6,11 +6,9 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	var screenData;
 	var currentHotspot;
 	var currentSubslide;
-	var defaultHotspotImg;
 
 	var init = function(){
 		screenData = {};
-		defaultHotspotImg = V.ImagesPath + "icons/hotspot.png";
 
 		//Hotspot Settings
 		_hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
@@ -77,8 +75,15 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			//Draw hotspots
 			if (Array.isArray(screenJSON.hotspots)) {
 				$(screenJSON.hotspots).each(function(index,hotspot){
-					 V.Utils.registerId(hotspot.id);
-					_drawHotspot(screenJSON.id,hotspot.id,hotspot.x,hotspot.y,hotspot.image,hotspot.lockAspectRatio,hotspot.width,hotspot.height,hotspot.rotationAngle);
+					V.Utils.registerId(hotspot.id);
+
+					//Transform dimensions from percentage to absolute numbers for a container with dimensions 800x600.
+					var hotspotX = hotspot.x*800/100;
+					var hotspotY = hotspot.y*600/100;
+					var hotspotWidth = hotspot.width*800/100;
+					var hotspotHeight = hotspot.height*600/100;
+
+					_drawHotspot(screenJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
 					if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
 						screenData[screenJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
 					}
@@ -193,7 +198,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 
 	var _drawHotspot = function(screenId,hotspotId,x,y,imgURL,lockAspectRatio,width,height,rotationAngle){
 		if(typeof imgURL !== "string"){
-			imgURL = defaultHotspotImg;
+			imgURL = V.Slideset.getDefaultHotspotImg();
 		}
 		if(typeof lockAspectRatio !== "boolean"){
 			lockAspectRatio = true;
@@ -574,7 +579,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 				break;
 		}
 		if(typeof hotspotImg !== "string"){
-			hotspotImg = defaultHotspotImg;
+			hotspotImg = V.Slideset.getDefaultHotspotImg();
 		}
 		$hotspot.attr("src", hotspotImg);
 
@@ -704,7 +709,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 	////////////////////
 
 	/*
-	 * Used by VISH.Editor module to save the screen in the JSON
+	 * Save the screen in JSON format
 	 */
 	var saveScreen = function(screenDOM){
 		var screen = {};
@@ -721,25 +726,32 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			if(hotspotsIds.length > 0) {
 				screen.hotspots = [];
 				hotspotsIds.forEach(hotspotId => {
-				  var hotspotDOM = $("img.hotspot[id='" + hotspotId + "']");
-				  var hotspotPosition = $(hotspotDOM).position();
-				  var hotspotSettings = screenData[screen.id].hotspots[hotspotId];
-				  //console.log(hotspotId, hotspotSettings);
-				  var hotspotJSON = {
-				  	"id": hotspotId,
-				  	"x": hotspotPosition.left,
-				  	"y": hotspotPosition.top,
-				  	"image": hotspotDOM.attr("src"),
-				  	"width": hotspotDOM.width(),
-				  	"height": hotspotDOM.height(),
-				  	"lockAspectRatio": hotspotSettings.lockAspectRatio,
-				  	"rotationAngle": hotspotDOM.attr("rotationAngle")
-				  };
+					var hotspotDOM = $("img.hotspot[id='" + hotspotId + "']");
+					var hotspotPosition = $(hotspotDOM).position();
+					var hotspotSettings = screenData[screen.id].hotspots[hotspotId];
 
-				  if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
-				  	hotspotJSON.actions = hotspotSettings.actions;
-				  }
-				  screen.hotspots.push(hotspotJSON);
+					//Transform dimensions to percentage instead of absolute numbers.
+					//Dimensions are calculated for a container with dimensions 800x600
+					var hotspotAdaptiveX = (hotspotPosition.left*100/800).toFixed(4);
+					var hotspotAdaptiveY = (hotspotPosition.top*100/600).toFixed(4);
+					var hotspotAdaptiveWidth = (hotspotDOM.width()*100/800).toFixed(4);
+					var hotspotAdaptiveHeight = (hotspotDOM.height()*100/600).toFixed(4);
+
+					var hotspotJSON = {
+						"id": hotspotId,
+						"x": hotspotAdaptiveX,
+						"y": hotspotAdaptiveY,
+						"image": hotspotDOM.attr("src"),
+						"width": hotspotAdaptiveWidth,
+						"height": hotspotAdaptiveHeight,
+						"lockAspectRatio": hotspotSettings.lockAspectRatio,
+						"rotationAngle": hotspotDOM.attr("rotationAngle")
+					};
+
+					if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
+						hotspotJSON.actions = hotspotSettings.actions;
+					}
+					screen.hotspots.push(hotspotJSON);
 				});
 			}
 			if(Object.keys(screenData[screen.id].zones).length > 0) {

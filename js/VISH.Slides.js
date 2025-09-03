@@ -392,13 +392,6 @@ VISH.Slides = (function(V,$,undefined){
 	var openSubslide = function(slide_id,triggeredByUser){
 		triggeredByUser = !(triggeredByUser===false);
 
-		if((triggeredByUser)&&(V.Status.isPreventDefaultMode())&&(V.Messenger)){
-			var params = new Object();
-			params.slideId = slide_id;
-			V.Messenger.notifyEventByMessage(V.Constant.Event.onSubslideOpen,params);
-			return;
-  		}
-
   		_onOpenSubslide(slide_id);
 
   		//done this way instead of .show() and .hide() to be able to add animations

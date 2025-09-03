@@ -18,6 +18,7 @@
 
 	<script src="/js/libs/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="/js/libs/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="/js/libs/jquery.fancybox-1.3.4.js"></script>
 	<script type="text/javascript" src="/js/libs/jquery.ui.touch-punch.0.2.3.js"></script>
 	<script type="text/javascript" src="/js/libs/escapp/escapp.js"></script>
 
@@ -67,41 +68,18 @@
 	<!-- Copy HTML from here -->
 
 	<section class="slides layout-regular template-default"></section>
-	<button id="back_arrow" class="vish_arrow" style="display:none" tabindex="2"></button>
-	<button id="forward_arrow" class="vish_arrow" style="display:none" tabindex="2"></button>
 
 	<div id="viewbar" style="display:none">
-		<a href="#" target="_blank"><div id="embedWatermark" class="watermark" style="display:none"></div></a>
 		<button id="page-fullscreen" class="fullscreen" type="submit" style="border: none; background-color: transparent; display: none;" tabindex="2"></button>
-		<button id="page-switcher-start" class="page-switcher" tabindex="2"></button>	    
-		<div id="slide-counter-div" style="">
-			<input id="slide-counter-input" type="text" name="goToSlide" maxlength="2" value="1"><span id="slide-counter-span"></span>
-		</div>
-		<button id="page-switcher-end" class="page-switcher" tabindex="2" ></button>
-		<!-- Force browser to preload viewbar icons -->
-		<img src="/images/vicons/arrows.png" style="display:none"/>
+		<!-- Force browser to preload images -->
 		<img src="/images/vicons/fullscreen.png" style="display:none"/>
-		<img src="/images/cursor/right-pointer.png" style="display:none"/>
-		<img src="/images/cursor/left-pointer.png" style="display:none"/>
-		<!-- Force browser to preload more ViSH Viewer icons -->
-		<img src="/images/vicons/ve_close.png" style="display:none"/>
-		<img src="/images/vicons/ve_close_hover.png" style="display:none"/>
-		<img src="/images/vicons/ve_close2.png" style="display:none"/>
-		<img src="/images/vicons/ve_close2_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle2_hover.png" style="display:none"/>
-		<img src="/images/vicons/helptutorial_circle_hover_tp.png" style="display:none"/>
 	</div>
 
 	<div style="display:none" id="viewerpreview"><span i18n-key="i.Preview">Preview</span></div>
-	<button id="closeButton" style="display:none" ><img id="closeButtonImg" src="/images/vicons/back_icon.png"/></button>
-
 
 	<!-- NOTIFICATIONS -->
-
 	<!-- Hidden link to open notification template -->
 	<a id="link_to_notification_template" href="#notification_template_cloned"></a>
-
 	<!-- NOTIFICATION TEMPLATE -->
 	<div id="notification_template_wrapper" style='display:none'></div>
 
