@@ -1,7 +1,5 @@
 VISH.Editor.Slides = (function(V,$,undefined){
 
-
-
 	var updateCurrentSlideFromHash = function(){
 		var slideNo = V.Utils.getSlideNumberFromHash();
 		if(slideNo){
@@ -164,11 +162,10 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		V.Utils.addTempShown(article_to_move);
 
 		//Refresh Draggable Objects
-		V.Editor.Utils.refreshDraggables(article_to_move);
-
-		//Refresh HTML5 EVideo Object
-		V.Editor.Utils.refreshHTML5EVideo(article_to_move);
-
+		if(V.Slideset.isSlideset(article_to_move)){
+			V.Editor.Screen.refreshDraggables(article_to_move);
+		}
+		
 		//Reload text areas
 		_cleanTextAreas(article_to_move);
 		_loadTextAreasOfSlide(article_to_move,textAreas);
@@ -250,8 +247,10 @@ VISH.Editor.Slides = (function(V,$,undefined){
 		var slideCopied = $("#"+newId);
 
 		//Restore draggables
-		V.Editor.Utils.refreshDraggables(slideCopied);
-
+		if(V.Slideset.isSlideset(slideCopied)){
+			V.Editor.Screen.refreshDraggables(slideCopied);
+		}
+		
 		//Restore text areas
 		if(slideToCopyType === V.Constant.STANDARD){
 			if(options.textAreas){

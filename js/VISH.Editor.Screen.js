@@ -236,6 +236,10 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		screenData[screenId].hotspots[hotspotId] = {};
 		screenData[screenId].hotspots[hotspotId].lockAspectRatio = lockAspectRatio;
 		
+		_enableDraggableHotspot($hotspot);
+	};
+
+	var _enableDraggableHotspot = function($hotspot){
 		$hotspot.draggable({
 			start: function(event, ui) {
 				_onSelectHotspot($hotspot);
@@ -243,6 +247,14 @@ VISH.Editor.Screen = (function(V,$,undefined){
 			stop: function(event, ui) {
 				_validateHotspotPosition($hotspot);
 			}
+		});
+	};
+
+	var refreshDraggables = function(screen){
+		//Refresh hotspots
+		$(screen).find('img.hotspot').each(function() {
+			var $hotspot = $(this);
+			_enableDraggableHotspot($hotspot);
 		});
 	};
 
@@ -918,6 +930,7 @@ VISH.Editor.Screen = (function(V,$,undefined){
 		getDummy						: getDummy,
 		addScreen						: addScreen,
 		draw 							: draw,
+		refreshDraggables				: refreshDraggables,
 		onBackgroundSelected 			: onBackgroundSelected,
 		addHotspot						: addHotspot,
 		addZone							: addZone,

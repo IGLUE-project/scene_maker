@@ -121,7 +121,13 @@ VISH.Editor = (function(V,$,undefined){
 	
 	var _initAferPresentationLoaded = function(options,presentation){
 		if(initialPresentation){
-			V.Editor.Slides.updateCurrentSlideFromHash();
+			//Set current slide
+			var slideFromHash = V.Utils.getSlideNumberFromHash();
+			if(slideFromHash){
+				V.Slides.setCurrentSlideNumber(slideFromHash);
+			} else {
+				V.Slides.setCurrentSlideNumber(1);
+			}
 		}
 		V.Slides.updateSlides();
 		V.Editor.Thumbnails.redrawThumbnails(function(){
@@ -163,9 +169,8 @@ VISH.Editor = (function(V,$,undefined){
 		}
 
 		//Init settings
-		if((V.Configuration.getConfiguration().presentationSettings) && (!initialPresentation)){
-			//TODO: REMOVE.
-			//V.Editor.Settings.displaySettings();
+		if(!initialPresentation){
+			V.Editor.Settings.displaySettings();
 		}
 
 		//Try to win focus

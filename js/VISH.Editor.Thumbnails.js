@@ -153,7 +153,6 @@ VISH.Editor.Thumbnails = (function(V,$,undefined){
 		$("#slides_list div.wrapper_slidethumbnail").removeClass("selectedThumbnailBackground");
 		$("#slides_list img.image_slidethumbnail[slideNumber=" + no + "]").parent("div.wrapper_slidethumbnail").addClass("selectedThumbnailBackground");
 
-
 		var advance = ((lastSelectedSlideThumbnail===undefined)||(no > lastSelectedSlideThumbnail));
 		lastSelectedSlideThumbnail = no;
 		var slide = V.Slides.getSlideWithNumber(no);

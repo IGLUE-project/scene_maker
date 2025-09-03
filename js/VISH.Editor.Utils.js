@@ -68,24 +68,6 @@ VISH.Editor.Utils = (function(V,$,undefined){
 		return "position: relative; width:" + WidthPercent + "%; height:" + HeightPercent + "%; top:" + TopPercent + "%; left:" + LeftPercent + "%;" ;
 	}; 
 	
-	
-	var refreshDraggables = function(slide){
-		//Class ui_draggable has removed... look for draggable=true param
-		$(slide).find("[draggable='true']").draggable({
-			cursor: "move",
-			stop: function(){
-				$(this).parent().click();  //call parent click to select it in case it was unselected	
-			}
-		});
-	};
-
-	var refreshHTML5EVideo = function(slide){
-		//if HTML5 video, redraw balls, because onloadeddata event is not fired again
-		if($(slide).attr("type")=="enrichedvideo" && $(slide).find("video[videotype=HTML5_VIDEO]")){
-			V.Editor.EVideo.onHTML5VideoReady($(slide).find(".evideoBody video")[0]);
-		}
-	}
-
 	/* Generate table for carrousels */
 	var generateTable = function(options){
 		//Default values
@@ -443,8 +425,6 @@ VISH.Editor.Utils = (function(V,$,undefined){
 		setStyleInPixels  			: setStyleInPixels,		
 		addZoomToStyle  			: addZoomToStyle,	
 		getStylesInPercentages 		: getStylesInPercentages,
-		refreshDraggables			: refreshDraggables,
-		refreshHTML5EVideo			: refreshHTML5EVideo,
 		replaceIdsForSlide 			: replaceIdsForSlide,
 		replaceIdsForSlideJSON		: replaceIdsForSlideJSON,
 		generateTable 				: generateTable,
