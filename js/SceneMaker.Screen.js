@@ -106,7 +106,16 @@ SceneMaker.Screen = (function(SM,$,undefined){
 						hideOnClick: true,
 						maxWidth: 'none',
 						offset: [2, 6],
-						delay: [0, 0] // show and hide delay are 0ms
+						delay: [0, 0],
+						popperOptions: {
+							modifiers: [
+								{ name: 'eventListeners', options: { scroll: false, resize: false } },
+							],
+						},
+						onCreate(instance) {
+							var toolTipId = instance.popper.id;
+							$hotspot.attr("tooltipid",toolTipId);
+						}
 					});
 				};
 				break;

@@ -161,6 +161,7 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		//Fs button
 		$("#page-fullscreen").width($("#page-fullscreen").height());
 
+		_updateTooltipsAfterSetupSize(increase);
 		_updateFancyboxAfterSetupSize(increase);
 		SM.Text.aftersetupSize(increase);
 		SM.ObjectPlayer.aftersetupSize(increase);
@@ -214,6 +215,20 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		$(fcontent).height("100%");
 		$(fccontentDivs).width("100%");
 		$(fccontentDivs).height("100%");
+	};
+
+	var _updateTooltipsAfterSetupSize = function(increase){
+		var $visibleToolTips = $("div[data-tippy-root]:visible");
+		if ($visibleToolTips.length > 0) {
+			$visibleToolTips.each(function(index, tooltip){
+				$("img.hotspot[tooltipid=" + $(tooltip).attr("id") + "]").each(function(index, hotspot){
+					if(typeof hotspot._tippy !== "undefined"){
+						hotspot._tippy.hide();
+						hotspot._tippy.show();
+					}
+				});
+			});
+		}
 	};
 
 	var _getPonderatedIncrease = function(increase,pFactor){
