@@ -1,0 +1,7 @@
+configuration/configuration.js
+.DS_Store
+.project
+.settings
+.gitignore~
+README.md~
+node_modules
