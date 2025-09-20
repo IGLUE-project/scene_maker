@@ -57,9 +57,15 @@ SceneMaker.Screen = (function(SM,$,undefined){
 			rotationAngle = 0;
 		}
 
+		var extraClasses = "";
+		var visible = (hotspotJSON.visibility !== "hidden");
+		if(visible === false){
+			extraClasses += " hotspot_hidden";
+		}
+
 		var $hotspot = $('<img>', {
 			src: hotspotJSON.image,
-			class: 'hotspot',
+			class: ('hotspot' + extraClasses),
 			id: hotspotJSON.id,
 			rotationAngle: rotationAngle,
 			css: {
@@ -112,6 +118,11 @@ SceneMaker.Screen = (function(SM,$,undefined){
 						window.open(action.actionParams.url, '_blank', 'noopener,noreferrer');
 					}
 					break;
+				case "changeBackground":
+					if((action.actionParams)&&(typeof action.actionParams.slide === "string")&&(typeof action.actionParams.url === "string")){
+						$("#" + action.actionParams.slide).css("background-image","url(" + action.actionParams.url + ")");
+					}
+					break;
 				case "changeScreen":
 					if((action.actionParams)&&(typeof action.actionParams.screen === "string")&&(typeof action.actionParams.screenReplacement === "string")){
 						var screenId = action.actionParams.screen;
@@ -119,12 +130,17 @@ SceneMaker.Screen = (function(SM,$,undefined){
 						_replaceScreen(screenId,screenReplacementId);
 					}
 					break;
-				case "removeElement":
+				case "showElement":
+				case "hideElement":
 					if((action.actionParams)&&(typeof action.actionParams.elementId === "string")){
 						var elementId = action.actionParams.elementId;
 						var $element = $("#" + elementId);
 						if ($element.length > 0) {
-							$element.remove();
+							if(action.actionType === "showElement"){
+								$element.show();
+							} else {
+								$element.hide();
+							}
 						}
 					}
 				case "solvePuzzle":

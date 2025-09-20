@@ -486,6 +486,13 @@
 					<label i18n-key="i.HotspotRotation">Rotation angle (°):</label>
 					<input type="number" id="hotspotRotation" min="0" max="360" value="0" step="1">
 				</div>
+				<div class="new_hotspot_settings_field">
+					<label i18n-key="i.HotspotVisibility">Visibility:</label>
+					<select id="hotspotVisibility">
+						<option value="visible" i18n-key="i.HotspotVisibilityVisible" selected>Visible</option>
+						<option value="hidden" i18n-key="i.HotspotVisibilityHidden">Hidden</option>
+					</select>
+				</div>
 				<div class="new_hotspot_settings_field new_hotspot_settings_field_last">
 					<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
 					<button id="hotspotNewAction" type="button" class="button">
@@ -502,8 +509,8 @@
 								<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
 								<option value="openLink" i18n-key="i.HotspotActionTypeOpenLink">Open link</option>
 								<option value="changeBackground" i18n-key="i.HotspotActionTypeChangeBackground">Change background of a screen or view</option>
-								<option value="showElement" i18n-key="i.HotspotActionTypeShowElement">Show hidden hotspot or zone</option>
-								<option value="removeElement" i18n-key="i.HotspotActionTypeRemoveElement">Remove hotspot or zone</option>
+								<option value="showElement" i18n-key="i.HotspotActionTypeShowElement">Show hotspot or zone</option>
+								<option value="hideElement" i18n-key="i.HotspotActionTypeHideElement">Remove hotspot or zone</option>
 								<option value="changeScreen" i18n-key="i.HotspotActionTypeChangeScreen">Change screen</option>
 								<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
 							</select>
@@ -518,6 +525,10 @@
 						</div>
 						<div class="hotspot_settings_element_wrapper hotspotActionParamsView" style='display:none'>
 							<label i18n-key="i.HotspotActionParamsView">View:</label>
+							<select></select>
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsSlide" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsSlide">Screen or view:</label>
 							<select></select>
 						</div>
 						<div class="hotspot_settings_element_wrapper hotspotActionParamsURL" style='display:none'>

@@ -66,6 +66,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		SM.Slides.updateCurrentScreenFromHash();
 		SM.Slides.updateScreens();
 		SM.ViewerAdapter.init(options);
+		SM.Utils.Loader.preloadResources(scene);
 
 		if(SM.Slides.getCurrentScreenNumber()>0){
 			SM.Slides.triggerEnterEventById($(SM.Slides.getCurrentScreen()).attr("id"));

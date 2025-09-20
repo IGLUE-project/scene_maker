@@ -153,6 +153,9 @@ div.close_view:hover {
 }
 
 /* Hotspots */
+.hotspot_hidden {
+	display: none;
+}
 .hotspot_with_actions {
 	cursor: pointer;
 }

@@ -87,7 +87,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 					var hotspotWidth = hotspot.width*slideContainerWidth/100;
 					var hotspotHeight = hotspot.height*slideContainerHeight/100;
 
-					_drawHotspot(slideJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
+					_drawHotspot(slideJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
 					if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
 						slideData[slideJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
 					}
@@ -200,7 +200,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		_enableEditingMode("NONE");
 	};
 
-	var _drawHotspot = function(slideId,hotspotId,x,y,imgURL,lockAspectRatio,width,height,rotationAngle){
+	var _drawHotspot = function(slideId,hotspotId,x,y,imgURL,lockAspectRatio,visibility,width,height,rotationAngle){
 		if(typeof imgURL !== "string"){
 			imgURL = SM.Screen.getDefaultHotspotImg();
 		}
@@ -244,7 +244,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 		slideData[slideId].hotspots[hotspotId] = {};
 		slideData[slideId].hotspots[hotspotId].lockAspectRatio = lockAspectRatio;
-		
+		slideData[slideId].hotspots[hotspotId].visibility = visibility;
+
 		_enableDraggableHotspot($hotspot);
 	};
 
@@ -349,8 +350,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 							}
 						}
 						break;
-					case 'removeElement':
-						//Keep behaviour if the hotspot remove itself
+					case 'hideElement':
+						//Keep behaviour if the hotspot hide itself
 						if((action.actionParams)&&(typeof action.actionParams.elementId === "string")){
 							var oldHotspotId = Object.keys(hotspotIdsMapping).find(k => hotspotIdsMapping[k] === key);
 							if(action.actionParams.elementId === oldHotspotId){
@@ -425,7 +426,14 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		} else {
 			$("#hotspotRotation").val(0);
 		}
-		
+
+		//Visibility
+		if(typeof slideData[slideId].hotspots[hotspotId].visibility === "string"){
+			$("#hotspotVisibility").val(slideData[slideId].hotspots[hotspotId].visibility);
+		} else {
+			$("#hotspotVisibility").val("visible");
+		}
+
 		//Actions
 
 		//Remove prior actions
@@ -461,23 +469,52 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 
 		//Fill action template with current views
 		var currentOptionsViews = [];
-		$(SM.Slides.getCurrentScreen()).children("article").each(function() {
-		  var $view = $(this);
-		  currentOptionsViews.push({
-		    value: $view.attr('id'),
-		    text: (SM.I18n.getTrans("i.ViewOption", {number: $view.attr('slidenumber')}))
-		  });
+		var currentOptionsScreenViews = [];
+		var currentOptionsImageViews = [];
+
+		var $currentScreen = $(SM.Slides.getCurrentScreen());
+		var currentScreenId = $currentScreen.attr('id');
+		$("article[type='screen'] > article").each(function(){
+			var $view = $(this);
+			var $screen = $(this).parent();
+			var option = {
+				value: $view.attr('id'),
+				text: (SM.I18n.getTrans("i.ViewOption", {screenNumber: $screen.attr('slidenumber'), viewNumber: $view.attr('slidenumber')}))
+			};
+			currentOptionsViews.push(option);
+
+			if($screen.attr('id') === currentScreenId){
+				currentOptionsScreenViews.push(option);
+			}
+			if($view.attr("type") === SM.Constant.VIEW_IMAGE){
+				currentOptionsImageViews.push(option);
+			}
 		});
 
 		$("div.hotspotActionParamsView select").each(function() {
 			var $select = $(this);
 			$select.empty();
 			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsViews, function(_, opt) {
+			$.each(currentOptionsScreenViews, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
 		});
 
+		//Fill action template with current slides with background (screens and image views)
+		$("div.hotspotActionParamsSlide select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
+			//Fill with screens
+			$.each(currentOptionsScreens, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+			//Fill with views
+			$.each(currentOptionsImageViews, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+		
 		//Fill action template with current element ids (hotspots and zones)
 		var currentOptionsElementIds = [];
 		//Hotspots
@@ -517,6 +554,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 						if(typeof hotspotAction.actionParams.view === "string"){
 							var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
 							$actionParamsViewSelect.val(hotspotAction.actionParams.view);
+						}
+						if(typeof hotspotAction.actionParams.slide === "string"){
+							var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
+							$actionParamsSlideSelect.val(hotspotAction.actionParams.slide);
 						}
 						if(typeof hotspotAction.actionParams.url === "string"){
 							var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
@@ -679,6 +720,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var $selectScreenReplacement = $selectScreenReplacementWrapper.find("select");
 		var $selectViewWrapper = $actionWrapperDiv.find("div.hotspotActionParamsView");
 		var $selectView = $selectViewWrapper.find("select");
+		var $selectSlideWrapper = $actionWrapperDiv.find("div.hotspotActionParamsSlide");
+		var $selectSlide = $selectSlideWrapper.find("select");
 		var $inputURLWrapper = $actionWrapperDiv.find("div.hotspotActionParamsURL");
 		var $inputURL = $inputURLWrapper.find("input");
 		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
@@ -705,13 +748,19 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		} else {
 			$selectViewWrapper.hide();
 		}
-		if(option === "openLink"){
+		if(option === "changeBackground"){
+			$selectSlide.prop("selectedIndex", 0);
+			$selectSlideWrapper.show();
+		} else {
+			$selectSlideWrapper.hide();
+		}
+		if((option === "openLink")||(option === "changeBackground")){
 			$inputURL.val("");
 			$inputURLWrapper.show();
 		} else {
 			$inputURLWrapper.hide();
 		}
-		if(option === "removeElement"){
+		if((option === "showElement")||(option === "hideElement")){
 			$selectElementId.prop("selectedIndex", 0);
 			$selectElementIdWrapper.show();
 		} else {
@@ -780,6 +829,9 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			$hotspot.css("transform", "rotate(" + rotationAngle + "deg)");
 		}
 
+		//Hotspot visibility
+		hotspotSettings.visibility = $("#hotspotVisibility").val();
+
 		//Validate position
 		_validateHotspotPosition($hotspot);
 
@@ -802,6 +854,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
 				if($actionParamsViewSelect.is(":visible")){
 					action.actionParams.view = $actionParamsViewSelect.val();
+				}
+				var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
+				if($actionParamsSlideSelect.is(":visible")){
+					action.actionParams.slide = $actionParamsSlideSelect.val();
 				}
 				var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
 				if($actionParamsUrlInput.is(":visible")){
@@ -948,7 +1004,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 						"width": hotspotAdaptiveWidth,
 						"height": hotspotAdaptiveHeight,
 						"lockAspectRatio": hotspotSettings.lockAspectRatio,
-						"rotationAngle": hotspotDOM.attr("rotationAngle")
+						"rotationAngle": hotspotDOM.attr("rotationAngle"),
+						"visibility": hotspotSettings.visibility,
 					};
 
 					if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {

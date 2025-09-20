@@ -3,6 +3,53 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 	var init = function(){
 	};
 
+	var preloadResources = function(scene){
+		if (scene.screens && Array.isArray(scene.screens)) {
+			for (let i = 0; i < scene.screens.length; i++) {
+				var screen = scene.screens[i];
+				if (screen.hotspots && Array.isArray(screen.hotspots)) {
+					for (let j = 0; j < screen.hotspots.length; j++) {
+						var hotspot = screen.hotspots[j];
+						if (hotspot.actions && Array.isArray(hotspot.actions)) {
+							for (let k = 0; k < hotspot.actions.length; k++) {
+								_preloadResourcesForAction(hotspot.actions[k]);						
+							}
+						}
+					}
+				}	
+			}
+		}
+	};
+
+	var _preloadResourcesForAction = function(action){
+		if (action.actionType && action.actionParams && (typeof action.actionParams === "object")) {
+			switch(action.actionType){
+			case "changeBackground":
+				if (typeof action.actionParams.url === "string") {
+					_preloadImages([action.actionParams.url]);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	var _preloadImages = function(urls){
+		for (let i = 0; i < urls.length; i++) {
+			const img = new Image();
+			img.src = urls[i];
+		}
+	};
+
+	var _preloadAudios = function(urls) {
+		for (let i = 0; i < urls.length; i++) {
+			const audio = new Audio();
+			audio.src = urls[i];
+			audio.preload = "auto";
+		}
+	};
+
 	var loadScript = function(scriptSrc,callback){
 		if((typeof scriptSrc !== "string")||(typeof callback !== "function")){
 			return;
@@ -180,6 +227,7 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 
 	return {
 		init 							: init,
+		preloadResources				: preloadResources,
 		loadScript						: loadScript,
 		loadCSS							: loadCSS,
 		loadLanguageCSS					: loadLanguageCSS,
