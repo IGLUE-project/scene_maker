@@ -56,7 +56,7 @@ SceneMaker.Editor.Utils = (function(SM,$,undefined){
 		var http_urls_pattern=/(^http(s)?:\/\/)/g
 		var anchor_urls_pattern=/(^#)/g
 		var objectInfo = SM.Object.getObjectInfo(input);
-		if((objectInfo.wrapper==null)&&(input.match(http_urls_pattern)==null)&&(input.match(anchor_urls_pattern)==null)){
+		if((objectInfo.wrapper===null)&&(input.match(http_urls_pattern)===null)&&(input.match(anchor_urls_pattern)===null)){
 			return "http://" + input;
 		} else {
 			return input;

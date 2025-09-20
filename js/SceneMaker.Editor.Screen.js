@@ -518,6 +518,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 							var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
 							$actionParamsViewSelect.val(hotspotAction.actionParams.view);
 						}
+						if(typeof hotspotAction.actionParams.url === "string"){
+							var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
+							$actionParamsUrlInput.val(hotspotAction.actionParams.url);
+						}
 						if(typeof hotspotAction.actionParams.elementId === "string"){
 							var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
 							$actionParamsElementIdSelect.val(hotspotAction.actionParams.elementId);
@@ -536,7 +540,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		_cleanHotspotGalleryCarrousel();
 
 		var hotspotGalleryImgs = [
-			{ src: SM.ImagesPath + "icons/hotspot.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/hotspot.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/arrow.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/magnifying_glass.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/eye.png" },
@@ -547,6 +551,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/pin.png" },
+			{ src: SM.ImagesPath + "vicons/close.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_futuristic.png" },
@@ -674,6 +679,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var $selectScreenReplacement = $selectScreenReplacementWrapper.find("select");
 		var $selectViewWrapper = $actionWrapperDiv.find("div.hotspotActionParamsView");
 		var $selectView = $selectViewWrapper.find("select");
+		var $inputURLWrapper = $actionWrapperDiv.find("div.hotspotActionParamsURL");
+		var $inputURL = $inputURLWrapper.find("input");
 		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
 		var $selectElementId = $selectElementIdWrapper.find("select");
 		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.hotspotActionParamsPuzzle");
@@ -697,6 +704,12 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			$selectViewWrapper.show();
 		} else {
 			$selectViewWrapper.hide();
+		}
+		if(option === "openLink"){
+			$inputURL.val("");
+			$inputURLWrapper.show();
+		} else {
+			$inputURLWrapper.hide();
 		}
 		if(option === "removeElement"){
 			$selectElementId.prop("selectedIndex", 0);
@@ -789,6 +802,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
 				if($actionParamsViewSelect.is(":visible")){
 					action.actionParams.view = $actionParamsViewSelect.val();
+				}
+				var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
+				if($actionParamsUrlInput.is(":visible")){
+					action.actionParams.url = SM.Editor.Utils.autocompleteUrls($actionParamsUrlInput.val());
 				}
 				var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
 				if($actionParamsElementIdSelect.is(":visible")){

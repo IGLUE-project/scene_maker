@@ -101,7 +101,6 @@
 		<img src="/images/icons/ve_delete_hover.png" style="display:none"/>
 		<img src="/images/icons/delete_content_hover.png" style="display:none"/>
 		<img src="/images/vicons/close.png" style="display:none"/>
-		<img src="/images/vicons/close_hover.png" style="display:none"/>
 		<img src="/images/vicons/close2.png" style="display:none"/>
 		<img src="/images/vicons/close2_hover.png" style="display:none"/>
 		<img src="/images/icons/slide_add_background_hover.png" style="display:none"/>
@@ -501,8 +500,11 @@
 								<option value="none" i18n-key="i.Unspecified">Undefined</option>
 								<option value="goToScreen" i18n-key="i.HotspotActionTypeGoToScreen">Go to screen</option>
 								<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
-								<option value="changeScreen" i18n-key="i.HotspotActionTypeChangeScreen">Change screen</option>
+								<option value="openLink" i18n-key="i.HotspotActionTypeOpenLink">Open link</option>
+								<option value="changeBackground" i18n-key="i.HotspotActionTypeChangeBackground">Change background of a screen or view</option>
+								<option value="showElement" i18n-key="i.HotspotActionTypeShowElement">Show hidden hotspot or zone</option>
 								<option value="removeElement" i18n-key="i.HotspotActionTypeRemoveElement">Remove hotspot or zone</option>
+								<option value="changeScreen" i18n-key="i.HotspotActionTypeChangeScreen">Change screen</option>
 								<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
 							</select>
 						</div>
@@ -517,6 +519,10 @@
 						<div class="hotspot_settings_element_wrapper hotspotActionParamsView" style='display:none'>
 							<label i18n-key="i.HotspotActionParamsView">View:</label>
 							<select></select>
+						</div>
+						<div class="hotspot_settings_element_wrapper hotspotActionParamsURL" style='display:none'>
+							<label i18n-key="i.HotspotActionParamsURL">URL:</label>
+							<input type="text">
 						</div>
 						<div class="hotspot_settings_element_wrapper hotspotActionParamsElementId" style='display:none'>
 							<label i18n-key="i.HotspotActionParamsElementId">Element ID:</label>

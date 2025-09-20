@@ -136,7 +136,7 @@ div.close_view {
 }
 
 div.close_view:hover {
-	background-image: url("/images/vicons/close_hover.png");
+	filter: brightness(0.9);
 }
 
 .temp_shown {

@@ -7,7 +7,7 @@ SceneMaker.Screen = (function(SM,$,undefined){
 			return;
 		}
 
-		defaultHotspotImg = SM.ImagesPath + "icons/hotspot.png";
+		defaultHotspotImg = SM.ImagesPath + "hotspotgallery/hotspot.png";
 
 		initialized = true;
 	};
@@ -107,6 +107,11 @@ SceneMaker.Screen = (function(SM,$,undefined){
 						}
 					}
 					break;	
+				case "openLink":
+					if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+						window.open(action.actionParams.url, '_blank', 'noopener,noreferrer');
+					}
+					break;
 				case "changeScreen":
 					if((action.actionParams)&&(typeof action.actionParams.screen === "string")&&(typeof action.actionParams.screenReplacement === "string")){
 						var screenId = action.actionParams.screen;
