@@ -118,6 +118,11 @@ SceneMaker.Screen = (function(SM,$,undefined){
 						window.open(action.actionParams.url, '_blank', 'noopener,noreferrer');
 					}
 					break;
+				case "showText":
+					if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+						alert(action.actionParams.text);
+					}
+					break;
 				case "changeBackground":
 					if((action.actionParams)&&(typeof action.actionParams.slide === "string")&&(typeof action.actionParams.url === "string")){
 						$("#" + action.actionParams.slide).css("background-image","url(" + action.actionParams.url + ")");

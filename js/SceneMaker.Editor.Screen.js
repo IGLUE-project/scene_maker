@@ -559,6 +559,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 							var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
 							$actionParamsSlideSelect.val(hotspotAction.actionParams.slide);
 						}
+						if(typeof hotspotAction.actionParams.text === "string"){
+							var $actionParamsTextAreaText = $actionWrapper.find("div.hotspotActionParamsText textarea");
+							$actionParamsTextAreaText.val(hotspotAction.actionParams.text);
+						}
 						if(typeof hotspotAction.actionParams.url === "string"){
 							var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
 							$actionParamsUrlInput.val(hotspotAction.actionParams.url);
@@ -722,6 +726,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var $selectView = $selectViewWrapper.find("select");
 		var $selectSlideWrapper = $actionWrapperDiv.find("div.hotspotActionParamsSlide");
 		var $selectSlide = $selectSlideWrapper.find("select");
+		var $textAreaTextWrapper = $actionWrapperDiv.find("div.hotspotActionParamsText");
+		var $textAreaText = $textAreaTextWrapper.find("textarea");
 		var $inputURLWrapper = $actionWrapperDiv.find("div.hotspotActionParamsURL");
 		var $inputURL = $inputURLWrapper.find("input");
 		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
@@ -753,6 +759,12 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			$selectSlideWrapper.show();
 		} else {
 			$selectSlideWrapper.hide();
+		}
+		if(option === "showText"){
+			$textAreaText.val("");
+			$textAreaTextWrapper.show();
+		} else {
+			$textAreaTextWrapper.hide();
 		}
 		if((option === "openLink")||(option === "changeBackground")||(option === "playSound")||(option === "stopSound")){
 			$inputURL.val("");
@@ -858,6 +870,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
 				if($actionParamsSlideSelect.is(":visible")){
 					action.actionParams.slide = $actionParamsSlideSelect.val();
+				}
+				var $actionParamsTextAreaText = $actionWrapper.find("div.hotspotActionParamsText textarea");
+				if($actionParamsTextAreaText.is(":visible")){
+					action.actionParams.text = $actionParamsTextAreaText.val();
 				}
 				var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
 				if($actionParamsUrlInput.is(":visible")){
