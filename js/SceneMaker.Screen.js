@@ -36,10 +36,11 @@ SceneMaker.Screen = (function(SM,$,undefined){
 		if((!hotspotJSON)||(!hotspotJSON.id)){
 			return;
 		}
-		if((!hotspotJSON.x)||(hotspotJSON.x < 0)||(hotspotJSON.x > 100)){
+		var coordinatesMargin = 10;
+		if((!hotspotJSON.x)||(hotspotJSON.x < (0-coordinatesMargin)||(hotspotJSON.x > (100+coordinatesMargin)))){
 			return;
 		}
-		if((!hotspotJSON.width)||(hotspotJSON.y < 0)||(hotspotJSON.y > 100)){
+		if((!hotspotJSON.y)||(hotspotJSON.y < (0-coordinatesMargin)||(hotspotJSON.y > (100+coordinatesMargin)))){
 			return;
 		}
 		if((!hotspotJSON.width)||(hotspotJSON.width < 0)||(hotspotJSON.width > 100)){
@@ -87,6 +88,32 @@ SceneMaker.Screen = (function(SM,$,undefined){
 	};
 
 	var _addActionToHotspot = function($hotspot, action){
+		switch(action.actionType){
+			case "showText":
+				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+					tippy(('#'+$hotspot.attr("id")), {
+						content: action.actionParams.text,
+						trigger: 'click',
+						placement: 'top',
+						inlinePositioning: true,
+						arrow: true,
+						theme: '',
+						animation: 'scale', //fade, scale,
+						duration: 1000,
+						inertia: false,
+						interactive: false,
+						interactiveBorder: 2,
+						hideOnClick: true,
+						maxWidth: 'none',
+						offset: [2, 6],
+						delay: [0, 0] // show and hide delay are 0ms
+					});
+				};
+				break;
+			default:
+				break;
+		};
+
 		$hotspot.on('click', function(){
 			switch(action.actionType){
 				case "goToScreen":
@@ -119,9 +146,10 @@ SceneMaker.Screen = (function(SM,$,undefined){
 					}
 					break;
 				case "showText":
-					if((action.actionParams)&&(typeof action.actionParams.text === "string")){
-						alert(action.actionParams.text);
-					}
+					//Do nothing. Tooltips are handled automatically by Tippy.
+					// if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+					// 	alert(action.actionParams.text);
+					// };
 					break;
 				case "changeBackground":
 					if((action.actionParams)&&(typeof action.actionParams.slide === "string")&&(typeof action.actionParams.url === "string")){
