@@ -754,7 +754,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		} else {
 			$selectSlideWrapper.hide();
 		}
-		if((option === "openLink")||(option === "changeBackground")){
+		if((option === "openLink")||(option === "changeBackground")||(option === "playSound")||(option === "stopSound")){
 			$inputURL.val("");
 			$inputURLWrapper.show();
 		} else {

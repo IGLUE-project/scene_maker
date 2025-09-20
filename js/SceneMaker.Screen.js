@@ -143,6 +143,17 @@ SceneMaker.Screen = (function(SM,$,undefined){
 							}
 						}
 					}
+					break;
+				case "playSound":
+					if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+						SM.Audio.HTML5.playAudio(action.actionParams.url);
+					}
+					break;
+				case "stopSound":
+					if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+						SM.Audio.HTML5.stopAudio(action.actionParams.url);
+					}
+					break;
 				case "solvePuzzle":
 					//TODO
 					break;

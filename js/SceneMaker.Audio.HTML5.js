@@ -1,6 +1,44 @@
 SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
-		
+	
+	//For managing sound effects
+	var currentAudio;
+
 	var init = function(){
+		var player = new Audio();
+		currentAudio = {"player": player, "url": undefined};
+		player.addEventListener("ended", () => {
+			currentAudio.url = undefined;
+		});
+	};
+
+	var playAudio = function(url){
+		if((typeof currentAudio === "undefined")||(typeof currentAudio.player === "undefined")){
+			//Not initialized
+			return;
+		}
+		if((typeof url === "string")&&(currentAudio.url === url)){
+			//Sound is already playing
+			return;
+		}
+		currentAudio.url = url;
+		currentAudio.player.pause();
+  		currentAudio.player.currentTime = 0;
+  		currentAudio.player.src = url; 
+  		currentAudio.player.play().then(() => {
+		}).catch(err => {
+			currentAudio.url = undefined;
+		});
+	};
+
+	var stopAudio = function(url){
+		if((typeof currentAudio === "undefined")||(typeof currentAudio.player === "undefined")){
+			//Not initialized
+			return;
+		}
+		if((typeof url === "string")&&(currentAudio.url === url)){
+			currentAudio.player.pause();
+			currentAudio.url = undefined;
+		}
 	};
 
 	/*
@@ -175,6 +213,8 @@ SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 
 	return {
 		init 					: init,
+		playAudio				: playAudio,
+		stopAudio				: stopAudio,
 		renderAudioFromJSON		: renderAudioFromJSON,
 		renderAudioFromSources	: renderAudioFromSources,
 		addSourcesToAudioTag	: addSourcesToAudioTag,

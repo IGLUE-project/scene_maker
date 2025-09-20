@@ -29,6 +29,11 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 					_preloadImages([action.actionParams.url]);
 				}
 				break;
+			case "playSound":
+				if (typeof action.actionParams.url === "string") {
+					_preloadAudios([action.actionParams.url]);
+				}
+				break;
 			default:
 				break;
 			}
