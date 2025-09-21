@@ -26,8 +26,8 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 
 		var slideElements = 0;
 		$('.slides > article').each(function(index,s){
-			var srcURL = getThumbnailURL(s);
-			var defaultURL = getDefaultThumbnailURL(s);
+			var srcURL = getThumbnailURLForSlide(s);
+			var defaultURL = getDefaultThumbnailURLSlide(s);
 			if(srcURL){
 				slideElements += 1;
 				imagesArray.push($("<img id='screenThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' action='goToScreenWithNumber' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
@@ -47,7 +47,14 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		var slide = SM.Slides.getScreenWithNumber(slideNumber);
 		var isScreen = SM.Slides.isScreen(slide);
 		if(isScreen){
-			SM.Editor.Screen.onThumbnailLoadFail(slide);
+			$(screen).children("img.slide_background").remove();
+			$(screen).children("div.change_bg_button").show();
+			var thumbnailURL = getDefaultThumbnailURLSlide();
+			if(SM.Slides.getCurrentSlide()===screen){
+				$("#screen_selected > img").attr("src",thumbnailURL);
+			}
+			var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(screen);
+			$(slideThumbnail).attr("src",thumbnailURL);
 		}
 	};
 
@@ -178,41 +185,45 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		return $("#views_list img.image_slidethumbnail[slideNumber=" + slidenumber + "]");
 	};
 
-	var getThumbnailURL = function(slide){
-		var thumbnailURL;
-		var slideType = $(slide).attr('type');
-
-		if(slideType===SM.Constant.VIEW_CONTENT){
-			//If the slide only contains one element, and it's an image, use it as thumbnail.
-			var zone = $(slide).children("div.view_content_zone");
-			if(($(zone).length === 1)&&(!SM.Editor.isZoneEmpty(zone))&&($(zone).attr("type")=="image")){
-				//The slide contains only one image
-				var img = $(zone).find("img");
-				if(($(img).length === 1)&&(typeof $(img).attr("src") == "string")){
-					thumbnailURL = $(img).attr("src");
-				}
-			} else {
-				thumbnailURL = _getDefaultThumbnailURLForViewContent(slide);
-			}
+	var getThumbnailURLForSlide = function(slide){
+		if($(slide).attr('type')===SM.Constant.VIEW_CONTENT){
+			return _getThumbnailURLForViewContent(slide);
 		} else {
 			//Screen or VIEW_IMAGE
-			thumbnailURL = SM.Editor.Screen.getThumbnailURL(slide);
+			return _getThumbnailURLForScreenOrViewImage(slide);
 		}
-		return thumbnailURL;
 	};
 
-	var getDefaultThumbnailURL = function(slide){
-		var slideType = $(slide).attr('type');
-		if(slideType===SM.Constant.VIEW_CONTENT){
-			return _getDefaultThumbnailURLForViewContent(slide);
+	var _getThumbnailURLForViewContent = function(slide){
+		//If the slide only contains one element and it is an image, use it as thumbnail.
+		var $zone = $(slide).children("div.view_content_zone");
+		if(($zone.length === 1)&&(!SM.Editor.isZoneEmpty($zone))&&($zone.attr("type")=="image")){
+			//The slide contains only one image
+			var img = $zone.find("img");
+			if(($(img).length === 1)&&(typeof $(img).attr("src") == "string")){
+				return $(img).attr("src");
+			}
+		}
+		return getDefaultThumbnailURLSlide(slide);
+	};
+
+	var _getThumbnailURLForScreenOrViewImage = function(slide){
+		var imgBackground = SM.Editor.Screen.getSlideBackground(slide);
+		if (typeof imgBackground !== "undefined") {
+			return imgBackground;
 		} else {
-			return SM.Editor.Screen.getDefaultThumbnailURL(slide);
+			return getDefaultThumbnailURLSlide(slide);
 		}
 	};
 
-	var _getDefaultThumbnailURLForViewContent = function(slide){
-		return SM.ImagesPath + "slidesthumbs/view_content_template.png";
+	var getDefaultThumbnailURLSlide = function(slide){
+		if($(slide).attr('type')===SM.Constant.VIEW_CONTENT){
+			return (SM.ImagesPath + "slidesthumbs/view_content_template.png");
+		} else {
+			return (SM.ImagesPath + "slidesthumbs/screen_template.png");
+		}
 	};
+
 
 	////////////////
 	// Views Thumbnails
@@ -234,8 +245,8 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 				SM.Debugging.log("Invalid view type");
 				return true; //Continue
 			}
-			var srcURL = getThumbnailURL(view);
-			var defaultURL = getDefaultThumbnailURL(view);
+			var srcURL = getThumbnailURLForSlide(view);
+			var defaultURL = getDefaultThumbnailURLSlide(view);
 			slideElements += 1;
 			imagesArray.push($("<img id='viewThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
     	});
@@ -326,8 +337,8 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		selectViewThumbnail					: selectViewThumbnail,
 		moveThumbnailsToScreenWithNumber	: moveThumbnailsToScreenWithNumber,
 		moveThumbnailsToViewWithNumber		: moveThumbnailsToViewWithNumber,
-		getThumbnailURL						: getThumbnailURL,
-		getDefaultThumbnailURL 				: getDefaultThumbnailURL,
+		getThumbnailURLForSlide				: getThumbnailURLForSlide,
+		getDefaultThumbnailURLSlide 		: getDefaultThumbnailURLSlide,
 		getThumbnailForSlide 				: getThumbnailForSlide,
 		isThumbnailVisible					: isThumbnailVisible
 	}

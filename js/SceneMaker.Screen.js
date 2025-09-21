@@ -24,7 +24,15 @@ SceneMaker.Screen = (function(SM,$,undefined){
 		var $screen = $("#" + screenJSON.id);
 
 		//Background image
-		$screen.css("background-image", screenJSON.background);
+		if(typeof screenJSON.background === "string"){
+			var imgBackgroundId = SM.Utils.getId(screenJSON.id + "_background");
+			var imgBackground = $("<img>", {
+				id: imgBackgroundId,
+				class: "slide_background",
+				src: screenJSON.background
+			});
+			$screen.append(imgBackground);
+		}
 
 		//Hotspots
 		for(i in screenJSON.hotspots){

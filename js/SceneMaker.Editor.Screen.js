@@ -60,8 +60,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 
 	var draw = function(slideJSON,scaffoldDOM){
 		if(slideJSON){
-			if((typeof slideJSON.background === "string")&&(slideJSON.background !== "none")){
-				onBackgroundSelected(SM.Utils.getSrcFromCSS(slideJSON.background),scaffoldDOM);
+			if(typeof slideJSON.background === "string"){
+				setSlideBackground(scaffoldDOM, slideJSON.background);
 			};
 			//Draw hotspots
 			if (Array.isArray(slideJSON.hotspots)) {
@@ -928,17 +928,20 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		console.log("Draw hotzone",slideId,hotzoneId,x,y);
 	};
 
-	/*
-	 * Callback from the SM.Editor.Image module to add the background
-	 */
-	var onBackgroundSelected = function(contentToAdd,slide){
-		if(typeof slide === "undefined"){
-			slide = SM.Slides.getCurrentSlide();
-		}
-
-		if($(slide).attr("type")!==SM.Constant.VIEW_CONTENT){
-			$(slide).css("background-image", "url("+contentToAdd+")");
-			$(slide).attr("avatar", "url('"+contentToAdd+"')");
+	var setSlideBackground = function(slide,backgroundURL){
+		var $slide = $(slide);
+		if($slide.attr("type")!==SM.Constant.VIEW_CONTENT){
+			var imgBackground = $slide.children("img.slide_background");
+			if (imgBackground.length === 0) {
+				// Create <img> for background
+				var imgBackgroundId = SM.Utils.getId($slide.attr("id") + "_background");
+				var imgBackground = $("<img>", {
+					id: imgBackgroundId,
+					class: "slide_background"
+				});
+				$slide.append(imgBackground);
+			}
+			$(imgBackground).attr("src",backgroundURL);
 			$(slide).find("div.change_bg_button").hide();
 
 			SM.Editor.Slides.updateThumbnail(slide);
@@ -948,30 +951,13 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		$.fancybox.close();
 	};
 
-	var getThumbnailURL = function(screen){
-		var avatar = $(screen).attr('avatar');
-		if(avatar){
-			return SM.Utils.getSrcFromCSS(avatar);
+	var getSlideBackground = function(slide){
+		var imgBackground = $(slide).children("img.slide_background");
+		if (imgBackground.length > 0) {
+			return $(imgBackground).attr("src");
 		} else {
-			return getDefaultThumbnailURL();
+			return undefined;
 		}
-	};
-
-	var getDefaultThumbnailURL = function(){
-		return (SM.ImagesPath + "slidesthumbs/screen_template.png");
-	};
-
-	var onThumbnailLoadFail = function(screen){
-		var thumbnailURL = getDefaultThumbnailURL();
-		$(screen).css("background-image", "none");
-		$(screen).attr("avatar", "url('"+thumbnailURL+"')");
-		$(screen).find("div.change_bg_button").show();
-
-		if(SM.Slides.getCurrentSlide()==screen){
-			$("#screen_selected > img").attr("src",thumbnailURL);
-		}
-		var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(screen);
-		$(slideThumbnail).attr("src",thumbnailURL);
 	};
 
 
@@ -987,8 +973,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		screen.id = $(screenDOM).attr('id');
 		screen.type = $(screenDOM).attr('type');
 
-		var screenBackground = $(screenDOM).css("background-image");
-		if((screenBackground && screenBackground !== "none")){
+		var screenBackground = getSlideBackground(screenDOM);
+		if(typeof screenBackground === "string"){
 			screen.background = screenBackground;
 		}
 
@@ -1070,8 +1056,6 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var options = {};
 		options.width = 375;
 		options.height = 130;
-		//options.notificationIconSrc = SM.Editor.Thumbnails.getThumbnailURL(slideToDelete);
-		//options.notificationIconClass = "notificationIconDelete";
 		options.text = SM.I18n.getTrans("i.AreYouSureDeleteHotspot");
 
 		var button1 = {};
@@ -1228,7 +1212,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		draw 							: draw,
 		refreshDraggables				: refreshDraggables,
 		copyHotspotConfig				: copyHotspotConfig,
-		onBackgroundSelected 			: onBackgroundSelected,
+		setSlideBackground 				: setSlideBackground,
+		getSlideBackground				: getSlideBackground,
 		addHotspot						: addHotspot,
 		addHotzone						: addHotzone,
 		onClick 						: onClick,
@@ -1247,8 +1232,6 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		onInputHotspotSizeHeight		: onInputHotspotSizeHeight,
 		onHotspotSettingsDone			: onHotspotSettingsDone,
 		saveScreen						: saveScreen,
-		getThumbnailURL 				: getThumbnailURL,
-		getDefaultThumbnailURL			: getDefaultThumbnailURL,
 		onEnterScreen					: onEnterScreen,
 		onLeaveScreen					: onLeaveScreen,
 		openScreen						: openScreen,

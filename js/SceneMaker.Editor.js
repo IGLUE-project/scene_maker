@@ -388,8 +388,6 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		return scene;
 	};
 
-	
-	
 	var _saveView = function(slideDOM,scene){
 		switch($(slideDOM).attr('type')){
 			case SM.Constant.VIEW_IMAGE:

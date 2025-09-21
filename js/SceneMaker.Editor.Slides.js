@@ -328,7 +328,7 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 		var options = {};
 		options.width = 375;
 		options.height = 130;
-		options.notificationIconSrc = SM.Editor.Thumbnails.getThumbnailURL(slideToDelete);
+		options.notificationIconSrc = SM.Editor.Thumbnails.getThumbnailURLForSlide(slideToDelete);
 		options.notificationIconClass = "notificationIconDelete";
 		if(removeView===true){
 			options.text = SM.I18n.getTrans("i.AreYouSureDeleteView");
@@ -481,12 +481,12 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 
 	var updateThumbnail = function(slide){
 		var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(slide);
-		var thumbnailURL = SM.Editor.Thumbnails.getThumbnailURL(slide);
+		var thumbnailURL = SM.Editor.Thumbnails.getThumbnailURLForSlide(slide);
 
 		//Capure load img error
 		$(slideThumbnail).error(function(response){
 			//Load the default image
-			_updateThumbnail(slide,slideThumbnail,SM.Editor.Thumbnails.getDefaultThumbnailURL(slide));
+			_updateThumbnail(slide,slideThumbnail,SM.Editor.Thumbnails.getDefaultThumbnailURLSlide(slide));
 		});
 
 		_updateThumbnail(slide,slideThumbnail,thumbnailURL);

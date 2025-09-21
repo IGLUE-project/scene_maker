@@ -25,14 +25,12 @@ SceneMaker.Editor.Image = (function(SM,$,undefined){
 	var _onLoadURLTab = function(){
 		if(contentAddMode === SM.Constant.SCREEN){
 			var $slide = $(SM.Slides.getCurrentSlide());
-			var avatar = $slide.attr("avatar");
-			if(typeof avatar === "string"){
-				var imgURL = SM.Utils.getSrcFromCSS(avatar);
-				if((typeof imgURL === "string")&&(imgURL.length > 0)){
-					$("#" + urlInputId).val(imgURL);
-					$("#" + urlDivId + " .previewButton").trigger("click");
-					return;
-				}
+			var slideBackgroundURL = SM.Editor.Screen.getSlideBackground($slide);
+			if(typeof slideBackgroundURL === "string"){
+				$("#" + urlInputId).val(slideBackgroundURL);
+				$("#" + urlDivId + " .previewButton").trigger("click");
+				$("#" + urlDivId + " .previewimgbox button").hide();
+				return;
 			}
 		}
 
@@ -44,7 +42,7 @@ SceneMaker.Editor.Image = (function(SM,$,undefined){
 	var addContent = function(){
 		switch(contentAddMode){
 			case SM.Constant.SCREEN:
-				SM.Editor.Screen.onBackgroundSelected(contentToAdd);
+				SM.Editor.Screen.setSlideBackground(SM.Slides.getCurrentSlide(),contentToAdd);
 				break;
 			default:
 				SM.Editor.Object.drawPreviewObject(contentToAdd, {forceType: SM.Constant.MEDIA.IMAGE});
