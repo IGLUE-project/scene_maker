@@ -10,9 +10,9 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
-The full text of the GNU General Public License Version 3 is as follows:
-
 -------------------------------------------------------------------------------------------------
+
+The full text of the GNU General Public License Version 3 is as follows:
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -657,7 +657,7 @@ the "copyright" line and a pointer to where the full notice is found.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
@@ -695,8 +695,10 @@ Third-Party Dependencies
 
 This software uses or has parts based on the following third-party software (each third-party software is licensed under its respective license):
 
+Annotorious | Copyright (c) 2023, Rainer Simon | BSD 3-Clause License (see libs/annotorious/annotorious.js.LICENSE)
 CKEditor VERSION 3.6.6 | Copyright (c) 2003-2013, CKSource - Frederico Knabben | GNU General Public License Version 2 or later (the "GPL").
-Escapp client (https://github.com/iglue-project/escapp_client) | GNU General Public License Version 3 (See js/libs/escapp/escapp.js.LICENSE).
+Escapp client (https://github.com/iglue-project/escapp_client) | GNU General Public License Version 3 (see libs/escapp/escapp.js.LICENSE).
+Font Awesome 3.2.1 by Dave Gandy (http://fontawesome.io) | Fonts: SIL OFL 1.1, Code: MIT License.
 jQuery v1.7.2 | (c) OpenJS Foundation and other contributors | jquery.org/license | MIT license.
 jQuery UI v1.9.2 | Copyright (c) 2012 jQuery Foundation and other contributors (http://jqueryui.com) | MIT license.
 jQuery carouFredSel 6.2.0 | Copyright (c) 2013 Fred Heusschen | Dual licensed under the MIT and GPL licenses.
@@ -706,7 +708,6 @@ jQuery Mouse Wheel Plugin 3.0.4 | Copyright (c) 2010 Brandon Aaron (http://brand
 jQuery UI Touch Punch 0.2.3 | Copyright 2011–2014, Dave Furfero | Dual licensed under the MIT or GPL Version 2 licenses.
 popperjs/core v2.11.8 | Copyright (c) 2021 Floating UI contributors | MIT License.
 Tippy.js | Copyright (c) 2017-present atomiks | MIT License.
-Font Awesome 3.2.1 by Dave Gandy (http://fontawesome.io) | Fonts: SIL OFL 1.1, Code: MIT License.
 
 -------------------------------------------------------------------------------------------------
 

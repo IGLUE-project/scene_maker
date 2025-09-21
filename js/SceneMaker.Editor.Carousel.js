@@ -1,8 +1,8 @@
-SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
+SceneMaker.Editor.Carousel = (function(SM,$,undefined){
 	
 	//Available Options: rows,callback,rowItems,scrollItems,styleClass
 	
-	var createCarrousel = function(containerId,options){
+	var createCarousel = function(containerId,options){
 		//Necessary params
 		if(!containerId){
 			return;
@@ -62,9 +62,9 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		//Define intern variables
 		var multipleRow = (rows>1);
 		
-		var carrouselClass = "";
+		var carouselClass = "";
 		if(styleClass){
-			carrouselClass = "_" + styleClass;
+			carouselClass = "_" + styleClass;
 		}
 		
 		if(!scrollItems){
@@ -72,9 +72,9 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		}
 			
 		if(multipleRow){
-			var rowClass = "multiple_row" + carrouselClass;
+			var rowClass = "multiple_row" + carouselClass;
 		} else {
-			var rowClass = "single_row" + carrouselClass;
+			var rowClass = "single_row" + carouselClass;
 		}		
 			
 		//Wrapper main div with a image carousel class container.
@@ -100,8 +100,8 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		$(button_next).addClass("next_" + rowClass);
 		button_prev.setAttribute('href', "#");
 		button_next.setAttribute('href', "#");
-		button_prev.setAttribute('id', "carrousel_prev" + containerId);
-		button_next.setAttribute('id', "carrousel_next" + containerId);
+		button_prev.setAttribute('id', "carousel_prev" + containerId);
+		button_next.setAttribute('id', "carousel_next" + containerId);
 		$(button_prev).html("<span>prev</span>");
 		$(button_next).html("<span>next</span>");
 		 
@@ -112,15 +112,15 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		if(pagination){
 			var paginationDiv = document.createElement('div');
 			paginationDiv.setAttribute('class','pagination pagination_' + rowClass);
-			paginationDiv.setAttribute('id','carrousel_pag' + containerId);
+			paginationDiv.setAttribute('id','carousel_pag' + containerId);
 			$(wrapperDiv).append(paginationDiv);
 		}
 		 
 		//Element stylesheet
-		$(mainDiv).children().addClass("carrousel_element_" + rowClass);
+		$(mainDiv).children().addClass("carousel_element_" + rowClass);
 		
 		$(mainDiv).children().each(function(index,value){
-			$(value).children().addClass("carrousel_element_" + rowClass);
+			$(value).children().addClass("carousel_element_" + rowClass);
 		});
 		
 		//Callbacks events
@@ -142,7 +142,7 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 				var start = 0;
 			}
 			
-			_setMainCarrousel(containerId,containerId, rows,[],rowItems,scrollItems,width,start, function(){
+			_setMainCarousel(containerId,containerId, rows,[],rowItems,scrollItems,width,start, function(){
 				if(pagination){
 					_forceShowPagination(containerId);
 				}
@@ -170,7 +170,7 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		for (i=0;i<rows;i++) {
 			window[mainDiv.id + "_row" + i ] = document.createElement('div');
 			window[mainDiv.id + "_row" + i ].setAttribute('id',mainDiv.id + "_row" + i);
-			window[mainDiv.id + "_row" + i ].setAttribute('class',"carrousel_wrapper_" + rowClass);
+			window[mainDiv.id + "_row" + i ].setAttribute('class',"carousel_wrapper_" + rowClass);
 			if(i!=0){
 				synchronizeIds.push(mainDiv.id + "_row" + i);
 			}
@@ -181,17 +181,17 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 			$(window[mainDiv.id + "_row" + index%rows  ]).append(value);
 		});
 			
-		//Add divs to the wrapper and invoke carrousel Plugin
+		//Add divs to the wrapper and invoke carousel Plugin
 		for (i=rows-1;i>=0;i--) {
 			$(wrapperDiv).prepend(window[mainDiv.id + "_row" + i ]);
 			if(i==0){
 				var newContainerId = mainDiv.id + "_row" + i;
-				_setMainCarrousel(newContainerId,containerId,rows,synchronizeIds,rowItems,scrollItems,width, null, function(){
+				_setMainCarousel(newContainerId,containerId,rows,synchronizeIds,rowItems,scrollItems,width, null, function(){
 					createdRows++;
 					_afterCreateRow(createdRows,rows,afterCreateCarruselFunction);
 				});
 			} else {
-				_setRowCarrousel(mainDiv.id + "_row" + i,rowItems,scrollItems,width, function(){
+				_setRowCarousel(mainDiv.id + "_row" + i,rowItems,scrollItems,width, function(){
 					createdRows++;
 					_afterCreateRow(createdRows,rows,afterCreateCarruselFunction);
 				});
@@ -205,7 +205,7 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		}
 	};
 
-	var _setRowCarrousel = function (id,rowItems,scrollItems,width,afterCreateCarruselFunction){
+	var _setRowCarousel = function (id,rowItems,scrollItems,width,afterCreateCarruselFunction){
 		$("#" + id).carouFredSel({
 			auto    : false,
 			circular: false,
@@ -228,7 +228,7 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		}); 
 	};
 
-	var _setMainCarrousel = function (id,widgetsId,rows,synchronizeIds,rowItems,scrollItems,width,start,afterCreateCarruselFunction){
+	var _setMainCarousel = function (id,widgetsId,rows,synchronizeIds,rowItems,scrollItems,width,start,afterCreateCarruselFunction){
 		if(!start){
 			start = 0;
 		}
@@ -253,14 +253,14 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 				start   : start
 			},
 			prev    : {
-				button  : "#carrousel_prev" + widgetsId
+				button  : "#carousel_prev" + widgetsId
 				// key     : "left"
 			},
 			next    : {
-				button  : "#carrousel_next" + widgetsId
+				button  : "#carousel_next" + widgetsId
 				// key     : "right"
 			},
-			pagination  : "#carrousel_pag"  + widgetsId,
+			pagination  : "#carousel_pag"  + widgetsId,
 			onCreate    : afterCreateCarruselFunction
 		});  
 			
@@ -279,30 +279,30 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 	};
 	
 	
-	var cleanCarrousel = function(containerId){
+	var cleanCarousel = function(containerId){
 		//Remove content
 		$("#" + containerId).html("");
 
-		//Check if is a multirow carrousel
+		//Check if is a multirow carousel
 		var containderIdForMultiRow = containerId + "_row0";
 		if($("#" + containderIdForMultiRow).attr("rows")){
 			var rows = $("#" + containderIdForMultiRow).attr("rows");
 			var i;
 			for(i=0; i<rows;i++){
-				_cleanOneRowCarrousel(containerId + "_row" + i);
+				_cleanOneRowCarousel(containerId + "_row" + i);
 			}
 			$("#" + containderIdForMultiRow).attr("id",containerId);
 		} else {
-			_cleanOneRowCarrousel(containerId);
+			_cleanOneRowCarousel(containerId);
 		}
 	};
   
-	var _cleanOneRowCarrousel = function(containerId){
-		var carrouselWrapper = $("#" + containerId).parent().parent();
-		if($(carrouselWrapper).hasClass('image_carousel')){
-			$(carrouselWrapper).removeClass();
-			$(carrouselWrapper).html("");
-			$(carrouselWrapper).attr("id",containerId);
+	var _cleanOneRowCarousel = function(containerId){
+		var carouselWrapper = $("#" + containerId).parent().parent();
+		if($(carouselWrapper).hasClass('image_carousel')){
+			$(carouselWrapper).removeClass();
+			$(carouselWrapper).html("");
+			$(carouselWrapper).attr("id",containerId);
 		}
 	};
 	
@@ -313,32 +313,32 @@ SceneMaker.Editor.Carrousel = (function(SM,$,undefined){
 		}
 	};
 
-	var goToElement = function(carrouselDivId,element){
+	var goToElement = function(carouselDivId,element){
 		if($(element).is("IMG")){
 			element = $(element).parent();
 		}
-		$("#" + carrouselDivId).trigger("slideTo", element);
+		$("#" + carouselDivId).trigger("slideTo", element);
 	};
   
-	var advanceCarrousel = function(carrouselDivId,no){
-		$("#" + carrouselDivId).trigger("next", no);
+	var advanceCarousel = function(carouselDivId,no){
+		$("#" + carouselDivId).trigger("next", no);
 	};
 
-	var backCarrousel = function(carrouselDivId,no){
-		$("#" + carrouselDivId).trigger("prev", no);
+	var backCarousel = function(carouselDivId,no){
+		$("#" + carouselDivId).trigger("prev", no);
 	};
 
-	var insertElement = function(carrouselDivId,element,posc){
-		$("#" + carrouselDivId).trigger("insertItem", [element, posc]);
+	var insertElement = function(carouselDivId,element,posc){
+		$("#" + carouselDivId).trigger("insertItem", [element, posc]);
 	};
 
 	return {
-		createCarrousel	  : createCarrousel,
-		cleanCarrousel    : cleanCarrousel,
-		goToElement       : goToElement,
-		advanceCarrousel  : advanceCarrousel,
-		backCarrousel     : backCarrousel,
-		insertElement	  : insertElement
+		createCarousel	  	: createCarousel,
+		cleanCarousel    	: cleanCarousel,
+		goToElement       	: goToElement,
+		advanceCarousel  	: advanceCarousel,
+		backCarousel     	: backCarousel,
+		insertElement	  	: insertElement
 	};
 
 }) (SceneMaker, jQuery);

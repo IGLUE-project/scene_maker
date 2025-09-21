@@ -58,7 +58,7 @@ div.image_carousel_multiple_row_hotspotgallery > div.caroufredsel_wrapper {
 }
 
 div.image_carousel a.prev, div.image_carousel a.next {
-	background: url(/images/carrousel/carrousel_sprite.png) no-repeat transparent;
+	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) no-repeat transparent;
 	width: 45px;
 	height: 50px;
 	display: block;
@@ -97,7 +97,7 @@ div.image_carousel div.pagination {
 	margin-top: 12px;
 }
 div.image_carousel div.pagination a {
-	background: url(/images/carrousel/carrousel_sprite.png) 0 -259px no-repeat transparent;
+	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) 0 -259px no-repeat transparent;
 	width: 17px;
 	height: 17px;
 	margin: 0 5px 0 0;
@@ -127,7 +127,7 @@ div.image_carousel a.prev_multiple_row, div.image_carousel a.next_multiple_row {
 	top: 245px;
 }
 
-div.carrousel_element_single_row {
+div.carousel_element_single_row {
 	float: left;
 	width: 78px;
 	height: 78px;
@@ -136,7 +136,7 @@ div.carrousel_element_single_row {
 	margin-left: 10px;
 }
 
-div.carrousel_element_single_row > img.carrousel_element_single_row {
+div.carousel_element_single_row > img.carousel_element_single_row {
 	width: 78px;
 	height: 78px;
 	max-width: 78px;
@@ -145,7 +145,7 @@ div.carrousel_element_single_row > img.carrousel_element_single_row {
 	margin-top: 1px !important;
 }
 
-div.carrousel_element_multiple_row {
+div.carousel_element_multiple_row {
 	width: 150px;
 	height: 155px;
 	max-width: 150px;
@@ -154,7 +154,7 @@ div.carrousel_element_multiple_row {
 	margin-left: 10px;
 }
 
-img.carrousel_element_multiple_row {
+img.carousel_element_multiple_row {
 	width: 150px;
 	height: 150px;
 	max-width: 150px;

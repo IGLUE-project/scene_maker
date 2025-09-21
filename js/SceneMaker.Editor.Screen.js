@@ -384,7 +384,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 
 		//Image
 		//Redraw gallery
-		_drawHotspotGalleryCarrousel(function(){
+		_drawHotspotGalleryCarousel(function(){
 			$("#hotspotImageGallery img").removeClass("selected");
 			var hotspotImageSource = $hotspot.attr("src");
 			//Check if image belongs to gallery
@@ -396,7 +396,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			} else {
 				$(imgGallery).addClass("selected");
 				$("#hotspotImageSource").val("gallery").trigger("change");
-				SM.Editor.Carrousel.goToElement("hotspotImageGallery",imgGallery);
+				SM.Editor.Carousel.goToElement("hotspotImageGallery",imgGallery);
 			}
 		});
 
@@ -581,8 +581,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 	};
 
-	var _drawHotspotGalleryCarrousel = function(callback){
-		_cleanHotspotGalleryCarrousel();
+	var _drawHotspotGalleryCarousel = function(callback){
+		_cleanHotspotGalleryCarousel();
 
 		var hotspotGalleryImgs = [
 			{ src: SM.ImagesPath + "hotspotgallery/hotspot.png" },
@@ -602,57 +602,57 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_futuristic.png" },
 		];
 
-		var carrouselImages = [];
+		var carouselImages = [];
 		$.each(hotspotGalleryImgs, function(index, image){
 			var myImg = $("<img src='" + image.src + "'/>");
-			carrouselImages.push(myImg);
+			carouselImages.push(myImg);
 		});
 
 		var options = {};
-		options.callback = _drawHotspotGalleryCarrouselAfterLoadImages;
-		options.afterDrawCarrouselCallback = callback;
-		SM.Editor.Utils.Loader.loadImagesOnContainer(carrouselImages,"hotspotImageGallery",options);
+		options.callback = _drawHotspotGalleryCarouselAfterLoadImages;
+		options.afterDrawCarouselCallback = callback;
+		SM.Editor.Utils.Loader.loadImagesOnContainer(carouselImages,"hotspotImageGallery",options);
 	};
 
-	var _drawHotspotGalleryCarrouselAfterLoadImages = function(loadImagesOnContainerOptions){
-		var $carrouselDiv = $("#hotspotImageGallery");
-		var $containerCarouselDiv = $carrouselDiv.parent();
-		$carrouselDiv.show();
-		SM.Utils.addTempShown([$containerCarouselDiv,$carrouselDiv]);
+	var _drawHotspotGalleryCarouselAfterLoadImages = function(loadImagesOnContainerOptions){
+		var $carouselDiv = $("#hotspotImageGallery");
+		var $containerCarouselDiv = $carouselDiv.parent();
+		$carouselDiv.show();
+		SM.Utils.addTempShown([$containerCarouselDiv,$carouselDiv]);
 
 		var options = new Array();
 		options.rows = 1;
-		//options.callback = _onClickCarrouselElement;
+		//options.callback = _onClickCarouselElement;
 		options.rowItems = 9;
 		options.scrollItems = 9;
 		//options.styleClass = "hotspotgallery";
 		options.afterCreateCarruselFunction = function(){
 			setTimeout(function(){
-				SM.Utils.removeTempShown([$containerCarouselDiv,$carrouselDiv]);
-				if(typeof loadImagesOnContainerOptions.afterDrawCarrouselCallback === "function"){
-					loadImagesOnContainerOptions.afterDrawCarrouselCallback();
+				SM.Utils.removeTempShown([$containerCarouselDiv,$carouselDiv]);
+				if(typeof loadImagesOnContainerOptions.afterDrawCarouselCallback === "function"){
+					loadImagesOnContainerOptions.afterDrawCarouselCallback();
 				}
 			},100);
 		}
-		SM.Editor.Carrousel.createCarrousel("hotspotImageGallery", options);
+		SM.Editor.Carousel.createCarousel("hotspotImageGallery", options);
 	};
 
-	var _cleanHotspotGalleryCarrousel = function(){
-		SM.Editor.Carrousel.cleanCarrousel("hotspotImageGallery");
+	var _cleanHotspotGalleryCarousel = function(){
+		SM.Editor.Carousel.cleanCarousel("hotspotImageGallery");
 		$("#hotspotImageGallery").hide();
 	};
 
 	var onHotspotImageSourceChange = function(event){
 		var option = event.target.value;
 		if(option === "gallery"){
-			var carrouselWrapper = $("#hotspotImageGallery").parent().parent();
-			$(carrouselWrapper).show();
+			var carouselWrapper = $("#hotspotImageGallery").parent().parent();
+			$(carouselWrapper).show();
 			$("#hotspotImageURLWrapper").hide();
 			$("#hotspotImageURL").val("");
 			checkHotspotImageURLPreview();
 		} else if(option === "url"){
-			var carrouselWrapper = $("#hotspotImageGallery").parent().parent();
-			$(carrouselWrapper).hide();
+			var carouselWrapper = $("#hotspotImageGallery").parent().parent();
+			$(carouselWrapper).hide();
 			$("#hotspotImageURLWrapper").show();
 			checkHotspotImageURLPreview();
 		}
