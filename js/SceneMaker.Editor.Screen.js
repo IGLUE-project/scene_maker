@@ -52,6 +52,13 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		});
 	};
 
+	var _setDefaultScreenConfig = function(slideId){
+		slideData[slideId] = {
+			hotspots: {},
+			hotzones: {}
+		};
+	};
+
 	var addScreen = function(){
 		var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:SM.Slides.getScreensQuantity()+1});
 		SM.Editor.Slides.addScreen(screen);
@@ -128,6 +135,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			case "HOTZONE":
 				_disableEditingMode("HOTSPOT");
 				$("#slides_panel").addClass("hotzone_active");
+				_onEnableHotzones();
 				break;
 			case "NONE":
 				_disableEditingMode("HOTSPOT");
@@ -144,6 +152,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				break;
 			case "HOTZONE":
 				$("#slides_panel").removeClass("hotzone_active");
+				_disableHotzones();
 				break;
 			default:
 				break;
@@ -164,7 +173,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 						_onClickInHotspotMode(event);
 						break;
 					case "HOTZONE":
-						_onClickInHotzoneMode(event);
+						//Do nothing. Handled by Annotorious.
 						break;
 					default:
 						break;
@@ -174,6 +183,54 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			if ($target.hasClass('hotspot')){
 				_onSelectHotspot($target);
 			}
+		}
+	};
+
+
+	/////////
+	// Hotzones
+	////////
+
+	var _onEnableHotzones = function(){
+		var $currentSlide = $(SM.Slides.getCurrentSlide());
+		var currentSlideId = $currentSlide.attr("id");
+
+		if(typeof slideData[currentSlideId].annotation === "undefined"){
+			var imgBackground = $currentSlide.children("img.slide_background");
+			if(imgBackground.length === 0){
+				//No background
+				_disableEditingMode("HOTZONE");
+				return;
+			}
+			_createAnnotationForSlide(currentSlideId);
+		} else {
+			slideData[currentSlideId].annotation.setDrawingEnabled(true);
+		}
+	};
+
+	var _createAnnotationForSlide = function(slideId){
+		var $imgBackground = $("#" + slideId).children("img.slide_background");
+		var annotation = Annotorious.createImageAnnotator($imgBackground.attr("id"), {
+			drawingEnabled: true,
+			drawingMode: "click",
+			style: {
+				fill: '#ffffff',
+				fillOpacity: 0.25
+			}
+		});
+		annotation.setDrawingTool('polygon');
+
+		annotation.on('createAnnotation', (createdAnnotation) => {
+			_disableEditingMode("HOTZONE");
+		});
+
+		slideData[slideId].annotation = annotation;
+	};
+
+	var _disableHotzones = function(){
+		var currentSlideId = $(SM.Slides.getCurrentSlide()).attr("id");
+		if((typeof slideData[currentSlideId] !== "undefined") && (typeof slideData[currentSlideId].annotation !== "undefined")){
+			slideData[currentSlideId].annotation.setDrawingEnabled(false);
 		}
 	};
 
@@ -237,10 +294,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		_validateHotspotPosition($hotspot);
 
 		if(typeof slideData[slideId] === "undefined"){
-			slideData[slideId] = {
-				hotspots: {},
-				hotzones: {}
-			};
+			_setDefaultScreenConfig(slideId);
 		}
 		slideData[slideId].hotspots[hotspotId] = {};
 		slideData[slideId].hotspots[hotspotId].lockAspectRatio = lockAspectRatio;
@@ -903,30 +957,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		$.fancybox.close();
 	};
 
+
 	/////////
-	// Hotzones
+	// Background
 	////////
-
-	var _onClickInHotzoneMode = function(event){
-		event.preventDefault();
-		event.stopPropagation();
-
-		var slide = SM.Slides.getCurrentSlide();
-		var slideId = $(slide).attr("id");
-		var hotzoneId = SM.Utils.getId("hotzone-");
-		var rect = slide.getBoundingClientRect();
-		var x = event.clientX - rect.left;
-		var y = event.clientY - rect.top;
-		
-		_drawHotzone(slideId,hotzoneId,x,y);
-
-		currentEditingMode = "NONE";
-		_enableEditingMode("NONE");
-	};
-
-	var _drawHotzone = function(slideId,hotzoneId,x,y){
-		console.log("Draw hotzone",slideId,hotzoneId,x,y);
-	};
 
 	var setSlideBackground = function(slide,backgroundURL){
 		var $slide = $(slide);
