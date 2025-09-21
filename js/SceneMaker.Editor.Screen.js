@@ -1,7 +1,7 @@
 SceneMaker.Editor.Screen = (function(SM,$,undefined){
 
 	var initialized = false;
-	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "ZONE".
+	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "HOTZONE".
 	var _hiddenLinkToInitHotspotSettings;
 	var slideData;
 	var currentHotspot;
@@ -97,7 +97,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
    /*
-	* Toolbar: Hotspots and zones
+	* Toolbar: Hotspots and Hotzones
 	*/
 	var addHotspot = function(){
 		if(currentEditingMode === "HOTSPOT"){
@@ -109,29 +109,29 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 	};
 
-	var addZone = function(){
-		if(currentEditingMode === "ZONE"){
-			_disableEditingMode("ZONE");
+	var addHotzone = function(){
+		if(currentEditingMode === "HOTZONE"){
+			_disableEditingMode("HOTZONE");
 			currentEditingMode = "NONE";
 		} else {
-			currentEditingMode = "ZONE";
-			_enableEditingMode("ZONE");
+			currentEditingMode = "HOTZONE";
+			_enableEditingMode("HOTZONE");
 		}
 	};
 
 	var _enableEditingMode = function(mode){
 		switch(mode){
 			case "HOTSPOT":
-				_disableEditingMode("ZONE");
+				_disableEditingMode("HOTZONE");
 				$("#slides_panel").addClass("hotspot_active");
 				break;
-			case "ZONE":
+			case "HOTZONE":
 				_disableEditingMode("HOTSPOT");
-				$("#slides_panel").addClass("zone_active");
+				$("#slides_panel").addClass("hotzone_active");
 				break;
 			case "NONE":
 				_disableEditingMode("HOTSPOT");
-				_disableEditingMode("ZONE");
+				_disableEditingMode("HOTZONE");
 				break;
 		}
 	};
@@ -142,8 +142,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				$("#slides_panel").removeClass("hotspot_active");
 				currentHotspot = undefined;
 				break;
-			case "ZONE":
-				$("#slides_panel").removeClass("zone_active");
+			case "HOTZONE":
+				$("#slides_panel").removeClass("hotzone_active");
 				break;
 			default:
 				break;
@@ -163,8 +163,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 					case "HOTSPOT":
 						_onClickInHotspotMode(event);
 						break;
-					case "ZONE":
-						_onClickInZoneMode(event);
+					case "HOTZONE":
+						_onClickInHotzoneMode(event);
 						break;
 					default:
 						break;
@@ -191,8 +191,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var hotspotId = SM.Utils.getId("hotspot-");
 		var hotspotSize = 42;
 		var rect = slide.getBoundingClientRect();
-	    var x = event.clientX - rect.left - hotspotSize/2;
-	    var y = event.clientY - rect.top - hotspotSize/2;
+		var x = event.clientX - rect.left - hotspotSize/2;
+		var y = event.clientY - rect.top - hotspotSize/2;
 		
 		_drawHotspot(slideId,hotspotId,x,y);
 
@@ -239,7 +239,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		if(typeof slideData[slideId] === "undefined"){
 			slideData[slideId] = {
 				hotspots: {},
-				zones: {}
+				hotzones: {}
 			};
 		}
 		slideData[slideId].hotspots[hotspotId] = {};
@@ -313,7 +313,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		if(slideData[newScreenId] === "undefined"){
 			slideData[newScreenId] = {
 				hotspots: {},
-				zones: {}
+				hotzones: {}
 			};
 		}
 		if(slideData[oldScreenId] === "undefined"){
@@ -515,7 +515,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			});
 		});
 		
-		//Fill action template with current element ids (hotspots and zones)
+		//Fill action template with current element ids (hotspots and hotzones)
 		var currentOptionsElementIds = [];
 		//Hotspots
 		$('img.hotspot').each(function() {
@@ -904,16 +904,28 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
 	/////////
-	// Zones
+	// Hotzones
 	////////
 
-	var _onClickInZoneMode = function(event){
+	var _onClickInHotzoneMode = function(event){
 		event.preventDefault();
 		event.stopPropagation();
-		console.log("TO DO: Add Zone");
+
+		var slide = SM.Slides.getCurrentSlide();
+		var slideId = $(slide).attr("id");
+		var hotzoneId = SM.Utils.getId("hotzone-");
+		var rect = slide.getBoundingClientRect();
+		var x = event.clientX - rect.left;
+		var y = event.clientY - rect.top;
+		
+		_drawHotzone(slideId,hotzoneId,x,y);
 
 		currentEditingMode = "NONE";
 		_enableEditingMode("NONE");
+	};
+
+	var _drawHotzone = function(slideId,hotzoneId,x,y){
+		console.log("Draw hotzone",slideId,hotzoneId,x,y);
 	};
 
 	/*
@@ -1030,8 +1042,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 					screen.hotspots.push(hotspotJSON);
 				});
 			}
-			if(Object.keys(slideData[screen.id].zones).length > 0) {
-				screen.zones = slideData[screen.id].zones;
+			if(Object.keys(slideData[screen.id].hotzones).length > 0) {
+				screen.zones = slideData[screen.id].hotzones;
 			}
 		}
 
@@ -1218,7 +1230,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		copyHotspotConfig				: copyHotspotConfig,
 		onBackgroundSelected 			: onBackgroundSelected,
 		addHotspot						: addHotspot,
-		addZone							: addZone,
+		addHotzone						: addHotzone,
 		onClick 						: onClick,
 		showHotspotSettings				: showHotspotSettings,
 		getCurrentHotspot				: getCurrentHotspot,

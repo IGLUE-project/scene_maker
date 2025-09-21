@@ -80,10 +80,10 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 				$("#toolbar_background_wrapper").children().css("visibility","visible");
 				if(typeof $(slide).attr("avatar") !== "undefined"){
 					$("div.tool_action[action='addHotspot']").show();
-					$("div.tool_action[action='addZone']").show();
+					$("div.tool_action[action='addHotzone']").show();
 				} else {
 					$("div.tool_action[action='addHotspot']").hide();
-					$("div.tool_action[action='addZone']").hide();
+					$("div.tool_action[action='addHotzone']").hide();
 				}
 				break;
 			default:
@@ -375,8 +375,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		SM.Editor.Screen.deleteCurrentHotspot();
 	};
 
-	var addZone = function(){
-		SM.Editor.Screen.addZone();
+	var addHotzone = function(){
+		SM.Editor.Screen.addHotzone();
 	};
 
    /*
@@ -420,7 +420,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		changeBackground				: changeBackground,
 		addHotspot						: addHotspot,
 		deleteHotspot 					: deleteHotspot,
-		addZone							: addZone,
+		addHotzone						: addHotzone,
 		addTooltipsToSlide				: addTooltipsToSlide,
 		addTooltipToZone				: addTooltipToZone,
 		showZoneToolTip					: showZoneToolTip,

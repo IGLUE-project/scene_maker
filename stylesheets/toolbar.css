@@ -226,7 +226,7 @@ button.btn_toolbar:active {
 	box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.15);
 }
 
-section.hotspot_active div.tool_action[action='addHotspot'],  section.zone_active div.tool_action[action='addZone']{
+section.hotspot_active div.tool_action[action='addHotspot'],  section.hotzone_active div.tool_action[action='addHotzone']{
 	background-color: #326999;
 }
 
@@ -235,7 +235,7 @@ section.hotspot_active article[type='screen'], section.hotspot_active article[ty
 	cursor: crosshair;
 }
 
-section.zone_active article[type='screen'], section.zone_active article[type='view_image'] {
+section.hotzone_active article[type='screen'], section.hotzone_active article[type='view_image'] {
 	cursor: crosshair;
 }
 
