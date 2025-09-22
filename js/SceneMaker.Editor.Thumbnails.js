@@ -27,7 +27,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		var slideElements = 0;
 		$('.slides > article').each(function(index,s){
 			var srcURL = getThumbnailURLForSlide(s);
-			var defaultURL = getDefaultThumbnailURLSlide(s);
+			var defaultURL = getDefaultThumbnailURLForSlide(s);
 			if(srcURL){
 				slideElements += 1;
 				imagesArray.push($("<img id='screenThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' action='goToScreenWithNumber' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
@@ -43,18 +43,14 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 	};
 	 
 	var _onImageError = function(image){
-		var slideNumber = $(image).attr("slidenumber");
-		var slide = SM.Slides.getScreenWithNumber(slideNumber);
-		var isScreen = SM.Slides.isScreen(slide);
-		if(isScreen){
-			$(screen).children("img.slide_background").remove();
-			$(screen).children("div.change_bg_button").show();
-			var thumbnailURL = getDefaultThumbnailURLSlide();
-			if(SM.Slides.getCurrentSlide()===screen){
-				$("#screen_selected > img").attr("src",thumbnailURL);
-			}
-			var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(screen);
-			$(slideThumbnail).attr("src",thumbnailURL);
+		var slide = SM.Slides.getScreenWithNumber($(image).attr("slidenumber"));
+		var defaultThumbnailURL = getDefaultThumbnailURLForSlide(slide);
+
+		var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(slide);
+		$(slideThumbnail).attr("src",defaultThumbnailURL);
+
+		if(SM.Slides.getCurrentScreen()===slide){
+			$("#screen_selected > img").attr("src",thumbnailURL);
 		}
 	};
 
@@ -204,7 +200,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 				return $(img).attr("src");
 			}
 		}
-		return getDefaultThumbnailURLSlide(slide);
+		return getDefaultThumbnailURLForSlide(slide);
 	};
 
 	var _getThumbnailURLForScreenOrViewImage = function(slide){
@@ -212,11 +208,11 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		if (typeof imgBackground !== "undefined") {
 			return imgBackground;
 		} else {
-			return getDefaultThumbnailURLSlide(slide);
+			return getDefaultThumbnailURLForSlide(slide);
 		}
 	};
 
-	var getDefaultThumbnailURLSlide = function(slide){
+	var getDefaultThumbnailURLForSlide = function(slide){
 		if($(slide).attr('type')===SM.Constant.VIEW_CONTENT){
 			return (SM.ImagesPath + "slidesthumbs/view_content_template.png");
 		} else {
@@ -246,7 +242,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 				return true; //Continue
 			}
 			var srcURL = getThumbnailURLForSlide(view);
-			var defaultURL = getDefaultThumbnailURLSlide(view);
+			var defaultURL = getDefaultThumbnailURLForSlide(view);
 			slideElements += 1;
 			imagesArray.push($("<img id='viewThumbnail" + slideElements + "' class='image_slidethumbnail' slideNumber='" + slideElements + "' src='" + srcURL + "' defaultsrc='" + defaultURL + "'/>"));
     	});
@@ -338,7 +334,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		moveThumbnailsToScreenWithNumber	: moveThumbnailsToScreenWithNumber,
 		moveThumbnailsToViewWithNumber		: moveThumbnailsToViewWithNumber,
 		getThumbnailURLForSlide				: getThumbnailURLForSlide,
-		getDefaultThumbnailURLSlide 		: getDefaultThumbnailURLSlide,
+		getDefaultThumbnailURLForSlide 		: getDefaultThumbnailURLForSlide,
 		getThumbnailForSlide 				: getThumbnailForSlide,
 		isThumbnailVisible					: isThumbnailVisible
 	}

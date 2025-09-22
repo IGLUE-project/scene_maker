@@ -475,7 +475,7 @@ SceneMaker.Utils = (function(SM,undefined){
 		var showCloseButton = false;
 		var notificationIconSrc;
 		if(SM.Editing){
-			notificationIconSrc = SM.ImagesPath + "zonethumbs/content_fail.png";
+			notificationIconSrc = SM.ImagesPath + "thumbs/content_fail.png";
 		}
 		
 		if(options.width){

@@ -405,7 +405,7 @@ SceneMaker.Editor.Text = (function(SM,$,undefined){
 			}
 
 			var area = getZoneForCKContainer(event.editor.container.$);
-			SM.Editor.selectArea(area);
+			SM.Editor.selectContentZone(area);
 		});
 
 		// ckeditor.on('blur', function(event){

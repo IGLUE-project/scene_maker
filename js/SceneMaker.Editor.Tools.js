@@ -35,7 +35,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	 
 	var cleanToolbar = function(){
 		var cSlide = SM.Slides.getCurrentScreen();
-		if(typeof cSlide != "undefined"){
+		if(typeof cSlide !== "undefined"){
 			loadToolsForSlide(cSlide);
 		}
 	};
@@ -100,12 +100,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		_cleanElementToolbar();
 	};
 
-	/*
-	 * Dirty Mode: change save buttons status
-	 */
-	var dirtyModeTimeout;
+	var saveButtonTimeout;
 	var saveButtonStatus = "enabled";
-
 	var changeSaveButtonStatus = function(status){
 		switch(status){
 			case "enabled":
@@ -127,7 +123,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 			return;
 		}
 		saveButtonStatus = "enabled";
-		_stopDirtyTimeout();
+		_stopSaveButtonTimeout();
 		$("#toolbar_save").find(".toolbar_scene_wrapper").removeClass("toolbar_scene_wrapper_loading");
 		$("#toolbar_save").find(".toolbar_scene_wrapper").removeClass("toolbar_scene_wrapper_disabled");
 		$("#toolbar_save").find("p.toolbar_scene_title").html(SM.I18n.getTrans("i.Save"));
@@ -160,8 +156,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		$("#toolbar_save").find(".toolbar_scene_wrapper").addClass("toolbar_scene_wrapper_disabled");
 		$("#toolbar_save").find("p.toolbar_scene_title").html(SM.I18n.getTrans("i.Saved"));
 
-		_stopDirtyTimeout();
-		dirtyModeTimeout = setTimeout(function(){
+		_stopSaveButtonTimeout();
+		saveButtonTimeout = setTimeout(function(){
 			changeSaveButtonStatus("enabled");
 		}, 5000);
 
@@ -170,9 +166,9 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		$(".menu_option.menu_action[action='onSaveButtonClicked']").find("span").html(SM.I18n.getTrans("i.Saved"));
 	};
 
-	var _stopDirtyTimeout = function(){
-		if(typeof dirtyModeTimeout != "undefined"){
-			clearTimeout(dirtyModeTimeout);
+	var _stopSaveButtonTimeout = function(){
+		if(typeof saveButtonTimeout != "undefined"){
+			clearTimeout(saveButtonTimeout);
 		}
 	};
 
@@ -328,6 +324,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	var _cleanElementToolbar = function(type){
 		if(type !== "hotspot"){
 			SM.Editor.Screen.setCurrentHotspot(undefined);
+		} else if(type !== "hotzone"){
+			SM.Editor.Screen.setCurrentHotzoneId(undefined);
 		}
 		$("#toolbar_element").children().hide();
 	};
@@ -371,12 +369,12 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		SM.Editor.Screen.addHotspot();
 	};
 
-	var deleteHotspot = function(){
-		SM.Editor.Screen.deleteCurrentHotspot();
-	};
-
 	var addHotzone = function(){
 		SM.Editor.Screen.addHotzone();
+	};
+
+	var deleteHotmarker = function(){
+		SM.Editor.Screen.deleteCurrentHotmarker();
 	};
 
    /*
@@ -419,8 +417,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		deleteSlide 					: deleteSlide,
 		changeBackground				: changeBackground,
 		addHotspot						: addHotspot,
-		deleteHotspot 					: deleteHotspot,
 		addHotzone						: addHotzone,
+		deleteHotmarker 				: deleteHotmarker,
 		addTooltipsToSlide				: addTooltipsToSlide,
 		addTooltipToZone				: addTooltipToZone,
 		showZoneToolTip					: showZoneToolTip,

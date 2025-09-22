@@ -198,7 +198,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		if(areaType === "audio"){
 			areaType = "video";
 		}
-		options.notificationIconSrc = SM.ImagesPath + "zonethumbs/" + areaType + ".png";
+		options.notificationIconSrc = SM.ImagesPath + "thumbs/" + areaType + ".png";
 		options.text = SM.I18n.getTrans("i.AreYouSureContent");
 		var button1 = {};
 		button1.text = SM.I18n.getTrans("i.no");
@@ -213,7 +213,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			area.removeAttr("type");
 			area.addClass("editable");
 			SM.Editor.Tools.addTooltipToZone(area);
-			selectArea(null);
+			selectContentZone(null);
 			SM.Editor.Slides.updateThumbnail(SM.Slides.getCurrentSlide());
 			$.fancybox.close();
 		}
@@ -226,9 +226,31 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	* Selectable elements are zones which can be selected.
 	*/
 	var onSelectableClicked = function(event){
-		selectArea($(this));
+		selectContentZone($(this));
 		event.stopPropagation();
 		event.preventDefault();
+	};
+
+	var selectContentZone = function(area){
+		setCurrentArea(area);
+		_removeSelectableProperties();
+		_addSelectableProperties(area);
+		SM.Editor.Tools.loadToolsForZone(area);
+	};
+	
+	var _addSelectableProperties = function(zone){
+		$(zone).removeClass("zoneUnselected");
+		$(zone).addClass("zoneSelected");
+	};
+
+	var _removeSelectableProperties = function(zone){
+		if(zone){
+			$(zone).removeClass("zoneSelected");
+			$(zone).addClass("zoneUnselected");
+		} else {
+			$(".zoneSelected").addClass("zoneUnselected");
+			$(".zoneSelected").removeClass("zoneSelected");
+		}
 	};
   
    /**
@@ -242,6 +264,11 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 			//No hide toolbar when we are working in a fancybox
 			if($("#fancybox-content").is(":visible")){
+				return;
+			}
+
+			//No hide toolbar when dragging annotations
+			if ($(target).is("polygon")) {
 				return;
 			}
 
@@ -278,21 +305,6 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.Editor.Tools.cleanZoneTool(getCurrentArea());
 		setCurrentArea(null);
 		_removeSelectableProperties();
-	};
-	
-	var _addSelectableProperties = function(zone){
-		$(zone).removeClass("zoneUnselected");
-		$(zone).addClass("zoneSelected");
-	};
-	
-	var _removeSelectableProperties = function(zone){
-		if(zone){
-			$(zone).removeClass("zoneSelected");
-			$(zone).addClass("zoneUnselected");
-		} else {
-			$(".zoneSelected").addClass("zoneUnselected");
-			$(".zoneSelected").removeClass("zoneSelected");
-		}
 	};
 
 	var addDeleteButton = function(element){
@@ -340,13 +352,6 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			//Hide objects
 			$('.object_wrapper').hide();
 		}
-	};
-
-	var selectArea = function(area){
-		setCurrentArea(area);
-		_removeSelectableProperties();
-		_addSelectableProperties(area);
-		SM.Editor.Tools.loadToolsForZone(area);
 	};
 	
 	var saveScene = function(){
@@ -652,7 +657,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		getCurrentElementType 	: getCurrentElementType,
 		getCurrentArea			: getCurrentArea,
 		setCurrentArea			: setCurrentArea,
-		selectArea				: selectArea,
+		selectContentZone		: selectContentZone,
 		getLastArea				: getLastArea,
 		cleanArea				: cleanArea,
 		getCurrentContainer		: getCurrentContainer,

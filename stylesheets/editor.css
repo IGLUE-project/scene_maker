@@ -564,35 +564,35 @@ div.view_content_zone[tooltip='true'] {
 }
 
 .textthumb {
-	background: url("/images/zonethumbs/text.png") no-repeat;
+	background: url("/images/thumbs/text.png") no-repeat;
 }
 
 .textthumb:hover {
-	background: url("/images/zonethumbs/text_hover.png") no-repeat;
+	background: url("/images/thumbs/text_hover.png") no-repeat;
 }
 
 .picthumb {
-	background: url("/images/zonethumbs/image.png") no-repeat;
+	background: url("/images/thumbs/image.png") no-repeat;
 }
 
 .picthumb:hover {
-	background: url("/images/zonethumbs/image_hover.png") no-repeat;
+	background: url("/images/thumbs/image_hover.png") no-repeat;
 }
 
 .objectthumb {
-	background: url("/images/zonethumbs/object.png") no-repeat;
+	background: url("/images/thumbs/object.png") no-repeat;
 }
 
 .objectthumb:hover {
-	background: url("/images/zonethumbs/object_hover.png") no-repeat;
+	background: url("/images/thumbs/object_hover.png") no-repeat;
 }
 
 .videothumb {
-	background: url("/images/zonethumbs/video.png") no-repeat;
+	background: url("/images/thumbs/video.png") no-repeat;
 }
 
 .videothumb:hover {
-	background: url("/images/zonethumbs/video_hover.png") no-repeat;
+	background: url("/images/thumbs/video_hover.png") no-repeat;
 }
 
 
