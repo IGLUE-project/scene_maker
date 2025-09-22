@@ -72,37 +72,87 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			if(typeof slideJSON.background === "string"){
 				setSlideBackground(scaffoldDOM, slideJSON.background);
 			};
-			//Draw hotspots
-			if (Array.isArray(slideJSON.hotspots)) {
-				$(slideJSON.hotspots).each(function(index,hotspot){
-					SM.Utils.registerId(hotspot.id);
-
-					//Transform dimensions from percentage to absolute numbers for the current container.
-					//If aspect ratio is 4:3, the dimensions of the container are 800x600
-					//If aspect ratio is 16:9, the dimensions of the container are 1024x576
-					var slideContainerWidth;
-					var slideContainerHeight;
-
-					if($("body").attr("aspectRatio")==="16:9"){
-						slideContainerWidth = 1024;
-						slideContainerHeight = 576;
-					} else {
-						slideContainerWidth = 800;
-						slideContainerHeight = 600;
-					}
-
-					var hotspotX = hotspot.x*slideContainerWidth/100;
-					var hotspotY = hotspot.y*slideContainerHeight/100;
-					var hotspotWidth = hotspot.width*slideContainerWidth/100;
-					var hotspotHeight = hotspot.height*slideContainerHeight/100;
-
-					_drawHotspot(slideJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
-					if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
-						slideData[slideJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
-					}
-				});
-			}
+			_drawHotspots(slideJSON,scaffoldDOM);
+			_drawHotzones(slideJSON,scaffoldDOM);
 		}
+	};
+
+	var _drawHotspots = function(slideJSON,scaffoldDOM){
+		if (Array.isArray(slideJSON.hotspots)) {
+			$(slideJSON.hotspots).each(function(index,hotspot){
+				SM.Utils.registerId(hotspot.id);
+
+				//Transform dimensions from percentage to absolute numbers for the current container.
+				//If aspect ratio is 4:3, the dimensions of the container are 800x600
+				//If aspect ratio is 16:9, the dimensions of the container are 1024x576
+				var slideContainerWidth;
+				var slideContainerHeight;
+
+				if($("body").attr("aspectRatio")==="16:9"){
+					slideContainerWidth = 1024;
+					slideContainerHeight = 576;
+				} else {
+					slideContainerWidth = 800;
+					slideContainerHeight = 600;
+				}
+
+				var hotspotX = hotspot.x*slideContainerWidth/100;
+				var hotspotY = hotspot.y*slideContainerHeight/100;
+				var hotspotWidth = hotspot.width*slideContainerWidth/100;
+				var hotspotHeight = hotspot.height*slideContainerHeight/100;
+
+				_drawHotspot(slideJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
+				if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
+					slideData[slideJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
+				}
+			});
+		}
+	};
+
+	var _drawHotzones = function(slideJSON,scaffoldDOM){
+		if (Array.isArray(slideJSON.hotzones)) {
+			$(slideJSON.hotzones).each(function(index,hotzoneJSON){
+				_drawHotzone(slideJSON.id,hotzoneJSON);
+				if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length>0)) {
+					slideData[slideJSON.id].hotzones[hotzoneJSON.id].actions = hotzoneJSON.actions;
+				}
+			});
+		}
+	};
+
+	var _drawHotzone = function(slideId,hotzoneJSON){
+		if(Array.isArray(hotzoneJSON.points)){
+			var annotation = _createAnnotationFromPointsArray(hotzoneJSON.points);
+			var annotator = _createAnnotatorForSlide(slideId);
+			annotator.setAnnotations([annotation]);
+		}
+	};
+
+	var _createAnnotationFromPointsArray = function(pointsArray){
+		var xs = pointsArray.map(([x]) => x);
+		var ys = pointsArray.map(([, y]) => y);
+		var minX = Math.min(...xs);
+		var maxX = Math.max(...xs);
+		var minY = Math.min(...ys);
+		var maxY = Math.max(...ys);
+
+		var annotation = {
+			"target": {
+				"selector": {
+					"type": "POLYGON",
+					"geometry": {
+						"bounds": {
+							"minX": minX,
+							"minY": minY,
+							"maxX": maxX,
+							"maxY": maxY
+						},
+						"points": pointsArray
+					}
+				}
+			}
+		};
+		return annotation;
 	};
 
    /*
@@ -206,45 +256,50 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 				return;
 			}
 			_createAnnotatorForSlide(currentSlideId);
-		} else {
-			slideData[currentSlideId].annotator.setDrawingEnabled(true);
-			slideData[currentSlideId].annotator.off('selectionChanged', _onAnnotationSelectionChange);
-			slideData[currentSlideId].annotator.setUserSelectAction('NONE');
-		}
+		} 
+		slideData[currentSlideId].annotator.setDrawingEnabled(true);
+		slideData[currentSlideId].annotator.setUserSelectAction('NONE');
+		slideData[currentSlideId].annotator.off('selectionChanged', _onAnnotationSelectionChange);
 	};
 
 	var _disableHotzones = function(){
 		var currentSlideId = $(SM.Slides.getCurrentSlide()).attr("id");
 		if((typeof slideData[currentSlideId] !== "undefined") && (typeof slideData[currentSlideId].annotator !== "undefined")){
 			slideData[currentSlideId].annotator.setDrawingEnabled(false);
-			slideData[currentSlideId].annotator.on('selectionChanged', _onAnnotationSelectionChange);
 			slideData[currentSlideId].annotator.setUserSelectAction('EDIT');
+			slideData[currentSlideId].annotator.on('selectionChanged', _onAnnotationSelectionChange);
 		}
 	};
 
 	var _createAnnotatorForSlide = function(slideId){
+		if(typeof slideData[slideId] === "undefined"){
+			slideData[slideId] = _getDefaultSlideConfig();
+		}
+		if(typeof slideData[slideId].annotator !== "undefined"){
+			return slideData[slideId].annotator; //already created
+		}
+
 		var $imgBackground = $("#" + slideId).children("img.slide_background");
 		var annotator = Annotorious.createImageAnnotator($imgBackground.attr("id"), {
-			drawingEnabled: true,
+			drawingEnabled: false,
 			drawingMode: "click",
-			userSelectAction: 'NONE',
+			userSelectAction: 'EDIT',
 			style: {
 				fill: '#dddddd',
 				fillOpacity: 0.25,
 				stroke: '#000000',
-    			strokeWidth: 1
+				strokeWidth: 1
 			}
 		});
 		annotator.setDrawingTool('polygon');
 		annotator.on('createAnnotation', (annotation) => {
-			var hotzoneDOM = $("[data-id=" + annotation.id + "]");
-			slideData[slideId].hotzones[annotation.id] = {hotzoneDOM: hotzoneDOM};
+			slideData[slideId].hotzones[annotation.id] = {};
 			_disableEditingMode("HOTZONE");
 		});
-		if(typeof slideData[slideId] === "undefined"){
-			slideData[slideId] = _getDefaultSlideConfig();
-		}
+		annotator.on('selectionChanged', _onAnnotationSelectionChange);
+		
 		slideData[slideId].annotator = annotator;
+		return annotator;
 	};
 
 	var _onAnnotationSelectionChange = function(annotations){
@@ -1044,6 +1099,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 
 		if(typeof slideData[screen.id] !== "undefined"){
+			//Hotspots
 			var hotspotsIds = Object.keys(slideData[screen.id].hotspots);
 			if(hotspotsIds.length > 0) {
 				screen.hotspots = [];
@@ -1093,9 +1149,31 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 					screen.hotspots.push(hotspotJSON);
 				});
 			}
-			if(Object.keys(slideData[screen.id].hotzones).length > 0) {
-				screen.zones = slideData[screen.id].hotzones;
+
+			//Hotzones
+			var hotzonesIds = Object.keys(slideData[screen.id].hotzones);
+			var annotator = slideData[screen.id].annotator;
+			if((hotzonesIds.length > 0)&&(typeof annotator !== "undefined")) {
+				screen.hotzones = [];
+				hotzonesIds.forEach(hotzoneId => {
+					//var hotzoneDOM = $("[data-id=" + hotzoneId + "]");
+					var annotation = annotator.getAnnotationById(hotzoneId);
+					var points = annotation.target.selector.geometry.points;
+					var hotzoneJSON = {
+						"id": hotzoneId,
+						"points": points,
+					};
+
+					var hotzoneSettings = slideData[screen.id].hotzones[hotzoneId];
+					//console.log("hotzoneSettings", hotzoneSettings);
+					if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
+						hotzoneJSON.actions = hotzoneSettings.actions;
+					}
+
+					screen.hotzones.push(hotzoneJSON);
+				});
 			}
+			
 		}
 
 		return screen;
