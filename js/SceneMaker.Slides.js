@@ -36,7 +36,7 @@ SceneMaker.Slides = (function(SM,$,undefined){
 
 	var getCurrentView = function(){
 		if(SM.Editing){
-			return SM.Editor.Screen.getCurrentView();
+			return SM.Editor.View.getCurrentView();
 		}
 
 		if(_currentViewId === null){

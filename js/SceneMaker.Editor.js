@@ -56,6 +56,8 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.EventsNotifier.init();
 		SM.Screen.init();
 		SM.Editor.Screen.init();
+		SM.Editor.View.init();
+		SM.Editor.Marker.init();
 		SM.Renderer.init();
 		SM.Slides.init();
 		SM.User.init(options);
@@ -126,7 +128,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		//Add the first slide
 		if(!isInitialScene){
 			var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:1});
-			SM.Editor.Slides.addScreen(screen);
+			SM.Editor.Screen.addScreen(screen);
 			SM.Slides.goToScreenWithNumber(1);
 		}
 
@@ -157,7 +159,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		}
 		var type = $(event.currentTarget).attr('type');
 		var view = SM.Editor.Dummies.getDummy(type, {screenId: $(screen).attr("id"), slideNumber: ($(screen).find("article").length + 1)});
-		SM.Editor.Slides.addView(screen,view);
+		SM.Editor.View.addView(screen,view);
 		$.fancybox.close();
 	};
 
@@ -370,7 +372,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			var screen = {};
 			if(SM.Slides.isScreen(screenDOM)){
 				SM.Utils.addTempShown(screenDOM);
-				screen = SM.Editor.Screen.saveScreen(screenDOM);
+				screen = SM.Editor.Marker.saveSlideWithMarkers(screenDOM);
 				screen.views = [];
 				//Save views
 				$(screenDOM).find("article").each(function(index,viewDOM){
@@ -404,7 +406,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 	var _saveViewImage = function(viewDOM){
 		SM.Utils.addTempShown(viewDOM);
-		var view = SM.Editor.Screen.saveScreen(viewDOM);
+		var view = SM.Editor.Marker.saveSlideWithMarkers(viewDOM);
 		SM.Utils.removeTempShown(viewDOM);
 		return view;
 	};
@@ -567,7 +569,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		if((typeof currentArea !== "undefined")&&(currentArea !== null)){
 			return currentArea;
 		}
-		var currentHotspot = SM.Editor.Screen.getCurrentHotspot();
+		var currentHotspot = SM.Editor.Marker.getCurrentHotspot();
 		if((typeof currentHotspot !== "undefined")&&(currentHotspot !== null)){
 			return currentHotspot;
 		}

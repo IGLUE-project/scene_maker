@@ -25,7 +25,7 @@ SceneMaker.Editor.Renderer = (function(SM,$,undefined){
 		var scaffold = SM.Editor.Dummies.getScaffoldForSlide(screenJSON,options);
 
 		if(scaffold){
-			SM.Editor.Slides.appendScreen(scaffold);
+			SM.Editor.Screen.appendScreen(scaffold);
 			SM.Slides.updateScreens();
 			SM.Slides.goToLastScreen();  //important to get the browser to draw everything
 
@@ -44,7 +44,7 @@ SceneMaker.Editor.Renderer = (function(SM,$,undefined){
 			}
 
 			//Complete scaffold
-			SM.Editor.Screen.draw(screenJSON,scaffoldDOM);
+			SM.Editor.Marker.drawSlideWithMakers(screenJSON,scaffoldDOM);
 		}
 	};
 
@@ -58,13 +58,13 @@ SceneMaker.Editor.Renderer = (function(SM,$,undefined){
 
 	var _renderViewCommon = function(view,renderOptions){
 		var scaffold = SM.Editor.Dummies.getScaffoldForSlide(view,{slideNumber: renderOptions.slideNumber});
-		SM.Editor.Slides.appendView(renderOptions.screenDOM,scaffold);
+		SM.Editor.View.appendView(renderOptions.screenDOM,scaffold);
 	};
 
 	var _renderViewImage = function(view,renderOptions){
 		_renderViewCommon(view,renderOptions);
 		var scaffoldDOM = $("#"+view.id);
-		SM.Editor.Screen.draw(view,scaffoldDOM);
+		SM.Editor.Marker.drawSlideWithMakers(view,scaffoldDOM);
 	};
 
 	var _renderViewContent = function(view,renderOptions){

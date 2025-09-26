@@ -13,8 +13,8 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 
 	var bindEditorEventListeners = function(){
 		if(!_bindedEditorEventListeners){
-			$(document).on('click', '#addScreenButton', SM.Editor.Screen.addScreen);
-			$(document).on('click', '#addViewButton', SM.Editor.Tools.Menu.insertView);
+			$(document).on('click', '#addScreenButton', SM.Editor.Screen.onClickAddScreenButton);
+			$(document).on('click', '#addViewButton', SM.Editor.View.onClickAddViewButton);
 			$(document).on('click', '#screen_selected_img', SM.Editor.Screen.onClickOpenScreen);
 					
 			$(document).on('click', '#save_scene_details', SM.Editor.Settings.onSaveSceneDetailsButtonClicked);
@@ -24,8 +24,8 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on('click','.selectable', SM.Editor.onSelectableClicked);
 			$(document).on('click',':not(".selectable"):not(".preventNoselectable")', SM.Editor.onNoSelectableClicked);
 			
-			$(document).on('click','.delete_screen', SM.Editor.Slides.onDeleteScreenClicked);
-			$(document).on('click','.delete_view', SM.Editor.Slides.onDeleteViewClicked);
+			$(document).on('click','.delete_screen', SM.Editor.Screen.onDeleteScreenClicked);
+			$(document).on('click','.delete_view', SM.Editor.View.onDeleteViewClicked);
 			$(document).on('click','.delete_content', SM.Editor.onDeleteItemClicked);
 
 			$(document).on("click", ".change_bg_button", SM.Editor.Tools.changeBackground);
@@ -35,16 +35,16 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on("click", "#tab_video_from_url_content button.button_addContent", SM.Editor.Video.addContent);
 
 			//Hotspot Settings
-			$(document).on("change", "#hotspotImageSource", SM.Editor.Screen.onHotspotImageSourceChange);
-			$(document).on("click", "#hotspotImageGallery img", SM.Editor.Screen.onClickHotspotImageGallery);
-			$(document).on("blur", "#hotspotImageURL", SM.Editor.Screen.checkHotspotImageURLPreview);
-			$(document).on("input", "#hotspotSizeWidth", SM.Editor.Screen.onInputHotspotSizeWidth);
-			$(document).on("input", "#hotspotSizeHeight", SM.Editor.Screen.onInputHotspotSizeHeight);
-			$(document).on("click", "#hotspotNewAction", SM.Editor.Screen.onHotspotNewAction);
-			$(document).on("click", "div.delete_action", SM.Editor.Screen.onHotspotDeleteAction);
-			$(document).on("change", "select.hotspotActionType", SM.Editor.Screen.onHotspotActionChange);
-			$(document).on("change", "div.hotspotActionParamsPuzzle select", SM.Editor.Screen.onHotspotPuzzleChange);
-			$(document).on("click", "#hotspotSettingsDone", SM.Editor.Screen.onHotspotSettingsDone);
+			$(document).on("change", "#hotspotImageSource", SM.Editor.Marker.onHotspotImageSourceChange);
+			$(document).on("click", "#hotspotImageGallery img", SM.Editor.Marker.onClickHotspotImageGallery);
+			$(document).on("blur", "#hotspotImageURL", SM.Editor.Marker.checkHotspotImageURLPreview);
+			$(document).on("input", "#hotspotSizeWidth", SM.Editor.Marker.onInputHotspotSizeWidth);
+			$(document).on("input", "#hotspotSizeHeight", SM.Editor.Marker.onInputHotspotSizeHeight);
+			$(document).on("click", "#hotspotNewAction", SM.Editor.Marker.onHotspotNewAction);
+			$(document).on("click", "div.delete_action", SM.Editor.Marker.onHotspotDeleteAction);
+			$(document).on("change", "select.hotspotActionType", SM.Editor.Marker.onHotspotActionChange);
+			$(document).on("change", "div.hotspotActionParamsPuzzle select", SM.Editor.Marker.onHotspotPuzzleChange);
+			$(document).on("click", "#hotspotSettingsDone", SM.Editor.Marker.onHotspotSettingsDone);
 		
 			//Element settings
 			$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
@@ -194,7 +194,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 	//////////////
 	
 	var handleClick = function(event){
-		SM.Editor.Screen.onClick(event);
+		SM.Editor.Marker.onClick(event);
 	};
 
 	var handleBodyKeyDown = function(event){
@@ -202,7 +202,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		case 39: // right arrow
 			if(SM.Editor.Slides.isSlideFocused()){
 				if(SM.Slides.isScreen(SM.Slides.getCurrentScreen())){
-					SM.Editor.Slides.forwardOneView();
+					SM.Editor.View.forwardOneView();
 				}
 				event.preventDefault();
 			}
@@ -216,7 +216,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		case 37: // left arrow
 			if(SM.Editor.Slides.isSlideFocused()){
 				if(SM.Slides.isScreen(SM.Slides.getCurrentScreen())){
-					SM.Editor.Slides.backwardOneView();
+					SM.Editor.View.backwardOneView();
 				}
 				event.preventDefault();
 			}

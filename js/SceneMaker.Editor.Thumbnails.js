@@ -117,7 +117,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 				// SM.Debugging.log("Org position: " + orgPosition);
 				// SM.Debugging.log("Dest position: " + destPosition);
 
-				SM.Editor.Slides.moveScreenTo(orgPosition, destPosition);
+				SM.Editor.Screen.moveScreenTo(orgPosition, destPosition);
 			}
 		});
 
@@ -204,7 +204,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 	};
 
 	var _getThumbnailURLForScreenOrViewImage = function(slide){
-		var imgBackground = SM.Editor.Screen.getSlideBackground(slide);
+		var imgBackground = SM.Editor.Slides.getSlideBackground(slide);
 		if (typeof imgBackground !== "undefined") {
 			return imgBackground;
 		} else {
@@ -285,7 +285,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 
 	var _onClickViewElement = function(event){
 		var viewNumber = $(event.target).attr("slideNumber");
-		SM.Editor.Screen.openViewWithNumber(viewNumber);
+		SM.Editor.View.openViewWithNumber(viewNumber);
 	};
 
 	var selectViewThumbnail = function(no){

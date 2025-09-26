@@ -78,7 +78,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 				$("#toolbar_slide").removeClass("toolbar_slide_view_content").addClass("toolbar_slide_screen");
 				$("#toolbar_background_wrapper").show();
 				$("#toolbar_background_wrapper").children().css("visibility","visible");
-				if(typeof SM.Editor.Screen.getSlideBackground(slide) !== "undefined"){
+				if(typeof SM.Editor.Slides.getSlideBackground(slide) !== "undefined"){
 					$("div.tool_action[action='addHotspot']").show();
 					$("div.tool_action[action='addHotzone']").show();
 				} else {
@@ -323,9 +323,9 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 
 	var _cleanElementToolbar = function(type){
 		if(type !== "hotspot"){
-			SM.Editor.Screen.setCurrentHotspot(undefined);
+			SM.Editor.Marker.setCurrentHotspot(undefined);
 		} else if(type !== "hotzone"){
-			SM.Editor.Screen.setCurrentHotzoneId(undefined);
+			SM.Editor.Marker.setCurrentHotzoneId(undefined);
 		}
 		$("#toolbar_element").children().hide();
 	};
@@ -366,15 +366,15 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	};
 
 	var addHotspot = function(){
-		SM.Editor.Screen.addHotspot();
+		SM.Editor.Marker.addHotspot();
 	};
 
 	var addHotzone = function(){
-		SM.Editor.Screen.addHotzone();
+		SM.Editor.Marker.addHotzone();
 	};
 
 	var deleteHotmarker = function(){
-		SM.Editor.Screen.deleteCurrentHotmarker();
+		SM.Editor.Marker.deleteCurrentHotmarker();
 	};
 
    /*
@@ -384,7 +384,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	var showElementSettings = function(target){
 		switch(SM.Editor.getCurrentElementType()){
 			case "HOTSPOT":
-				SM.Editor.Screen.showHotspotSettings();
+				SM.Editor.Marker.showHotspotSettings();
 				break;
 			case "HOTZONE":
 				//TODO

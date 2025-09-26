@@ -63,7 +63,7 @@ SceneMaker.Editor.Clipboard = (function(SM,$,undefined){
 				options.textAreas = myStack[1].textAreas;
 			}
 		}
-		SM.Editor.Slides.copyScreen(slideToCopy,options);
+		SM.Editor.Screen.copyScreen(slideToCopy,options);
 	};
 
 	return {

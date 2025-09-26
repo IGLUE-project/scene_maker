@@ -200,9 +200,8 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 		return false; //Prevent iframe to move
 	};
 
-	var insertView = function(){
-		$("#addViewFancybox").trigger('click');
-		SM.Editor.Utils.loadTab('tab_views');
+	var addView = function(){
+		$("#addViewButton").trigger('click');
 		return false; //Prevent iframe to move
 	};
 
@@ -224,7 +223,7 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 		disableMenu 					: disableMenu,
 		enableMenu 						: enableMenu,
 		addScreen						: addScreen,
-		insertView						: insertView,
+		addView							: addView,
 		displaySettings					: displaySettings, 
 		onSaveButtonClicked 			: onSaveButtonClicked,
 		preview 						: preview,
