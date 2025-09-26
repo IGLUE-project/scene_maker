@@ -201,7 +201,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		switch (event.keyCode) {
 		case 39: // right arrow
 			if(SM.Editor.Slides.isSlideFocused()){
-				if(SM.Slides.isScreen(SM.Slides.getCurrentScreen())){
+				if(SM.Slides.isScreen(SM.Screen.getCurrentScreen())){
 					SM.Editor.View.forwardOneView();
 				}
 				event.preventDefault();
@@ -209,13 +209,13 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			break;
 		case 40: //down arrow	    
 			if(SM.Editor.Slides.isSlideFocused()){
-				SM.Slides.forwardOneScreen();
+				SM.Screen.forwardOneScreen();
 				event.preventDefault();
 			}
 			break;
 		case 37: // left arrow
 			if(SM.Editor.Slides.isSlideFocused()){
-				if(SM.Slides.isScreen(SM.Slides.getCurrentScreen())){
+				if(SM.Slides.isScreen(SM.Screen.getCurrentScreen())){
 					SM.Editor.View.backwardOneView();
 				}
 				event.preventDefault();
@@ -223,7 +223,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			break;
 		case 38: //up arrow	
 			if(SM.Editor.Slides.isSlideFocused()){
-				SM.Slides.backwardOneScreen();
+				SM.Screen.backwardOneScreen();
 				event.preventDefault();    		
 			}
 			break;
@@ -233,8 +233,8 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		case 67: //cKey
 			if(SM.Editor.Slides.isSlideFocused()){
 				if(_isCtrlKeyPressed){
-					if(SM.Slides.getCurrentScreenNumber()){
-						SM.Editor.Clipboard.copy(SM.Slides.getCurrentScreen());
+					if(SM.Screen.getCurrentScreenNumber()){
+						SM.Editor.Clipboard.copy(SM.Screen.getCurrentScreen());
 					}
 				}
 			}

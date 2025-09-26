@@ -663,7 +663,7 @@ SceneMaker.Utils = (function(SM,undefined){
 				return;
 			}
 
-			var sNumber = Math.max(1,Math.min(SM.Slides.getScreensQuantity(),parseInt(location.hash.split("?")[0].split("#").pop())));
+			var sNumber = Math.max(1,Math.min(SM.Screen.getScreensQuantity(),parseInt(location.hash.split("?")[0].split("#").pop())));
 			if(isNaN(sNumber)){
 				return undefined;
 			} else {

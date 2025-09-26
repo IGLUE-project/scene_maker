@@ -7,12 +7,12 @@ SceneMaker.Renderer = (function(SM,$,undefined){
 		var screenDOM = _renderScreen(screenJSON);
 		if(screenDOM){
 			$('section.slides').append($(screenDOM));
-			SM.Screen.draw(screenJSON);
+			SM.Marker.drawSlideWithMarkers(screenJSON);
 			//Draw views with type VIEWS_IMAGE
 			var viewsL = screenJSON.views.length;
 			for(var i=0; i<viewsL; i++){
 				var viewJSON = screenJSON.views[i];
-				SM.Screen.draw(viewJSON);
+				SM.Marker.drawSlideWithMarkers(viewJSON);
 			}
 		}
 	};

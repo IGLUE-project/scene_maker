@@ -34,7 +34,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	};
 	 
 	var cleanToolbar = function(){
-		var cSlide = SM.Slides.getCurrentScreen();
+		var cSlide = SM.Screen.getCurrentScreen();
 		if(typeof cSlide !== "undefined"){
 			loadToolsForSlide(cSlide);
 		}

@@ -20,14 +20,14 @@ SceneMaker.Editor.Renderer = (function(SM,$,undefined){
 
 	var _renderScreen = function(screenJSON){
 		var options = {};
-		options.slideNumber = SM.Slides.getScreensQuantity()+1;
+		options.slideNumber = SM.Screen.getScreensQuantity()+1;
 		options.screenId = (screenJSON.id).toString();
 		var scaffold = SM.Editor.Dummies.getScaffoldForSlide(screenJSON,options);
 
 		if(scaffold){
 			SM.Editor.Screen.appendScreen(scaffold);
-			SM.Slides.updateScreens();
-			SM.Slides.goToLastScreen();  //important to get the browser to draw everything
+			SM.Screen.updateScreens();
+			SM.Screen.goToLastScreen();  //important to get the browser to draw everything
 
 			//Get screen in DOM
 			var screenId = $(scaffold).attr("id");

@@ -43,13 +43,13 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 	};
 	 
 	var _onImageError = function(image){
-		var slide = SM.Slides.getScreenWithNumber($(image).attr("slidenumber"));
+		var slide = SM.Screen.getScreenWithNumber($(image).attr("slidenumber"));
 		var defaultThumbnailURL = getDefaultThumbnailURLForSlide(slide);
 
 		var slideThumbnail = SM.Editor.Thumbnails.getThumbnailForSlide(slide);
 		$(slideThumbnail).attr("src",defaultThumbnailURL);
 
-		if(SM.Slides.getCurrentScreen()===slide){
+		if(SM.Screen.getCurrentScreen()===slide){
 			$("#screen_selected > img").attr("src",thumbnailURL);
 		}
 	};
@@ -130,7 +130,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 	var _onClickSlideElement = function(event){
 		switch($(event.target).attr("action")){
 			case "goToScreenWithNumber":
-				SM.Slides.goToScreenWithNumber($(event.target).attr("slideNumber"));
+				SM.Screen.goToScreenWithNumber($(event.target).attr("slideNumber"));
 				break;
 			default:
 			  return;
@@ -148,7 +148,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 
 		var advance = ((lastSelectedScreenThumbnail===undefined)||(no > lastSelectedScreenThumbnail));
 		lastSelectedScreenThumbnail = no;
-		var slide = SM.Slides.getScreenWithNumber(no);
+		var slide = SM.Screen.getScreenWithNumber(no);
 		if(!isThumbnailVisible(slide)){
 			if(advance){
 				moveThumbnailsToScreenWithNumber(Math.max(no-5,1));
@@ -298,7 +298,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 
 		var advance = ((lastSelectedViewThumbnail===undefined)||(no > lastSelectedViewThumbnail));
 		lastSelectedViewThumbnail = no;
-		var view = SM.Slides.getViewWithNumber(SM.Slides.getCurrentScreen(),no);
+		var view = SM.View.getViewWithNumber(SM.Screen.getCurrentScreen(),no);
 		if(!isThumbnailVisible(view)){
 			if(advance){
 				moveThumbnailsToViewWithNumber(Math.max(no-7,1));

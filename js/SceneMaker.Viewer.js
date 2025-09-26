@@ -49,6 +49,8 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		SM.EventsNotifier.init();
 		SM.Object.init();
 		SM.Screen.init();
+		SM.View.init();
+		SM.Marker.init();
 		SM.Slides.init();
 		SM.I18n.translateUI();
 		SM.User.init(options);
@@ -63,13 +65,13 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 
 	var _initAferRenderScene = function(options,scene){
 		SM.Video.HTML5.setMultimediaEvents();
-		SM.Slides.updateCurrentScreenFromHash();
-		SM.Slides.updateScreens();
+		SM.Screen.updateCurrentScreenFromHash();
+		SM.Screen.updateScreens();
 		SM.ViewerAdapter.init(options);
 		SM.Utils.Loader.preloadResources(scene);
 
-		if(SM.Slides.getCurrentScreenNumber()>0){
-			SM.Slides.triggerEnterEventById($(SM.Slides.getCurrentScreen()).attr("id"));
+		if(SM.Screen.getCurrentScreenNumber()>0){
+			SM.Slides.triggerSlideEnterEvent($(SM.Screen.getCurrentScreen()).attr("id"));
 		}
 
 		if(!SM.Status.isExternalDomain()){
@@ -88,7 +90,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 	*/
 	var onSlideEnterViewer = function(e){
 		var slide = e.target;
-		var cSlideNumber = SM.Slides.getCurrentScreenNumber();
+		var cSlideNumber = SM.Screen.getCurrentScreenNumber();
 		var isView = SM.Slides.isView(slide);
 		var isScreen = ((!isView)&&(SM.Slides.isScreen(slide)));
 
@@ -100,7 +102,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 
 		setTimeout(function(){
 			if(!isView){
-				if(cSlideNumber!==SM.Slides.getCurrentScreenNumber()){
+				if(cSlideNumber!==SM.Screen.getCurrentScreenNumber()){
 					//Prevent objects to load when the slide isn't focused
 					return;
 				}

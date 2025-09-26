@@ -33,7 +33,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	};
 
 	var onDeleteViewClicked = function(event){
-		var currentScreen = SM.Slides.getCurrentScreen();
+		var currentScreen = SM.Screen.getCurrentScreen();
 		var viewNumber = $(event.target).prev("img").attr("slidenumber");
 		var viewToDelete = $(currentScreen).find("article[slidenumber='" + viewNumber + "']")[0];
 		removeView(viewToDelete);
@@ -68,10 +68,10 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 		}
 
 		var screen = $(view).parent();
-		var currentView = SM.Slides.getCurrentView();
+		var currentView = SM.View.getCurrentView();
 		var removingCurrentView = (currentView === view);
 
-		if(SM.Slides.getCurrentView() === view){
+		if(SM.View.getCurrentView() === view){
 			closeView(view);
 		}
 		$(view).remove();
@@ -96,7 +96,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	};
 	
 	var openViewWithNumber = function(viewNumber){
-		var screen = SM.Slides.getCurrentScreen();
+		var screen = SM.Screen.getCurrentScreen();
 		var views = $(screen).find("article");
 		var view = views[viewNumber-1];
 		openView(view);
@@ -115,7 +115,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 		_setCurrentView(view);
 		_showView(view);
 		SM.Editor.Thumbnails.selectViewThumbnail($(view).attr("slidenumber"));
-		SM.Slides.triggerEnterEventById($(view).attr("id"));
+		SM.Slides.triggerSlideEnterEvent($(view).attr("id"));
 	};
 
 	var _showView = function(view){
@@ -127,7 +127,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	};
 
 	var closeViewWithNumber = function(viewNumber){
-		var screen = SM.Slides.getCurrentScreen();
+		var screen = SM.Screen.getCurrentScreen();
 		var views = $(screen).find("article");
 		var view = views[viewNumber-1];
 		closeView(view);
@@ -137,7 +137,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 		_setCurrentView(null);
 		SM.Editor.Thumbnails.selectViewThumbnail(null);
 		_hideView(view);
-		SM.Slides.triggerLeaveEventById($(view).attr("id"));
+		SM.Slides.triggerSlideLeaveEvent($(view).attr("id"));
 	};
 
 
@@ -152,11 +152,11 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	};
 
 	var _moveViews = function(n){
-		var currentViewNumber = SM.Slides.getCurrentViewNumber();
+		var currentViewNumber = SM.View.getCurrentViewNumber();
 		if(typeof currentViewNumber === "undefined"){
 			currentViewNumber = 0;
 		}
-		var viewsQuantity = SM.Editor.Screen.getViewsQuantity(SM.Slides.getCurrentScreen());
+		var viewsQuantity = SM.Editor.Screen.getViewsQuantity(SM.Screen.getCurrentScreen());
 		var no = currentViewNumber+n;
 		var cno = Math.min(Math.max(0,no),viewsQuantity);
 		if(no===cno){

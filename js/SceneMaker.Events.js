@@ -18,7 +18,7 @@ SceneMaker.Events = (function(SM,$,undefined){
 		$('article').live('slideenter', SM.Viewer.onSlideEnterViewer);
 		$('article').live('slideleave', SM.Viewer.onSlideLeaveViewer);
 
-		$(document).on('click','.close_view', SM.Screen.onCloseViewClicked);
+		$(document).on('click','.close_view', SM.View.onCloseViewClicked);
 
 		//Focus
 		// $(window).focus(function(){

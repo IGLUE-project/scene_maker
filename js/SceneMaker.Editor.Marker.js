@@ -600,7 +600,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var currentOptionsScreenViews = [];
 		var currentOptionsImageViews = [];
 
-		var $currentScreen = $(SM.Slides.getCurrentScreen());
+		var $currentScreen = $(SM.Screen.getCurrentScreen());
 		var currentScreenId = $currentScreen.attr('id');
 		$("article[type='screen'] > article").each(function(){
 			var $view = $(this);

@@ -99,7 +99,7 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 	/////////////////
 
 	var onSaveButtonClicked = function(){
-		if(SM.Slides.getScreens().length === 0){
+		if(SM.Screen.getScreens().length === 0){
 			var options = {};
 			options.width = 600;
 			options.height = 150;

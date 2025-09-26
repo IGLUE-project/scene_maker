@@ -26,10 +26,10 @@ SceneMaker.Editor.Preview = (function(SM,$,undefined){
 			'transitionOut'		: 'none',
 			'type'				: 'iframe',
 			'onStart'			: function(){
-				SM.Editor.Utils.Loader.unloadObjectsInEditorSlide(SM.Slides.getCurrentScreen());
+				SM.Editor.Utils.Loader.unloadObjectsInEditorSlide(SM.Screen.getCurrentScreen());
 			},
 			'onClosed'			: function() {
-				SM.Editor.Utils.Loader.loadObjectsInEditorSlide(SM.Slides.getCurrentScreen());
+				SM.Editor.Utils.Loader.loadObjectsInEditorSlide(SM.Screen.getCurrentScreen());
 			},
 			'onComplete': function() {
 			}

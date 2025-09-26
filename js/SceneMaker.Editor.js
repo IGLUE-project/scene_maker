@@ -56,7 +56,9 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.EventsNotifier.init();
 		SM.Screen.init();
 		SM.Editor.Screen.init();
+		SM.View.init();
 		SM.Editor.View.init();
+		SM.Marker.init();
 		SM.Editor.Marker.init();
 		SM.Renderer.init();
 		SM.Slides.init();
@@ -89,15 +91,15 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			//Set current slide
 			var slideFromHash = SM.Utils.getScreenNumberFromHash();
 			if(slideFromHash){
-				SM.Slides.setCurrentScreenNumber(slideFromHash);
+				SM.Screen.setCurrentScreenNumber(slideFromHash);
 			} else {
-				SM.Slides.setCurrentScreenNumber(1);
+				SM.Screen.setCurrentScreenNumber(1);
 			}
 		}
-		SM.Slides.updateScreens();
+		SM.Screen.updateScreens();
 		SM.Editor.Thumbnails.drawScreenThumbnails(function(){
-			SM.Editor.Thumbnails.selectThumbnail(SM.Slides.getCurrentScreenNumber());
-			SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Slides.getCurrentScreenNumber());
+			SM.Editor.Thumbnails.selectThumbnail(SM.Screen.getCurrentScreenNumber());
+			SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Screen.getCurrentScreenNumber());
 		});
 		
 		if(isInitialScene){
@@ -121,15 +123,15 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.Editor.Utils.Loader.unloadAllObjects();
 
 		//Enter in currentSlide (this will cause that objects will be shown)
-		if(SM.Slides.getCurrentScreenNumber()>0){
-			SM.Slides.triggerEnterEventById($(SM.Slides.getCurrentScreen()).attr("id"));
+		if(SM.Screen.getCurrentScreenNumber()>0){
+			SM.Slides.triggerSlideEnterEvent($(SM.Screen.getCurrentScreen()).attr("id"));
 		}
 
 		//Add the first slide
 		if(!isInitialScene){
 			var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:1});
 			SM.Editor.Screen.addScreen(screen);
-			SM.Slides.goToScreenWithNumber(1);
+			SM.Screen.goToScreenWithNumber(1);
 		}
 
 		//Init settings
@@ -153,7 +155,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	 * Add a new view to the current screen.
 	 */
 	var onViewThumbClicked = function(event){
-		var screen = SM.Slides.getCurrentScreen();
+		var screen = SM.Screen.getCurrentScreen();
 		if(!SM.Slides.isScreen(screen)){
 			return;
 		}
@@ -334,7 +336,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			},500);
 		}
 
-		SM.Editor.Thumbnails.selectThumbnail(SM.Slides.getCurrentScreenNumber());
+		SM.Editor.Thumbnails.selectThumbnail(SM.Screen.getCurrentScreenNumber());
 		cleanArea();
 		SM.Editor.Tools.loadToolsForSlide(slide);
 	};
@@ -387,7 +389,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		//Unload all objects
 		SM.Editor.Utils.Loader.unloadAllObjects();
 		//Reload current slide objects
-		SM.Editor.Utils.Loader.loadObjectsInEditorSlide(SM.Slides.getCurrentScreen());
+		SM.Editor.Utils.Loader.loadObjectsInEditorSlide(SM.Screen.getCurrentScreen());
 
 		SM.Debugging.log("\n\nScene Maker save the following scene:\n");
 		SM.Debugging.log(JSON.stringify(scene));

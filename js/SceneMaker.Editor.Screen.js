@@ -6,23 +6,23 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	var addScreen = function(screen){
 		var screen = $(screen);
 
-		if(SM.Slides.getCurrentScreen()){
-			$(SM.Slides.getCurrentScreen()).after(screen);
+		if(SM.Screen.getCurrentScreen()){
+			$(SM.Screen.getCurrentScreen()).after(screen);
 		} else {
 			appendScreen(screen);
 		}
 
-		var oldCurrentScreenNumber = SM.Slides.getCurrentScreenNumber();
+		var oldCurrentScreenNumber = SM.Screen.getCurrentScreenNumber();
 		//currentScreenNumber is next screen
-		SM.Slides.setCurrentScreenNumber(oldCurrentScreenNumber+1);
+		SM.Screen.setCurrentScreenNumber(oldCurrentScreenNumber+1);
 
-		SM.Slides.triggerLeaveEvent(oldCurrentScreenNumber);
-		SM.Slides.updateScreens();
-		SM.Slides.triggerEnterEvent(SM.Slides.getCurrentScreenNumber());
+		SM.Screen.triggerScreenLeaveEvent(oldCurrentScreenNumber);
+		SM.Screen.updateScreens();
+		SM.Screen.triggerScreenEnterEvent(SM.Screen.getCurrentScreenNumber());
 
 		SM.Editor.Thumbnails.drawScreenThumbnails(function(){
-			SM.Editor.Thumbnails.selectThumbnail(SM.Slides.getCurrentScreenNumber());
-			SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Slides.getCurrentScreenNumber());
+			SM.Editor.Thumbnails.selectThumbnail(SM.Screen.getCurrentScreenNumber());
+			SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Screen.getCurrentScreenNumber());
 		});
 	};
 
@@ -31,7 +31,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
 	var onClickAddScreenButton = function(){
-		var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:SM.Slides.getScreensQuantity()+1});
+		var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:SM.Screen.getScreensQuantity()+1});
 		addScreen(screen);
 		$.fancybox.close();
 	};
@@ -65,7 +65,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
 	var onClickOpenScreen = function(){
-		var screen = SM.Slides.getCurrentScreen();
+		var screen = SM.Screen.getCurrentScreen();
 		openScreen(screen);
 	};
 
@@ -119,29 +119,30 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			return;
 		}
 
-		if(SM.Slides.getCurrentScreen() === screen){
+		if(SM.Screen.getCurrentScreen() === screen){
 			onLeaveScreen(screen);
 		}
 
 		var screenToDeleteNumber = $(screen).attr("slidenumber");
-		var currentScreenNumber = SM.Slides.getCurrentScreenNumber();
+		var currentScreenNumber = SM.Screen.getCurrentScreenNumber();
 
 		$(screen).remove();
 
 		if(screenToDeleteNumber <= currentScreenNumber){
 			if((currentScreenNumber-1) > 0) {
-				SM.Slides.setCurrentScreenNumber(currentScreenNumber-1);
-			} else if (SM.Slides.getScreensQuantity()>1){
-				SM.Slides.setCurrentScreenNumber(1);
+				SM.Screen.setCurrentScreenNumber(currentScreenNumber-1);
+			} else if (SM.Screen.getScreensQuantity()>1){
+				SM.Screen.setCurrentScreenNumber(1);
 			}
 		}
 
-		SM.Slides.updateScreens();
+		SM.Screen.updateScreens();
 		SM.Editor.Thumbnails.drawScreenThumbnails(function(){
-			if(typeof SM.Slides.getCurrentScreen() !== "undefined"){
-				SM.Editor.Thumbnails.selectThumbnail(SM.Slides.getCurrentScreenNumber());
-				SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Slides.getCurrentScreenNumber());
-				SM.Slides.triggerEnterEventById($(SM.Slides.getCurrentScreen()).attr("id"));
+			if(typeof SM.Screen.getCurrentScreen() !== "undefined"){
+				var currentScreenNumber = SM.Screen.getCurrentScreenNumber();
+				SM.Editor.Thumbnails.selectThumbnail(currentScreenNumber);
+				SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(currentScreenNumber);
+				SM.Screen.triggerScreenEnterEvent(currentScreenNumber);
 			}
 		});
 	};
@@ -150,8 +151,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	/* Move & copy screen features */
 
 	var moveScreenTo = function(orgPosition, destPosition){
-		var screen_to_move = SM.Slides.getScreenWithNumber(orgPosition);
-		var reference_screen = SM.Slides.getScreenWithNumber(destPosition);
+		var screen_to_move = SM.Screen.getScreenWithNumber(orgPosition);
+		var reference_screen = SM.Screen.getScreenWithNumber(destPosition);
 
 		if((typeof screen_to_move === "undefined")||(typeof reference_screen === "undefined")){
 			return;
@@ -186,7 +187,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 
 		var moving_current_screen = false;
-		var currentScreen = SM.Slides.getCurrentScreen();
+		var currentScreen = SM.Screen.getCurrentScreen();
 		var oldCurrentScreenNumber = parseInt($(currentScreen).attr("slidenumber"));
 		if(currentScreen === screen_to_move){
 			moving_current_screen = true;
@@ -214,7 +215,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		SM.Utils.removeTempShown(screen_to_move);
 
 		//Update screens
-		SM.Slides.setScreens($('section.slides > article'));
+		SM.Screen.setScreens($('section.slides > article'));
 
 		//Update scrollbar params and counters
 		$("#screens_list").find("div.wrapper_slidethumbnail:has(img[slidenumber])").each(function(index,div){
@@ -239,10 +240,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		}
 
 		if(typeof newCurrentScreenNumber == "number"){
-			SM.Slides.setCurrentScreenNumber(newCurrentScreenNumber);
+			SM.Screen.setCurrentScreenNumber(newCurrentScreenNumber);
 		}
 		
-		SM.Slides.updateScreens();
+		SM.Screen.updateScreens();
 	};
 
 	var copyScreen = function(screenToCopy,options){
@@ -254,7 +255,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		screenToCopy = _replaceIdsForCopyScreen(screenToCopy);
 		var newId = $(screenToCopy).attr("id");
 
-		var currentScreen = SM.Slides.getCurrentScreen();
+		var currentScreen = SM.Screen.getCurrentScreen();
 		if(currentScreen){
 			$(currentScreen).after(screenToCopy);
 		} else {
@@ -271,15 +272,15 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			SM.Editor.Slides.loadTextAreasOfSlide(screenCopied,options.textAreas,true);
 		}
 		
-		SM.Slides.updateScreens();
+		SM.Screen.updateScreens();
 
 		//Redraw thumbnails
 		SM.Editor.Thumbnails.drawScreenThumbnails(function(){
 			if(currentScreen){
-				SM.Slides.goToScreenWithNumber(SM.Slides.getCurrentScreenNumber()+1);
-				SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Slides.getCurrentScreenNumber());
+				SM.Screen.goToScreenWithNumber(SM.Screen.getCurrentScreenNumber()+1);
+				SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Screen.getCurrentScreenNumber());
 			} else {
-				SM.Slides.goToScreenWithNumber(1);
+				SM.Screen.goToScreenWithNumber(1);
 				SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(1);
 			}
 		});
