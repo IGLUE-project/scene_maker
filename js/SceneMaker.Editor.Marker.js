@@ -4,6 +4,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var currentHotzoneId;
 	var currentEditingMode = "NONE"; //Can be "NONE", "HOTSPOT" or "HOTZONE".
 	var hiddenLinkToInitHotspotSettings;
+	var hiddenLinkToInitHotzoneSettings;
 
 	var init = function(){
 		slideData = {};
@@ -19,6 +20,24 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			'padding' : 0,
 			"onStart"  : function(data){
 				_onStartHotspotSettingsFancybox();
+			},
+			"onComplete" : function(data){
+			},
+			"onClosed"  : function(data){
+			}
+		});
+
+		//Hotzone Settings
+		hiddenLinkToInitHotzoneSettings = $('<a href="#hotzoneSettings_fancybox" style="display:none"></a>');
+		$(hiddenLinkToInitHotzoneSettings).fancybox({
+			'autoDimensions' : false,
+			'height': 690,
+			'width': 920,
+			'scrolling': 'no',
+			'showCloseButton': false,
+			'padding' : 0,
+			"onStart"  : function(data){
+				_onStartHotzoneSettingsFancybox();
 			},
 			"onComplete" : function(data){
 			},
@@ -180,87 +199,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			}
 			//Hotzones are handleded using Annotorious events.
 		}
-	};
-
-
-	/////////
-	// Hotzones
-	////////
-
-	var _enableHotzones = function(){
-		var $currentSlide = $(SM.Slides.getCurrentSlide());
-		var currentSlideId = $currentSlide.attr("id");
-
-		if((typeof slideData[currentSlideId] === "undefined")||(typeof slideData[currentSlideId].annotator === "undefined")){
-			var imgBackground = $currentSlide.children("img.slide_background");
-			if(imgBackground.length === 0){
-				//No background
-				_disableEditingMode("HOTZONE");
-				return;
-			}
-			_createAnnotatorForSlide(currentSlideId);
-		} 
-		slideData[currentSlideId].annotator.setDrawingEnabled(true);
-		slideData[currentSlideId].annotator.setUserSelectAction('NONE');
-		slideData[currentSlideId].annotator.off('selectionChanged', _onAnnotationSelectionChange);
-	};
-
-	var _disableHotzones = function(){
-		var currentSlideId = $(SM.Slides.getCurrentSlide()).attr("id");
-		if((typeof slideData[currentSlideId] !== "undefined") && (typeof slideData[currentSlideId].annotator !== "undefined")){
-			slideData[currentSlideId].annotator.setDrawingEnabled(false);
-			slideData[currentSlideId].annotator.setUserSelectAction('EDIT');
-			slideData[currentSlideId].annotator.on('selectionChanged', _onAnnotationSelectionChange);
-		}
-	};
-
-	var _createAnnotatorForSlide = function(slideId){
-		if(typeof slideData[slideId] === "undefined"){
-			slideData[slideId] = _getDefaultSlideConfig();
-		}
-		if(typeof slideData[slideId].annotator !== "undefined"){
-			return slideData[slideId].annotator; //already created
-		}
-
-		var $imgBackground = SM.Slides.getSlideBackgroundImg($("#" + slideId));
-		var annotator = Annotorious.createImageAnnotator($imgBackground.attr("id"), {
-			drawingEnabled: false,
-			drawingMode: "click",
-			userSelectAction: 'EDIT',
-			style: {
-				fill: '#dddddd',
-				fillOpacity: 0.25,
-				stroke: '#000000',
-				strokeWidth: 1
-			}
-		});
-		annotator.setDrawingTool('polygon');
-		annotator.on('createAnnotation', (annotation) => {
-			slideData[slideId].hotzones[annotation.id] = {};
-			_disableEditingMode("HOTZONE");
-		});
-
-		annotator.on('selectionChanged', _onAnnotationSelectionChange);
-		
-		slideData[slideId].annotator = annotator;
-		return annotator;
-	};
-
-	var _onAnnotationSelectionChange = function(annotations){
-		if(Array.isArray(annotations)){
-			if (annotations.length === 1){
-				//Annotation selected
-				_onSelectHotzone(annotations[0].id);
-			}
-			// if(annotations.length === 0){
-			// 	//Annotation unselected
-			// }
-		}
-	};
-
-	var _onSelectHotzone = function(hotzoneId){
-		currentHotzoneId = hotzoneId;
-		SM.Editor.Tools.loadToolsForElement("hotzone");
 	};
 
 
@@ -699,6 +637,129 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	};
 
 
+	/////////
+	// Hotzones
+	////////
+
+	var _enableHotzones = function(){
+		var $currentSlide = $(SM.Slides.getCurrentSlide());
+		var currentSlideId = $currentSlide.attr("id");
+
+		if((typeof slideData[currentSlideId] === "undefined")||(typeof slideData[currentSlideId].annotator === "undefined")){
+			var imgBackground = $currentSlide.children("img.slide_background");
+			if(imgBackground.length === 0){
+				//No background
+				_disableEditingMode("HOTZONE");
+				return;
+			}
+			_createAnnotatorForSlide(currentSlideId);
+		} 
+		slideData[currentSlideId].annotator.setDrawingEnabled(true);
+		slideData[currentSlideId].annotator.setUserSelectAction('NONE');
+		slideData[currentSlideId].annotator.off('selectionChanged', _onAnnotationSelectionChange);
+	};
+
+	var _disableHotzones = function(){
+		var currentSlideId = $(SM.Slides.getCurrentSlide()).attr("id");
+		if((typeof slideData[currentSlideId] !== "undefined") && (typeof slideData[currentSlideId].annotator !== "undefined")){
+			slideData[currentSlideId].annotator.setDrawingEnabled(false);
+			slideData[currentSlideId].annotator.setUserSelectAction('EDIT');
+			slideData[currentSlideId].annotator.on('selectionChanged', _onAnnotationSelectionChange);
+		}
+	};
+
+	var _createAnnotatorForSlide = function(slideId){
+		if(typeof slideData[slideId] === "undefined"){
+			slideData[slideId] = _getDefaultSlideConfig();
+		}
+		if(typeof slideData[slideId].annotator !== "undefined"){
+			return slideData[slideId].annotator; //already created
+		}
+
+		var $imgBackground = SM.Slides.getSlideBackgroundImg($("#" + slideId));
+		var annotator = Annotorious.createImageAnnotator($imgBackground.attr("id"), {
+			drawingEnabled: false,
+			drawingMode: "click",
+			userSelectAction: 'EDIT',
+			style: {
+				fill: '#dddddd',
+				fillOpacity: 0.25,
+				stroke: '#000000',
+				strokeWidth: 1
+			}
+		});
+		annotator.setDrawingTool('polygon');
+		annotator.on('createAnnotation', (annotation) => {
+			slideData[slideId].hotzones[annotation.id] = {};
+			_disableEditingMode("HOTZONE");
+		});
+
+		annotator.on('selectionChanged', _onAnnotationSelectionChange);
+		
+		slideData[slideId].annotator = annotator;
+		return annotator;
+	};
+
+	var _onAnnotationSelectionChange = function(annotations){
+		if(Array.isArray(annotations)){
+			if (annotations.length === 1){
+				//Annotation selected
+				_onSelectHotzone(annotations[0].id);
+			}
+			// if(annotations.length === 0){
+			// 	//Annotation unselected
+			// }
+		}
+	};
+
+	var _onSelectHotzone = function(hotzoneId){
+		currentHotzoneId = hotzoneId;
+		SM.Editor.Tools.loadToolsForElement("hotzone");
+	};
+
+	var showHotzoneSettings = function(){
+		$(hiddenLinkToInitHotzoneSettings).trigger("click");
+	};
+
+	var _onStartHotzoneSettingsFancybox = function(){
+		var slideId = $(SM.Slides.getCurrentSlide()).attr("id");
+		var hotzoneId = currentHotzoneId;
+		var hotzoneSettings = slideData[slideId].hotzones[hotzoneId];
+
+		//ID
+		$("#hotzoneIdInput").val(hotzoneId);
+
+		//Visibility
+		if(typeof slideData[slideId].hotzones[hotzoneId].visibility === "string"){
+			$("#hotzoneVisibility").val(slideData[slideId].hotzones[hotzoneId].visibility);
+		} else {
+			$("#hotzoneVisibility").val("hidden");
+		}
+
+		//Actions
+		SM.Editor.Actions.loadActions($("#hotzoneActions"),hotzoneSettings,"HOTZONE");
+	};
+
+	var onHotzoneSettingsDone = function(event){
+		var slideId = $(SM.Slides.getCurrentSlide()).attr("id");
+		var hotzoneId = currentHotzoneId;
+		var hotzoneSettings = {};
+
+		//Hotzone visibility
+		hotzoneSettings.visibility = $("#hotzoneVisibility").val();
+
+		//Hotzone actions
+		var actions = SM.Editor.Actions.getActionsJSON($("#hotzoneActions"));
+		if(actions.length > 0){
+			hotzoneSettings.actions = actions;
+		}
+
+		slideData[slideId].hotzones[hotzoneId] = hotzoneSettings;
+
+		$.fancybox.close();
+	};
+
+
 	////////////////////
 	// Getters & setters
 	////////////////////
@@ -889,6 +950,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		addHotzone						: addHotzone,
 		onClick 						: onClick,
 		showHotspotSettings				: showHotspotSettings,
+		showHotzoneSettings				: showHotzoneSettings,
 		getCurrentHotspot				: getCurrentHotspot,
 		getCurrentHotzoneId				: getCurrentHotzoneId,
 		setCurrentHotspot				: setCurrentHotspot,
@@ -900,6 +962,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		onInputHotspotSizeWidth			: onInputHotspotSizeWidth,
 		onInputHotspotSizeHeight		: onInputHotspotSizeHeight,
 		onHotspotSettingsDone			: onHotspotSettingsDone,
+		onHotzoneSettingsDone			: onHotzoneSettingsDone,
 		saveSlideWithMarkers			: saveSlideWithMarkers
 	};
 

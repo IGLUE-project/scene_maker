@@ -1158,36 +1158,33 @@ img.hotspot.ui-draggable {
 	cursor: pointer;
 }
 
-/* Hotzones */
 
+/* Hotspot and Hotzone Settings */
 
-
-/* Hotspot Settings */
-
-#hotspotSettings_wrapper {
+div.markerSettings_wrapper {
 	overflow: auto;
 	height: 555px;
 }
 
-div.new_hotspot_settings_field {
+div.new_marker_settings_field {
 	margin-left: 10px;
 	margin-top: 10px;
 }
 
-div.new_hotspot_settings_field label, div.new_hotspot_settings_field p, div.new_hotspot_settings_field input, div.new_hotspot_settings_field select {
+div.new_marker_settings_field label, div.new_marker_settings_field p, div.new_marker_settings_field input, div.new_marker_settings_field select {
 	font-size: 14px;
 }
 
-div.new_hotspot_settings_field.new_hotspot_settings_field_first {
+div.new_marker_settings_field.new_marker_settings_field_first {
 	margin-top: 5px;
 }
 
-div > div.new_hotspot_settings_field:not(.new_hotspot_settings_field_last) {
+div > div.new_marker_settings_field:not(.new_marker_settings_field_last) {
   border-bottom: 1px solid black;
   padding-bottom: 10px;
 }
 
-div.new_hotspot_settings_field p {
+div.new_marker_settings_field p {
 	margin: 0px 0px 5px 0px;
 }
 
@@ -1213,9 +1210,15 @@ div.settings_element_wrapper textarea {
 	overflow: auto;
 }
 
-#hotspotSettings_wrapper input[readonly] {
+div.markerSettings_wrapper input[readonly] {
 	background: #ddd;
+	width: 450px;
 	pointer-events: none;
+}
+
+div.actionParamsPuzzleSolution input[type="text"] {
+	user-select: text;
+	pointer-events: auto;
 }
 
 #hotspotImageURLPreviewWrapper img {
@@ -1228,7 +1231,7 @@ div.settings_element_wrapper textarea {
   border: 1px solid white;
 }
 
-#hotspotNewAction {
+div.markerSettings_wrapper button.add_action {
 	cursor: pointer;
 }
 

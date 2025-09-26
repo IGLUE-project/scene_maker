@@ -567,33 +567,20 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		return initOptions;
 	};
 
-	var getCurrentElement = function(){
+	var getCurrentElementType = function(){
 		var currentArea = getCurrentArea();
 		if((typeof currentArea !== "undefined")&&(currentArea !== null)){
-			return currentArea;
+			return "ZONE";
 		}
 		var currentHotspot = SM.Editor.Marker.getCurrentHotspot();
 		if((typeof currentHotspot !== "undefined")&&(currentHotspot !== null)){
-			return currentHotspot;
+			return "HOTSPOT";
 		}
-	};
-
-	var getCurrentElementType = function(){
-		var currentElement = getCurrentElement();
-		if((typeof currentElement !== "undefined")&&(currentElement !== null)){
-			currentElement = $(currentElement);
-			if(currentElement.hasClass("hotspot")){
-				return "HOTSPOT";
-			}
-			if(currentElement.hasClass("hotzone")){
-				return "HOTZONE";
-			}
-			if(currentElement.hasClass("view_content_zone")){
-				return "ZONE";
-			}
-		} else {
-			return "NONE";
+		var currentHotzoneId = SM.Editor.Marker.getCurrentHotzoneId();
+		if((typeof currentHotzoneId !== "undefined")&&(currentHotzoneId !== null)){
+			return "HOTZONE";
 		}
+		return "NONE";
 	};
 	
 	var getCurrentArea = function() {
@@ -658,7 +645,6 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	return {
 		init					: init,
 		getOptions				: getOptions,
-		getCurrentElement       : getCurrentElement,
 		getCurrentElementType 	: getCurrentElementType,
 		getCurrentArea			: getCurrentArea,
 		setCurrentArea			: setCurrentArea,

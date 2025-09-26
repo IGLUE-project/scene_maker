@@ -386,7 +386,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 				SM.Editor.Marker.showHotspotSettings();
 				break;
 			case "HOTZONE":
-				//TODO
+				SM.Editor.Marker.showHotzoneSettings();
 				break;
 			case "ZONE":
 			switch($(SM.Editor.getCurrentArea()).attr("type")){

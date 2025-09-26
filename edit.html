@@ -444,12 +444,12 @@
 	<div style='display:none'>
 		<div id="hotspotSettings_fancybox" class="elSettings_fancybox">
 			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
-			<div id="hotspotSettings_wrapper">
-				<div class="new_hotspot_settings_field new_hotspot_settings_field_first">
+			<div class="markerSettings_wrapper">
+				<div class="new_marker_settings_field new_marker_settings_field_first">
 					<label i18n-key="i.HotspotID">Hotspot ID:</label>
-					<input id="hotspotIdInput" type="text" maxlength="8" readonly>
+					<input id="hotspotIdInput" type="text" readonly>
 				</div>
-				<div class="new_hotspot_settings_field">
+				<div class="new_marker_settings_field">
 					<p i18n-key="i.Image">Image</p>
 					<div id="HotspotImageSourceWrapper" class="settings_element_wrapper">
 						<label i18n-key="i.ImageSource">Source:</label>
@@ -465,7 +465,7 @@
 					</div>
 					<div id="hotspotImageURLPreviewWrapper" class="settings_element_wrapper" style='display:none'></div>
 				</div>
-				<div class="new_hotspot_settings_field">
+				<div class="new_marker_settings_field">
 					<p i18n-key="i.Position">Position</p>
 					<div id="HotspotPositionXWrapper" class="settings_element_wrapper">
 						<label i18n-key="i.PositionX">X (px):</label>
@@ -476,7 +476,7 @@
 						<input id="hotspotPositionY" type="number" step="1">
 					</div>
 				</div>
-				<div class="new_hotspot_settings_field">
+				<div class="new_marker_settings_field">
 					<p i18n-key="i.Size">Size</p>
 					<input type="hidden" id="hotspotAspectRatio">
 					<div id="HotspotAspectRatioWrapper" class="settings_element_wrapper">
@@ -492,18 +492,18 @@
 						<input id="hotspotSizeHeight" type="number" value="42" step="1">
 					</div>
 				</div>
-				<div class="new_hotspot_settings_field">
+				<div class="new_marker_settings_field">
 					<label i18n-key="i.Rotation">Rotation angle (°):</label>
 					<input type="number" id="hotspotRotation" min="0" max="360" value="0" step="1">
 				</div>
-				<div class="new_hotspot_settings_field">
+				<div class="new_marker_settings_field">
 					<label i18n-key="i.Visibility">Visibility:</label>
 					<select id="hotspotVisibility">
 						<option value="visible" i18n-key="i.VisibilityVisible" selected>Visible</option>
 						<option value="hidden" i18n-key="i.VisibilityHidden">Hidden</option>
 					</select>
 				</div>
-				<div id="hotspotActions" class="actions_container new_hotspot_settings_field new_hotspot_settings_field_last">
+				<div id="hotspotActions" class="actions_container new_marker_settings_field new_marker_settings_field_last">
 					<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
 					<button type="button" class="button add_action">
 						<i class="icon-plus"></i> 
@@ -513,6 +513,36 @@
 			</div>
 			<div class="elSettingsButtonsWrapper">
 				<button id="hotspotSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Hotzone Settings -->
+	<div style='display:none'>
+		<div id="hotzoneSettings_fancybox" class="elSettings_fancybox">
+			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
+			<div class="markerSettings_wrapper">
+				<div class="new_marker_settings_field new_marker_settings_field_first">
+					<label i18n-key="i.HotzoneID">Zone ID:</label>
+					<input id="hotzoneIdInput" type="text" readonly>
+				</div>
+				<div class="new_marker_settings_field">
+					<label i18n-key="i.Visibility">Visibility:</label>
+					<select id="hotzoneVisibility">
+						<option value="hidden" i18n-key="i.VisibilityHidden">Hidden</option>
+						<option value="visible_hover" i18n-key="i.VisibilityHover" selected>Change cursor on hover</option>
+					</select>
+				</div>
+				<div id="hotzoneActions" class="actions_container new_marker_settings_field new_marker_settings_field_last">
+					<p i18n-key="i.HotzoneActions">Actions to perform when the zone is clicked</p>
+					<button type="button" class="button add_action">
+						<i class="icon-plus"></i> 
+						<span i18n-key="i.NewAction">Add action</span> 
+					</button>
+				</div>
+			</div>
+			<div class="elSettingsButtonsWrapper">
+				<button id="hotzoneSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>
 			</div>
 		</div>
 	</div>

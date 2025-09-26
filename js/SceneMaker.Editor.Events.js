@@ -41,6 +41,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on("input", "#hotspotSizeWidth", SM.Editor.Marker.onInputHotspotSizeWidth);
 			$(document).on("input", "#hotspotSizeHeight", SM.Editor.Marker.onInputHotspotSizeHeight);
 			$(document).on("click", "#hotspotSettingsDone", SM.Editor.Marker.onHotspotSettingsDone);
+			$(document).on("click", "#hotzoneSettingsDone", SM.Editor.Marker.onHotzoneSettingsDone);
 
 			//Actions
 			$(document).on("click", "div.actions_container button.add_action", function(){
