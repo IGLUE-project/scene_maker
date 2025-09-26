@@ -2,7 +2,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var slideData;
 	var currentHotspot;
 	var currentHotzoneId;
-	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "HOTZONE".
+	var currentEditingMode = "NONE"; //Can be "NONE", "HOTSPOT" or "HOTZONE".
 	var hiddenLinkToInitHotspotSettings;
 
 	var init = function(){
@@ -24,29 +24,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			},
 			"onClosed"  : function(data){
 			}
-		});
-
-		//Fill action template with current puzzles
-		var nPuzzles = SM.Editor.getOptions().nPuzzles;
-
-		if((typeof nPuzzles === "number")&&(nPuzzles > 0)){
-			var currentOptionsPuzzles = [];
-			for(var inp = 0; inp < nPuzzles; inp++){
-				var nPuzzle = (inp+1);
-				currentOptionsPuzzles.push({
-					value: nPuzzle,
-					text: (SM.I18n.getTrans("i.PuzzleOption", {number: nPuzzle}))
-				});
-			}
-		}
-
-		$("div.hotspotActionWrapperTemplate div.hotspotActionParamsPuzzle select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsPuzzles, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
 		});
 	};
 
@@ -538,150 +515,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		}
 
 		//Actions
-
-		//Remove prior actions
-		$("div.hotspotActionWrapper:not(.hotspotActionWrapperTemplate)").remove();
-
-		//Fill action template with current screens
-		var currentOptionsScreens = [];
-		$('article[type="screen"]').each(function() {
-		  var $screen = $(this);
-		  currentOptionsScreens.push({
-		    value: $screen.attr('id'),
-		    text: (SM.I18n.getTrans("i.ScreenOption", {number: $screen.attr('slidenumber')}))
-		  });
-		});
-
-		$("div.hotspotActionParamsScreen select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsScreens, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-		});
-
-		$("div.hotspotActionParamsScreenReplacement select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsScreens, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-		});
-
-		//Fill action template with current views
-		var currentOptionsViews = [];
-		var currentOptionsScreenViews = [];
-		var currentOptionsImageViews = [];
-
-		var $currentScreen = $(SM.Screen.getCurrentScreen());
-		var currentScreenId = $currentScreen.attr('id');
-		$("article[type='screen'] > article").each(function(){
-			var $view = $(this);
-			var $screen = $(this).parent();
-			var option = {
-				value: $view.attr('id'),
-				text: (SM.I18n.getTrans("i.ViewOption", {screenNumber: $screen.attr('slidenumber'), viewNumber: $view.attr('slidenumber')}))
-			};
-			currentOptionsViews.push(option);
-
-			if($screen.attr('id') === currentScreenId){
-				currentOptionsScreenViews.push(option);
-			}
-			if($view.attr("type") === SM.Constant.VIEW_IMAGE){
-				currentOptionsImageViews.push(option);
-			}
-		});
-
-		$("div.hotspotActionParamsView select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsScreenViews, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-		});
-
-		//Fill action template with current slides with background (screens and image views)
-		$("div.hotspotActionParamsSlide select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			//Fill with screens
-			$.each(currentOptionsScreens, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-			//Fill with views
-			$.each(currentOptionsImageViews, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-		});
-		
-		//Fill action template with current element ids (hotspots and hotzones)
-		var currentOptionsElementIds = [];
-		//Hotspots
-		$('img.hotspot').each(function() {
-		  var $hotspot = $(this);
-		  currentOptionsElementIds.push({
-		    value: $hotspot.attr('id'),
-		    text: $hotspot.attr('id')
-		  });
-		});
-
-		$("div.hotspotActionParamsElementId select").each(function() {
-			var $select = $(this);
-			$select.empty();
-			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsElementIds, function(_, opt) {
-				$select.append($("<option>", { value: opt.value, text: opt.text }));
-			});
-		});
-
-		//Fill properties with hotspotSettings
-		if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
-			for(var i=0; i<hotspotSettings.actions.length; i++){
-				var hotspotAction = hotspotSettings.actions[i];
-				if((typeof hotspotAction.actionType === "string")&&(hotspotAction.actionType !== "none")){
-					var $actionWrapper = onHotspotNewAction();
-					$actionWrapper.find("select.hotspotActionType").val(hotspotAction.actionType).trigger('change');
-					if(typeof hotspotAction.actionParams !== "undefined"){
-						if(typeof hotspotAction.actionParams.screen === "string"){
-							var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsScreen select");
-							$actionParamsScreenSelect.val(hotspotAction.actionParams.screen);
-						}
-						if(typeof hotspotAction.actionParams.screenReplacement === "string"){
-							var $actionParamsScreenSelectReplacement = $actionWrapper.find("div.hotspotActionParamsScreenReplacement select");
-							$actionParamsScreenSelectReplacement.val(hotspotAction.actionParams.screenReplacement);
-						}
-						if(typeof hotspotAction.actionParams.view === "string"){
-							var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
-							$actionParamsViewSelect.val(hotspotAction.actionParams.view);
-						}
-						if(typeof hotspotAction.actionParams.slide === "string"){
-							var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
-							$actionParamsSlideSelect.val(hotspotAction.actionParams.slide);
-						}
-						if(typeof hotspotAction.actionParams.text === "string"){
-							var $actionParamsTextAreaText = $actionWrapper.find("div.hotspotActionParamsText textarea");
-							$actionParamsTextAreaText.val(hotspotAction.actionParams.text);
-						}
-						if(typeof hotspotAction.actionParams.url === "string"){
-							var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
-							$actionParamsUrlInput.val(hotspotAction.actionParams.url);
-						}
-						if(typeof hotspotAction.actionParams.elementId === "string"){
-							var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
-							$actionParamsElementIdSelect.val(hotspotAction.actionParams.elementId);
-						}
-						if(typeof hotspotAction.actionParams.puzzle === "string"){
-							var $actionParamsPuzzleSelect = $actionWrapper.find("div.hotspotActionParamsPuzzle select");
-							$actionParamsPuzzleSelect.val(hotspotAction.actionParams.puzzle);
-						}
-					}
-				}
-			}	
-		}
+		SM.Editor.Actions.loadActions($("#hotspotActions"),hotspotSettings,"HOTSPOT");
 	};
 
 	var _drawHotspotGalleryCarousel = function(callback){
@@ -777,7 +611,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		$img.addClass("selected");
 	};
 
-
 	var onInputHotspotSizeWidth = function(event){
 		var lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
 		if(lockAspectRatio){
@@ -792,102 +625,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			var aspectRatio = parseFloat($("#hotspotAspectRatio").val());
 			$("#hotspotSizeWidth").val($("#hotspotSizeHeight").val()*aspectRatio);
 		}
-	};
-
-	var onHotspotNewAction = function(){
-		var $actionWrapperDiv = $(".hotspotActionWrapperTemplate").clone().removeClass("hotspotActionWrapperTemplate").show();
-		$("#hotspotNewAction").closest(".new_hotspot_settings_field").append($actionWrapperDiv);
-		return $actionWrapperDiv;
-	};
-
-	var onHotspotDeleteAction = function(event){
-		$(event.target).closest(".hotspotActionWrapper").remove();
-	};
-
-	var onHotspotPuzzleChange = function(event){
-		var option = event.target.value;
-		var $actionWrapperDiv = $(event.target).closest("div.hotspotActionWrapper");
-		var $inputPuzzleSolutionWrapper = $actionWrapperDiv.find("div.hotspotActionParamsPuzzleSolution");
-		var $inputPuzzleSolution = $inputPuzzleSolutionWrapper.find("input");
-		if(option != "none"){
-			$inputPuzzleSolution.val($("#hotspotIdInput").val());
-			$inputPuzzleSolutionWrapper.show();
-		} else {
-			$inputPuzzleSolution.val();
-			$inputPuzzleSolutionWrapper.hide();
-		}
-	};
-
-	var onHotspotActionChange = function(event){
-		var option = event.target.value;
-		var $actionWrapperDiv = $(event.target).closest("div.hotspotActionWrapper");
-		var $selectScreenWrapper = $actionWrapperDiv.find("div.hotspotActionParamsScreen");
-		var $selectScreen = $selectScreenWrapper.find("select");
-		var $selectScreenReplacementWrapper = $actionWrapperDiv.find("div.hotspotActionParamsScreenReplacement");
-		var $selectScreenReplacement = $selectScreenReplacementWrapper.find("select");
-		var $selectViewWrapper = $actionWrapperDiv.find("div.hotspotActionParamsView");
-		var $selectView = $selectViewWrapper.find("select");
-		var $selectSlideWrapper = $actionWrapperDiv.find("div.hotspotActionParamsSlide");
-		var $selectSlide = $selectSlideWrapper.find("select");
-		var $textAreaTextWrapper = $actionWrapperDiv.find("div.hotspotActionParamsText");
-		var $textAreaText = $textAreaTextWrapper.find("textarea");
-		var $inputURLWrapper = $actionWrapperDiv.find("div.hotspotActionParamsURL");
-		var $inputURL = $inputURLWrapper.find("input");
-		var $selectElementIdWrapper = $actionWrapperDiv.find("div.hotspotActionParamsElementId");
-		var $selectElementId = $selectElementIdWrapper.find("select");
-		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.hotspotActionParamsPuzzle");
-		var $selectPuzzle = $selectPuzzleWrapper.find("select");
-		var $inputPuzzleSolutionWrapper = $actionWrapperDiv.find("div.hotspotActionParamsPuzzleSolution");
-		
-		if((option === "goToScreen")||(option === "changeScreen")){
-			$selectScreen.prop("selectedIndex", 0);
-			$selectScreenWrapper.show();
-		} else {
-			$selectScreenWrapper.hide();
-		}
-		if(option === "changeScreen"){
-			$selectScreenReplacement.prop("selectedIndex", 0);
-			$selectScreenReplacementWrapper.show();
-		} else {
-			$selectScreenReplacementWrapper.hide();
-		}
-		if(option === "openView"){
-			$selectView.prop("selectedIndex", 0);
-			$selectViewWrapper.show();
-		} else {
-			$selectViewWrapper.hide();
-		}
-		if(option === "changeBackground"){
-			$selectSlide.prop("selectedIndex", 0);
-			$selectSlideWrapper.show();
-		} else {
-			$selectSlideWrapper.hide();
-		}
-		if(option === "showText"){
-			$textAreaText.val("");
-			$textAreaTextWrapper.show();
-		} else {
-			$textAreaTextWrapper.hide();
-		}
-		if((option === "openLink")||(option === "changeBackground")||(option === "playSound")||(option === "stopSound")){
-			$inputURL.val("");
-			$inputURLWrapper.show();
-		} else {
-			$inputURLWrapper.hide();
-		}
-		if((option === "showElement")||(option === "hideElement")){
-			$selectElementId.prop("selectedIndex", 0);
-			$selectElementIdWrapper.show();
-		} else {
-			$selectElementIdWrapper.hide();
-		}
-		if(option === "solvePuzzle"){
-			$selectPuzzle.prop("selectedIndex", 0);
-			$selectPuzzleWrapper.show();
-		} else {
-			$selectPuzzleWrapper.hide();
-		}
-		$inputPuzzleSolutionWrapper.hide();
 	};
 
 	var onHotspotSettingsDone = function(event){
@@ -951,52 +688,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		_validateHotspotPosition($hotspot);
 
 		//Hotspot actions
-		var actions = [];
-
-		$("div.hotspotActionWrapper").each(function(index, element) {
-			var $actionWrapper = $(this);
-			var actionType = $actionWrapper.find("select.hotspotActionType").val();
-			if(actionType !== "none"){
-				var action = {actionType: actionType, actionParams: {}};
-				var $actionParamsScreenSelect = $actionWrapper.find("div.hotspotActionParamsScreen select");
-				if($actionParamsScreenSelect.is(":visible")){
-					action.actionParams.screen = $actionParamsScreenSelect.val();
-				}
-				var $actionParamsScreenReplacementSelect = $actionWrapper.find("div.hotspotActionParamsScreenReplacement select");
-				if($actionParamsScreenReplacementSelect.is(":visible")){
-					action.actionParams.screenReplacement = $actionParamsScreenReplacementSelect.val();
-				}
-				var $actionParamsViewSelect = $actionWrapper.find("div.hotspotActionParamsView select");
-				if($actionParamsViewSelect.is(":visible")){
-					action.actionParams.view = $actionParamsViewSelect.val();
-				}
-				var $actionParamsSlideSelect = $actionWrapper.find("div.hotspotActionParamsSlide select");
-				if($actionParamsSlideSelect.is(":visible")){
-					action.actionParams.slide = $actionParamsSlideSelect.val();
-				}
-				var $actionParamsTextAreaText = $actionWrapper.find("div.hotspotActionParamsText textarea");
-				if($actionParamsTextAreaText.is(":visible")){
-					action.actionParams.text = $actionParamsTextAreaText.val();
-				}
-				var $actionParamsUrlInput = $actionWrapper.find("div.hotspotActionParamsURL input");
-				if($actionParamsUrlInput.is(":visible")){
-					action.actionParams.url = SM.Editor.Utils.autocompleteUrls($actionParamsUrlInput.val());
-				}
-				var $actionParamsElementIdSelect = $actionWrapper.find("div.hotspotActionParamsElementId select");
-				if($actionParamsElementIdSelect.is(":visible")){
-					action.actionParams.elementId = $actionParamsElementIdSelect.val();
-				}
-				var $actionParamsPuzzleSelect = $actionWrapper.find("div.hotspotActionParamsPuzzle select");
-				if($actionParamsPuzzleSelect.is(":visible")){
-					action.actionParams.puzzle = $actionParamsPuzzleSelect.val();
-				}
-				if (Object.keys(action.actionParams).length === 0) {
-					delete action.actionParams;
-				}
-				actions.push(action);
-			}
-		});
-
+		var actions = SM.Editor.Actions.getActionsJSON($("#hotspotActions"));
 		if(actions.length > 0){
 			hotspotSettings.actions = actions;
 		}
@@ -1005,11 +697,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 		$.fancybox.close();
 	};
-
-
-	////////////////////
-	// JSON Manipulation
-	////////////////////
 
 
 	////////////////////
@@ -1091,6 +778,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		options.buttons = [button1,button2];
 		SM.Utils.showDialog(options);
 	};
+
+
+	////////////////////
+	// JSON Manipulation
+	////////////////////
 
 	var saveSlideWithMarkers = function(slideDOM){
 		var slide = {};
@@ -1202,10 +894,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		setCurrentHotspot				: setCurrentHotspot,
 		setCurrentHotzoneId				: setCurrentHotzoneId,
 		deleteCurrentHotmarker			: deleteCurrentHotmarker,
-		onHotspotNewAction				: onHotspotNewAction,
-		onHotspotDeleteAction			: onHotspotDeleteAction,
-		onHotspotActionChange			: onHotspotActionChange,
-		onHotspotPuzzleChange			: onHotspotPuzzleChange,
 		onHotspotImageSourceChange		: onHotspotImageSourceChange,
 		onClickHotspotImageGallery		: onClickHotspotImageGallery,
 		checkHotspotImageURLPreview		: checkHotspotImageURLPreview,

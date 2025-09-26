@@ -60,6 +60,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.Editor.View.init();
 		SM.Marker.init();
 		SM.Editor.Marker.init();
+		SM.Editor.Actions.init();
 		SM.Renderer.init();
 		SM.Slides.init();
 		SM.User.init(options);

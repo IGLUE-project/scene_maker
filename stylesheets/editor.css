@@ -286,7 +286,7 @@ button.slidesScrollbarButton:hover {
 }
 
 #addViewButton > .slidesScrollbarButton {
-	width: 90px;
+	width: 102px;
 	margin-top: 20px;
 }
 
@@ -1191,24 +1191,24 @@ div.new_hotspot_settings_field p {
 	margin: 0px 0px 5px 0px;
 }
 
-div.hotspot_settings_element_wrapper {
+div.settings_element_wrapper {
 	margin-bottom: 5px;
 	display: flex;
   	align-items: center;
   	gap: 5px;
 }
 
-div.hotspot_settings_element_wrapper label {
+div.settings_element_wrapper label {
 	white-space: nowrap;
 }
 
-div.hotspot_settings_element_wrapper input[type="text"], div.hotspot_settings_element_wrapper textarea {
+div.settings_element_wrapper input[type="text"], div.settings_element_wrapper textarea {
 	flex: 1;                 
   	min-width: 0;
   	padding: 4px 8px;
 }
 
-div.hotspot_settings_element_wrapper textarea {
+div.settings_element_wrapper textarea {
 	resize: none;
 	overflow: auto;
 }
@@ -1232,7 +1232,7 @@ div.hotspot_settings_element_wrapper textarea {
 	cursor: pointer;
 }
 
-div.hotspotActionWrapper {
+div.actionWrapper {
 	position: relative;
 	border: 1px solid black;
     border-radius: 5px 5px 5px 5px;

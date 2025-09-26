@@ -89,6 +89,7 @@
 	<script type="text/javascript" src="/js/SceneMaker.Editor.Screen.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Editor.View.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Editor.Marker.js"></script>
+	<script type="text/javascript" src="/js/SceneMaker.Editor.Actions.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Editor.Preview.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Editor.Clipboard.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Editor.Events.js"></script>
@@ -193,14 +194,10 @@
 				</a>
 			</div>
 			<div id="toolbar_slide">
-				<a id="toolbar_background" class="tool_action" action="changeBackground" href="#">
-					<div id="toolbar_background_wrapper" class="subToolbar toolbar_btn toolbar_scene_wrapper_slideTools" style='display:none'>
-						<button id="bgw_btn" type="button" class="btn_toolbar">
-							<i id="bgw_icon"class="icon-button icon-picture"></i>
-						</button>
-						<p class="toolbar_scene_title" i18n-key="i.Background">Background</p>
-					</div>
-				</a>
+				<div class="subToolbar toolbar_btn tool_action" action="changeBackground">
+					<img class="toolbar_icon" src="/images/toolbar/change_background.png"/>
+					<p i18n-key="i.Background">Background</p>
+				</div>
 				<div class="subToolbar toolbar_btn tool_action" action="addHotspot">
 					<img class="toolbar_icon" src="/images/toolbar/add_hotspot.png"/>
 					<p i18n-key="i.AddHotspot">Add hotspot</p>
@@ -283,7 +280,7 @@
 					<div id="scene_details_fields_row1_column1">
 						<div id="scene_details_title">
 							<span class="scene_details_text" i18n-key="i.Title">Title</span>
-							<input id="scene_details_input_title" class="scene_details_input" type="text" placeholder="Untitled" i18n-key="i.untitled" maxlength="100">
+							<input id="scene_details_input_title" class="scene_details_input" type="text" placeholder="Untitled" i18n-key="i.Untitled" maxlength="100">
 						</div>
 						<div id="scene_details_aspectRatio">
 							<span class="scene_details_text" i18n-key="i.AspectRatio">Aspect ratio</span>
@@ -453,121 +450,65 @@
 					<input id="hotspotIdInput" type="text" maxlength="8" readonly>
 				</div>
 				<div class="new_hotspot_settings_field">
-					<p i18n-key="i.HotspotImage">Image</p>
-					<div id="HotspotImageSourceWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotImageSource">Source:</label>
+					<p i18n-key="i.Image">Image</p>
+					<div id="HotspotImageSourceWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.ImageSource">Source:</label>
 						<select id="hotspotImageSource">
-							<option value="gallery" i18n-key="i.HotspotImageSourceGallery" selected>Gallery</option>
-							<option value="url" i18n-key="i.HotspotImageSourceURL">URL</option>
+							<option value="gallery" i18n-key="i.ImageSourceGallery" selected>Gallery</option>
+							<option value="url" i18n-key="i.ImageSourceURL">URL</option>
 						</select>
 					</div>
 					<div id="hotspotImageGallery"></div>
-					<div id="hotspotImageURLWrapper" class="hotspot_settings_element_wrapper" style='display:none'>
-						<label i18n-key="i.HotspotImageURL">URL:</label>
+					<div id="hotspotImageURLWrapper" class="settings_element_wrapper" style='display:none'>
+						<label i18n-key="i.ImageURL">URL:</label>
 						<input id="hotspotImageURL" type="text">
 					</div>
-					<div id="hotspotImageURLPreviewWrapper" class="hotspot_settings_element_wrapper" style='display:none'></div>
+					<div id="hotspotImageURLPreviewWrapper" class="settings_element_wrapper" style='display:none'></div>
 				</div>
 				<div class="new_hotspot_settings_field">
-					<p i18n-key="i.HotspotPosition">Position</p>
-					<div id="HotspotPositionXWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotPositionX">X (px):</label>
+					<p i18n-key="i.Position">Position</p>
+					<div id="HotspotPositionXWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.PositionX">X (px):</label>
 						<input id="hotspotPositionX" type="number" step="1">
 					</div>
-					<div id="HotspotPositionYWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotPositionY">Y (px):</label>
+					<div id="HotspotPositionYWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.PositionY">Y (px):</label>
 						<input id="hotspotPositionY" type="number" step="1">
 					</div>
 				</div>
 				<div class="new_hotspot_settings_field">
-					<p i18n-key="i.HotspotSize">Size</p>
+					<p i18n-key="i.Size">Size</p>
 					<input type="hidden" id="hotspotAspectRatio">
-					<div id="HotspotAspectRatioWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotLockAspectRatio">Maintain aspect ratio:</label>
+					<div id="HotspotAspectRatioWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.LockAspectRatio">Maintain aspect ratio:</label>
 						<input id="hotspotLockAspectRatio" type="checkbox" checked>
 					</div>
-					<div id="HotspotSizeWidthWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotSizeWidth">Width:</label>
+					<div id="HotspotSizeWidthWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.SizeWidth">Width:</label>
 						<input id="hotspotSizeWidth" type="number" value="42" step="1">
 					</div>
-					<div id="HotspotSizeHeightWrapper" class="hotspot_settings_element_wrapper">
-						<label i18n-key="i.HotspotSizeHeight">Height:</label>
+					<div id="HotspotSizeHeightWrapper" class="settings_element_wrapper">
+						<label i18n-key="i.SizeHeight">Height:</label>
 						<input id="hotspotSizeHeight" type="number" value="42" step="1">
 					</div>
 				</div>
 				<div class="new_hotspot_settings_field">
-					<label i18n-key="i.HotspotRotation">Rotation angle (°):</label>
+					<label i18n-key="i.Rotation">Rotation angle (°):</label>
 					<input type="number" id="hotspotRotation" min="0" max="360" value="0" step="1">
 				</div>
 				<div class="new_hotspot_settings_field">
-					<label i18n-key="i.HotspotVisibility">Visibility:</label>
+					<label i18n-key="i.Visibility">Visibility:</label>
 					<select id="hotspotVisibility">
-						<option value="visible" i18n-key="i.HotspotVisibilityVisible" selected>Visible</option>
-						<option value="hidden" i18n-key="i.HotspotVisibilityHidden">Hidden</option>
+						<option value="visible" i18n-key="i.VisibilityVisible" selected>Visible</option>
+						<option value="hidden" i18n-key="i.VisibilityHidden">Hidden</option>
 					</select>
 				</div>
-				<div class="new_hotspot_settings_field new_hotspot_settings_field_last">
+				<div id="hotspotActions" class="actions_container new_hotspot_settings_field new_hotspot_settings_field_last">
 					<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
-					<button id="hotspotNewAction" type="button" class="button">
+					<button type="button" class="button add_action">
 						<i class="icon-plus"></i> 
-						<span i18n-key="i.HotspotNewAction">Add action</span> 
+						<span i18n-key="i.NewAction">Add action</span> 
 					</button>
-					<div class="hotspotActionWrapper hotspotActionWrapperTemplate" style='display:none'>
-						<div class="delete_action"></div>
-						<div class="hotspot_settings_element_wrapper">
-							<label i18n-key="i.HotspotActionType">Action:</label>
-							<select class="hotspotActionType">
-								<option value="none" i18n-key="i.Unspecified">Undefined</option>
-								<option value="goToScreen" i18n-key="i.HotspotActionTypeGoToScreen">Go to screen</option>
-								<option value="openView" i18n-key="i.HotspotActionTypeOpenView">Open view</option>
-								<option value="openLink" i18n-key="i.HotspotActionTypeOpenLink">Open link</option>
-								<option value="showText" i18n-key="i.HotspotActionTypeShowText">Show text</option>
-								<option value="changeBackground" i18n-key="i.HotspotActionTypeChangeBackground">Change background of a screen or view</option>
-								<option value="showElement" i18n-key="i.HotspotActionTypeShowElement">Show hotspot or zone</option>
-								<option value="hideElement" i18n-key="i.HotspotActionTypeHideElement">Remove hotspot or zone</option>
-								<option value="changeScreen" i18n-key="i.HotspotActionTypeChangeScreen">Change screen</option>
-								<option value="playSound" i18n-key="i.HotspotActionTypePlaySound">Play sound</option>
-								<option value="stopSound" i18n-key="i.HotspotActionTypeStopSound">Stop sound</option>
-								<option value="solvePuzzle" i18n-key="i.HotspotActionTypeSolvePuzzle">Solve escape room puzzle</option>
-							</select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsScreen" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsScreen">Screen:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsScreenReplacement" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsScreenReplacement">Replace with:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsView" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsView">View:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsSlide" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsSlide">Screen or view:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsURL" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsURL">URL:</label>
-							<input type="text">
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsText" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsText">Text:</label>
-							<textarea maxlength="500" rows="3"></textarea>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsElementId" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsElementId">Element ID:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsPuzzle" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsPuzzle">Puzzle:</label>
-							<select></select>
-						</div>
-						<div class="hotspot_settings_element_wrapper hotspotActionParamsPuzzleSolution" style='display:none'>
-							<label i18n-key="i.HotspotActionParamsPuzzleSolution">Puzzle solution:</label>
-							<input type="text" readonly>
-						</div>
-					</div>
 				</div>
 			</div>
 			<div class="elSettingsButtonsWrapper">
@@ -576,22 +517,76 @@
 		</div>
 	</div>
 
+	<!-- Teamplate to add new actions -->
+	<div class="actionWrapper actionWrapperTemplate" style='display:none'>
+		<div class="delete_action"></div>
+		<div class="settings_element_wrapper">
+			<label i18n-key="i.ActionType">Action:</label>
+			<select class="actionType">
+				<option value="none" i18n-key="i.Unspecified">Undefined</option>
+				<option value="goToScreen" i18n-key="i.ActionTypeGoToScreen">Go to screen</option>
+				<option value="openView" i18n-key="i.ActionTypeOpenView">Open view</option>
+				<option value="openLink" i18n-key="i.ActionTypeOpenLink">Open link</option>
+				<option value="showText" i18n-key="i.ActionTypeShowText">Show text</option>
+				<option value="changeBackground" i18n-key="i.ActionTypeChangeBackground">Change background of a screen or view</option>
+				<option value="showElement" i18n-key="i.ActionTypeShowElement">Show hotspot or zone</option>
+				<option value="hideElement" i18n-key="i.ActionTypeHideElement">Remove hotspot or zone</option>
+				<option value="changeScreen" i18n-key="i.ActionTypeChangeScreen">Change screen</option>
+				<option value="playSound" i18n-key="i.ActionTypePlaySound">Play sound</option>
+				<option value="stopSound" i18n-key="i.ActionTypeStopSound">Stop sound</option>
+				<option value="solvePuzzle" i18n-key="i.ActionTypeSolvePuzzle">Solve escape room puzzle</option>
+			</select>
+		</div>
+		<div class="settings_element_wrapper actionParamsScreen" style='display:none'>
+			<label i18n-key="i.ActionParamsScreen">Screen:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsScreenReplacement" style='display:none'>
+			<label i18n-key="i.ActionParamsScreenReplacement">Replace with:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsView" style='display:none'>
+			<label i18n-key="i.ActionParamsView">View:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsSlide" style='display:none'>
+			<label i18n-key="i.ActionParamsSlide">Screen or view:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsURL" style='display:none'>
+			<label i18n-key="i.ActionParamsURL">URL:</label>
+			<input type="text">
+		</div>
+		<div class="settings_element_wrapper actionParamsText" style='display:none'>
+			<label i18n-key="i.ActionParamsText">Text:</label>
+			<textarea maxlength="500" rows="3"></textarea>
+		</div>
+		<div class="settings_element_wrapper actionParamsElementId" style='display:none'>
+			<label i18n-key="i.ActionParamsElementId">Element ID:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsPuzzle" style='display:none'>
+			<label i18n-key="i.ActionParamsPuzzle">Puzzle:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionParamsPuzzleSolution" style='display:none'>
+			<label i18n-key="i.ActionParamsPuzzleSolution">Puzzle solution:</label>
+			<input type="text" readonly>
+		</div>
+	</div>
+
 	<!-- Object Settings -->
 	<div style='display:none'>
 		<div id="objectSettings_fancybox" class="elSettings_fancybox">
 			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
-
 			<input type="hidden" name="elId">
-
 			<div class="new_elsettings_field">
 				<span i18n-key="i.OSettingsUnload">Unload the object when the slide disappears</span>
 				<input type="checkbox" defaultvalue="true" name="unloadObject">
 			</div>
-
 			<div class="elSettingsButtonsWrapper">
 				<button id="objectSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>
 			</div>
-
 		</div>
 	</div>
 

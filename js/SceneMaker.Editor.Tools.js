@@ -76,8 +76,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 			case SM.Constant.VIEW_IMAGE:
 			case SM.Constant.SCREEN:
 				$("#toolbar_slide").removeClass("toolbar_slide_view_content").addClass("toolbar_slide_screen");
-				$("#toolbar_background_wrapper").show();
-				$("#toolbar_background_wrapper").children().css("visibility","visible");
+				$("div.tool_action[action='changeBackground']").show();
 				if(typeof SM.Slides.getSlideBackground(slide) !== "undefined"){
 					$("div.tool_action[action='addHotspot']").show();
 					$("div.tool_action[action='addHotzone']").show();

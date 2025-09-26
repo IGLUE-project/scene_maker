@@ -40,12 +40,16 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on("blur", "#hotspotImageURL", SM.Editor.Marker.checkHotspotImageURLPreview);
 			$(document).on("input", "#hotspotSizeWidth", SM.Editor.Marker.onInputHotspotSizeWidth);
 			$(document).on("input", "#hotspotSizeHeight", SM.Editor.Marker.onInputHotspotSizeHeight);
-			$(document).on("click", "#hotspotNewAction", SM.Editor.Marker.onHotspotNewAction);
-			$(document).on("click", "div.delete_action", SM.Editor.Marker.onHotspotDeleteAction);
-			$(document).on("change", "select.hotspotActionType", SM.Editor.Marker.onHotspotActionChange);
-			$(document).on("change", "div.hotspotActionParamsPuzzle select", SM.Editor.Marker.onHotspotPuzzleChange);
 			$(document).on("click", "#hotspotSettingsDone", SM.Editor.Marker.onHotspotSettingsDone);
-		
+
+			//Actions
+			$(document).on("click", "div.actions_container button.add_action", function(){
+				SM.Editor.Actions.addNewAction($(this).closest("div.actions_container"));
+			});
+			$(document).on("change", "select.actionType", SM.Editor.Actions.onActionChange);
+			$(document).on("click", "div.delete_action", SM.Editor.Actions.onDeleteAction);
+			$(document).on("change", "div.actionParamsPuzzle select", SM.Editor.Actions.onPuzzleChange);
+			
 			//Element settings
 			$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
 

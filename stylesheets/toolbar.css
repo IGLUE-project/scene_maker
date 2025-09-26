@@ -240,21 +240,30 @@ section.hotzone_active article[type='screen'], section.hotzone_active article[ty
 }
 
 .toolbar_icon {
-    height: 19px;
+    height: 25px;
     position: relative;
-    left: 30%;
-    top: -3px;
+    left: 25px;
+    top: -5px;
 }
 
 .subToolbar {
 	display: inline-block;
-	height: 30px;
+	height: 31px;
     position: relative;
     top: -4px;
     border: 0;
-    padding: 10px;
+    padding: 10px 5px 10px 5px;
     cursor: pointer;
     margin-top: 8px;
+}
+
+#toolbar_background div.subToolbar {
+	top: -16px;
+}
+
+.subToolbar[action="changeBackground"] img, .subToolbar[action="addHotspot"] img, .subToolbar[action="addHotzone"] img {
+	height: 31px;
+	top: -9px;
 }
 
 .subToolbar.toolbar_btn p {
@@ -262,9 +271,17 @@ section.hotzone_active article[type='screen'], section.hotzone_active article[ty
     margin: 0px;
     color: white;
     text-align: center;
-    width: 68px;
+    width: 80px;
     position: relative;
-    top: 2px;
+    top: -3px;
+}
+
+.subToolbar[action="changeBackground"] p, .subToolbar[action="addHotspot"] p, .subToolbar[action="addHotzone"] p {
+	top: -9px;
+}
+
+#toolbar_background .subToolbar.toolbar_btn p {
+	top: 2px;
 }
 
 div.toolbar_scene_wrapper_slideTools {
