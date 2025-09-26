@@ -204,7 +204,7 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 	};
 
 	var _getThumbnailURLForScreenOrViewImage = function(slide){
-		var imgBackground = SM.Editor.Slides.getSlideBackground(slide);
+		var imgBackground = SM.Slides.getSlideBackground(slide);
 		if (typeof imgBackground !== "undefined") {
 			return imgBackground;
 		} else {

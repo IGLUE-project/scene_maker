@@ -56,7 +56,7 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 	var setSlideBackground = function(slide,backgroundURL){
 		var $slide = $(slide);
 		if($slide.attr("type")!==SM.Constant.VIEW_CONTENT){
-			var $imgBackground = getSlideBackgroundImg($slide);
+			var $imgBackground = SM.Slides.getSlideBackgroundImg($slide);
 			if ($imgBackground.length === 0) {
 				// Create <img> for background
 				var imgBackgroundId = $slide.attr("id") + "_background";
@@ -74,21 +74,6 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 		}
 
 		$.fancybox.close();
-	};
-
-	var getSlideBackgroundImg = function(slide){
-		var $slide = $(slide);
-		var slideId = $slide.attr("id");
-		return $slide.find("img.slide_background#" + slideId + "_background");
-	};
-
-	var getSlideBackground = function(slide){
-		var $imgBackground = getSlideBackgroundImg(slide);
-		if ($imgBackground.length > 0) {
-			return $imgBackground.attr("src");
-		} else {
-			return undefined;
-		}
 	};
 
 	var copyTextAreasOfSlide = function(slide){
@@ -138,8 +123,6 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 		updateThumbnail				: updateThumbnail,
 		isSlideFocused				: isSlideFocused,
 		setSlideBackground 			: setSlideBackground,
-		getSlideBackground			: getSlideBackground,
-		getSlideBackgroundImg		: getSlideBackgroundImg,
 		copyTextAreasOfSlide		: copyTextAreasOfSlide,
 		loadTextAreasOfSlide		: loadTextAreasOfSlide,
 		cleanTextAreasOfSlide		: cleanTextAreasOfSlide

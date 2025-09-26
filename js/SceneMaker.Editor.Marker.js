@@ -1,17 +1,16 @@
 SceneMaker.Editor.Marker = (function(SM,$,undefined){
-
-	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "HOTZONE".
-	var _hiddenLinkToInitHotspotSettings;
 	var slideData;
 	var currentHotspot;
 	var currentHotzoneId;
+	var currentEditingMode = "NONE"; //Can be "NONE", HOTSPOT" or "HOTZONE".
+	var hiddenLinkToInitHotspotSettings;
 
 	var init = function(){
 		slideData = {};
 
 		//Hotspot Settings
-		_hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
-		$(_hiddenLinkToInitHotspotSettings).fancybox({
+		hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
+		$(hiddenLinkToInitHotspotSettings).fancybox({
 			'autoDimensions' : false,
 			'height': 690,
 			'width': 920,
@@ -115,39 +114,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var _drawHotzone = function(slideId,hotzoneJSON){
 		if(Array.isArray(hotzoneJSON.points)){
 			var hotzoneId = hotzoneJSON.id;
-			var annotation = _createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
+			var annotation = SM.Marker.createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
 			var annotator = _createAnnotatorForSlide(slideId);
 			annotator.setAnnotations([annotation]);
 			slideData[slideId].hotzones[hotzoneId] = {};
 		}
-	};
-
-	var _createAnnotationFromPointsArray = function(id, pointsArray){
-		var xs = pointsArray.map(([x]) => x);
-		var ys = pointsArray.map(([, y]) => y);
-		var minX = Math.min(...xs);
-		var maxX = Math.max(...xs);
-		var minY = Math.min(...ys);
-		var maxY = Math.max(...ys);
-
-		var annotation = {
-			"id": id,
-			"target": {
-				"selector": {
-					"type": "POLYGON",
-					"geometry": {
-						"bounds": {
-							"minX": minX,
-							"minY": minY,
-							"maxX": maxX,
-							"maxY": maxY
-						},
-						"points": pointsArray
-					}
-				}
-			}
-		};
-		return annotation;
 	};
 
    /*
@@ -274,7 +245,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			return slideData[slideId].annotator; //already created
 		}
 
-		var $imgBackground = $("#" + slideId).children("img.slide_background");
+		var $imgBackground = SM.Slides.getSlideBackgroundImg($("#" + slideId));
 		var annotator = Annotorious.createImageAnnotator($imgBackground.attr("id"), {
 			drawingEnabled: false,
 			drawingMode: "click",
@@ -338,7 +309,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var _drawHotspot = function(slideId,hotspotId,x,y,imgURL,lockAspectRatio,visibility,width,height,rotationAngle){
 		if(typeof imgURL !== "string"){
-			imgURL = SM.Screen.getDefaultHotspotImg();
+			imgURL = SM.Marker.getDefaultHotspotImg();
 		}
 		if(typeof lockAspectRatio !== "boolean"){
 			lockAspectRatio = true;
@@ -502,7 +473,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	};
 
 	var showHotspotSettings = function(){
-		$(_hiddenLinkToInitHotspotSettings).trigger("click");
+		$(hiddenLinkToInitHotspotSettings).trigger("click");
 	};
 
 	var _onStartHotspotSettingsFancybox = function(){
@@ -941,7 +912,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 				break;
 		}
 		if(typeof hotspotImg !== "string"){
-			hotspotImg = SM.Screen.getDefaultHotspotImg();
+			hotspotImg = SM.Marker.getDefaultHotspotImg();
 		}
 		$hotspot.attr("src", hotspotImg);
 
@@ -1126,7 +1097,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		slide.id = $(slideDOM).attr('id');
 		slide.type = $(slideDOM).attr('type');
 
-		var slideBackground = SM.Editor.Slides.getSlideBackground(slideDOM);
+		var slideBackground = SM.Slides.getSlideBackground(slideDOM);
 		if(typeof slideBackground === "string"){
 			slide.background = slideBackground;
 		}

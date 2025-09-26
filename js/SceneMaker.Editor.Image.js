@@ -25,7 +25,7 @@ SceneMaker.Editor.Image = (function(SM,$,undefined){
 	var _onLoadURLTab = function(){
 		if(contentAddMode === SM.Constant.SCREEN){
 			var $slide = $(SM.Slides.getCurrentSlide());
-			var slideBackgroundURL = SM.Editor.Slides.getSlideBackground($slide);
+			var slideBackgroundURL = SM.Slides.getSlideBackground($slide);
 			if(typeof slideBackgroundURL === "string"){
 				$("#" + urlInputId).val(slideBackgroundURL);
 				$("#" + urlDivId + " .previewButton").trigger("click");

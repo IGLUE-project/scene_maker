@@ -24,6 +24,31 @@ SceneMaker.Slides = (function(SM,$,undefined){
 		}
 	};
 
+	/* Background  */
+
+	var getSlideBackgroundImg = function(slide){
+		var $slide = $(slide);
+		var slideId = $slide.attr("id");
+		return $slide.find("img.slide_background#" + slideId + "_background");
+	};
+
+	var getSlideBackground = function(slide){
+		var $imgBackground = getSlideBackgroundImg(slide);
+		if ($imgBackground.length > 0) {
+			return $imgBackground.attr("src");
+		} else {
+			return undefined;
+		}
+	};
+
+	var changeSlideBackground = function(slide,backgroundURL){
+		var $slide = $(slide);
+		if($slide.attr("type")!==SM.Constant.VIEW_CONTENT){
+			var $imgBackground = getSlideBackgroundImg($slide);
+			$imgBackground.attr("src",backgroundURL);
+		}
+	};
+
 
 	/* Slide types  */
 
@@ -102,6 +127,9 @@ SceneMaker.Slides = (function(SM,$,undefined){
 			init          				: init,
 			getCurrentSlide				: getCurrentSlide,
 			getCurrentSlideNumber		: getCurrentSlideNumber,
+			getSlideBackgroundImg		: getSlideBackgroundImg,
+			getSlideBackground			: getSlideBackground,
+			changeSlideBackground		: changeSlideBackground,
 			getSlideType 				: getSlideType,
 			isScreen					: isScreen,
 			isView						: isView,
