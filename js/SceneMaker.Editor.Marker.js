@@ -114,13 +114,15 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var _drawHotzone = function(slideId,hotzoneJSON){
 		if(Array.isArray(hotzoneJSON.points)){
-			var annotation = _createAnnotationFromPointsArray(hotzoneJSON.points);
+			var hotzoneId = hotzoneJSON.id;
+			var annotation = _createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
 			var annotator = _createAnnotatorForSlide(slideId);
 			annotator.setAnnotations([annotation]);
+			slideData[slideId].hotzones[hotzoneId] = {};
 		}
 	};
 
-	var _createAnnotationFromPointsArray = function(pointsArray){
+	var _createAnnotationFromPointsArray = function(id, pointsArray){
 		var xs = pointsArray.map(([x]) => x);
 		var ys = pointsArray.map(([, y]) => y);
 		var minX = Math.min(...xs);
@@ -129,6 +131,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var maxY = Math.max(...ys);
 
 		var annotation = {
+			"id": id,
 			"target": {
 				"selector": {
 					"type": "POLYGON",
@@ -288,6 +291,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			slideData[slideId].hotzones[annotation.id] = {};
 			_disableEditingMode("HOTZONE");
 		});
+
 		annotator.on('selectionChanged', _onAnnotationSelectionChange);
 		
 		slideData[slideId].annotator = annotator;
@@ -299,7 +303,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			if (annotations.length === 1){
 				//Annotation selected
 				_onSelectHotzone(annotations[0].id);
-			} 
+			}
 			// if(annotations.length === 0){
 			// 	//Annotation unselected
 			// }
@@ -1180,29 +1184,32 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			}
 
 			//Hotzones
-			var hotzonesIds = Object.keys(slideData[slide.id].hotzones);
 			var annotator = slideData[slide.id].annotator;
-			if((hotzonesIds.length > 0)&&(typeof annotator !== "undefined")) {
-				slide.hotzones = [];
-				hotzonesIds.forEach(hotzoneId => {
-					//var hotzoneDOM = $("[data-id=" + hotzoneId + "]");
-					var annotation = annotator.getAnnotationById(hotzoneId);
-					var points = annotation.target.selector.geometry.points;
-					var hotzoneJSON = {
-						"id": hotzoneId,
-						"points": points,
-					};
+			if(typeof annotator !== "undefined") {
+				var annotations = annotator.getAnnotations();
+				if(annotations.length > 0){
+					slide.hotzones = [];
+		
+					annotations.forEach(annotation => {
+						var hotzoneId = annotation.id;
+						var points = annotation.target.selector.geometry.points;
+						var hotzoneJSON = {
+							"id": hotzoneId,
+							"points": points,
+						};
 
-					var hotzoneSettings = slideData[slide.id].hotzones[hotzoneId];
-					//console.log("hotzoneSettings", hotzoneSettings);
-					if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
-						hotzoneJSON.actions = hotzoneSettings.actions;
-					}
-
-					slide.hotzones.push(hotzoneJSON);
-				});
+						if((typeof slideData[slide.id].hotzones !== "undefined")&&(typeof slideData[slide.id].hotzones[hotzoneId] !== "undefined")){
+							var hotzoneSettings = slideData[slide.id].hotzones[hotzoneId];
+							//console.log("hotzoneSettings", hotzoneSettings);
+							if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
+								hotzoneJSON.actions = hotzoneSettings.actions;
+							}
+						}
+						
+						slide.hotzones.push(hotzoneJSON);
+					});
+				}
 			}
-			
 		}
 
 		return slide;
