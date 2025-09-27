@@ -866,6 +866,10 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	// Getters & setters
 	////////////////////
 
+	var getSlideData = function(){
+		return slideData;
+	};
+
 	var getCurrentHotspot = function(){
 		return currentHotspot;
 	};
@@ -1061,6 +1065,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		addHotspot							: addHotspot,
 		addHotzone							: addHotzone,
 		onClick 							: onClick,
+		getSlideData						: getSlideData,
 		getCurrentHotspot					: getCurrentHotspot,
 		setCurrentHotspot					: setCurrentHotspot,
 		showHotspotSettings					: showHotspotSettings,

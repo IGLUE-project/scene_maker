@@ -102,9 +102,8 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			});
 		});
 		
-		//Fill action template with current hotspots and hotzones
+		//Fill action template with current hotspots
 		var currentOptionsHotspotIds = [];
-		//Hotspots
 		$('img.hotspot').each(function() {
 			var $hotspot = $(this);
 			currentOptionsHotspotIds.push({
@@ -122,14 +121,16 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			});
 		});
 
+		//Fill action template with current hotzones
 		var currentOptionsHotzonesIds = [];
-		//Hotzones
-		$('g.a9s-annotation[data-id]').each(function() {
-			var $hotzone = $(this);
-			var hotzoneId = $hotzone.attr('data-id');
-			currentOptionsHotzonesIds.push({
-				value: hotzoneId,
-				text: SM.Editor.Marker.getAliasForHotzone(hotzoneId)
+		var slideData = SM.Editor.Marker.getSlideData();
+		Object.keys(slideData).forEach((slideId, index) => {
+			Object.keys(slideData[slideId].hotzones).forEach((hotzoneId, index) => {
+				//var hotzone = slideData[slideId].hotzones[hotzoneId];
+				currentOptionsHotzonesIds.push({
+					value: hotzoneId,
+					text: SM.Editor.Marker.getAliasForHotzone(hotzoneId)
+				})
 			});
 		});
 
