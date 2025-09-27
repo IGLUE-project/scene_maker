@@ -61,14 +61,14 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			if(typeof slideJSON.background === "string"){
 				SM.Editor.Slides.setSlideBackground(scaffoldDOM, slideJSON.background);
 			};
-			drawHotspots(slideJSON,scaffoldDOM);
-			drawHotzones(slideJSON,scaffoldDOM);
+			_drawHotspots(slideJSON,scaffoldDOM);
+			_drawHotzones(slideJSON.id,slideJSON.hotzones);
 		}
 	};
 
-	var drawHotspots = function(slideJSON,scaffoldDOM){
-		if (Array.isArray(slideJSON.hotspots)) {
-			$(slideJSON.hotspots).each(function(index,hotspot){
+	var _drawHotspots = function(slideId,hotspots){
+		if (Array.isArray(hotspots)) {
+			$(hotspots).each(function(index,hotspot){
 				SM.Utils.registerId(hotspot.id);
 
 				//Transform dimensions from percentage to absolute numbers for the current container.
@@ -90,25 +90,30 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 				var hotspotWidth = hotspot.width*slideContainerWidth/100;
 				var hotspotHeight = hotspot.height*slideContainerHeight/100;
 
-				_drawHotspot(slideJSON.id,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
+				_drawHotspot(slideId,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
 				if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
-					slideData[slideJSON.id].hotspots[hotspot.id].actions = hotspot.actions;
+					slideData[slideId].hotspots[hotspot.id].actions = hotspot.actions;
 				}
 			});
 		}
 	};
 
-	var drawHotzones = function(slideJSON,scaffoldDOM){
-		if (Array.isArray(slideJSON.hotzones)) {
-			$(slideJSON.hotzones).each(function(index,hotzoneJSON){
-				_drawHotzone(slideJSON.id,hotzoneJSON);
+	var _drawHotzones = function(slideId,hotzones){
+		if (Array.isArray(hotzones)) {
+			$(hotzones).each(function(index,hotzoneJSON){
+				_drawHotzone(slideId,hotzoneJSON);
 			});
 		}
 	};
 
 	var _drawHotzone = function(slideId,hotzoneJSON){
 		if(Array.isArray(hotzoneJSON.points)){
-			var hotzoneId = hotzoneJSON.id;
+			var hotzoneId;
+			if(typeof hotzoneJSON.id === "string"){
+				hotzoneId = hotzoneJSON.id;
+			} else {
+				hotzoneId = SM.Utils.getId("annotation-");
+			}
 			var hotzoneIdAlias;
 			if(typeof hotzoneJSON.id_alias === "string"){
 				hotzoneIdAlias = hotzoneJSON.id_alias;
@@ -344,58 +349,126 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		});
 	};
 
-	var copyHotspotConfig = function(oldScreenId,newScreenId,hotspotIdsMapping){
-		if(slideData[newScreenId] === "undefined"){
-			slideData[newScreenId] = _getDefaultSlideConfig();
+	var copyHotzones = function(oldScreenId,newScreenId){
+		_copyHotzonesInSlide(oldScreenId,newScreenId);
+		$("#"+newScreenId).children("article").each(function(index, view) {
+			var newViewId = $(view).attr("id");
+			var oldViewId = oldScreenId + newViewId.slice(newScreenId.length);
+			_copyHotzonesInSlide(oldViewId,newViewId);
+		});
+	};
+
+	var _copyHotzonesInSlide = function(oldSlideId,newSlideId){
+		if((typeof slideData[oldSlideId] === "undefined")||(typeof slideData[oldSlideId].annotator === "undefined")){
+			//No hotzones to copy in this slide
+			return; 
 		}
-		if(slideData[oldScreenId] === "undefined"){
+
+		//Undo annotator
+		var $newSlide = $("#" + newSlideId);
+		var $imgBackground = SM.Slides.getSlideBackgroundImg($newSlide);
+		$($imgBackground).prependTo($newSlide);
+		$newSlide.find("svg.a9s-annotationlayer").parent("div[data-theme]").remove();
+
+		var slideJSON = saveSlideWithMarkers($("#"+oldSlideId));
+		if (Array.isArray(slideJSON.hotzones) && slideJSON.hotzones.length > 0) {
+			_drawHotzones(newSlideId,_copyHotzonesJSON(slideJSON.hotzones, oldSlideId, newSlideId));
+		}
+	};
+
+	var _copyHotzonesJSON = function(hotzones, oldSlideId, newSlideId){
+		var hotzoneIdsMapping = {};
+		for (var i = 0; i < hotzones.length; i++) {
+			var oldHotzoneId = hotzones[i].id;
+			hotzones[i].id = SM.Utils.getId("annotation-");
+			hotzoneIdsMapping[oldHotzoneId] = hotzones[i].id;
+			delete hotzones[i].id_alias;
+		}
+		for (var j = 0; j < hotzones.length; j++) {
+			hotzones[j].actions = _changeIdsInActions(hotzones[j].actions,hotzones[j].id,oldSlideId,newSlideId,hotzoneIdsMapping);
+		}
+		return hotzones;
+	};
+
+	var copyMarkerConfig = function($slide,oldSlideId,newSlideId){
+		if(typeof slideData[newSlideId] === "undefined"){
+			slideData[newSlideId] = _getDefaultSlideConfig();
+		}
+		if(typeof slideData[oldSlideId] === "undefined"){
 			//Nothing to copy
 			return;
 		}
-		slideData[newScreenId] = JSON.parse(JSON.stringify(slideData[oldScreenId]));
-
-		//Change ids in config
-		//Hotspot ids
-		for (var oldHotspotId in hotspotIdsMapping) {
-			var newHotspotId = hotspotIdsMapping[oldHotspotId];
-			var oldHotspotData = Object.assign({}, slideData[newScreenId].hotspots[oldHotspotId]);
-			if((typeof oldHotspotData !== "undefined")&&(Object.keys(oldHotspotData).length > 0)){
-				slideData[newScreenId].hotspots[newHotspotId] = oldHotspotData;
-			}
-			delete slideData[newScreenId].hotspots[oldHotspotId];
+		slideData[newSlideId] = JSON.parse(JSON.stringify(slideData[oldSlideId]));
+		
+		if(typeof slideData[newSlideId].annotator !== "undefined"){
+			delete slideData[newSlideId].annotator;
 		}
 
-		//Ids in actions
-		for (var key in slideData[newScreenId].hotspots) {
-			var hotspot = slideData[newScreenId].hotspots[key];
-			if (Array.isArray(hotspot.actions)) {
-				var nActions = hotspot.actions.length;
-				for(var i=0; i<nActions; i++){
-					var action = hotspot.actions[i];
-					switch(action.actionType){
-						case 'openView':
-							//open the same view but in the copy screen
-							if((action.actionParams)&&(typeof action.actionParams.view === "string")){
-								var oldViewId = action.actionParams.view;
-								if (oldViewId.startsWith(oldScreenId)) {
-								  var newViewId = newScreenId + oldViewId.slice(oldScreenId.length);
-								  slideData[newScreenId].hotspots[key].actions[i].actionParams.view = newViewId;
-								}
+		//Change hotspot ids in config
+		var hotspotIdsMapping = {};
+		$slide.children("img.hotspot").each(function(index, hotspot){
+			var oldHotspotId = $(hotspot).attr("id");
+			var newHotspotId = SM.Utils.getId("hotspot-");
+			$(hotspot).attr("id",newHotspotId);
+			hotspotIdsMapping[oldHotspotId] = newHotspotId;
+		});
+
+		for (var oldHotspotId in hotspotIdsMapping) {
+			var newHotspotId = hotspotIdsMapping[oldHotspotId];
+			var oldHotspotData = Object.assign({}, slideData[newSlideId].hotspots[oldHotspotId]);
+			if((typeof oldHotspotData !== "undefined")&&(Object.keys(oldHotspotData).length > 0)){
+				slideData[newSlideId].hotspots[newHotspotId] = oldHotspotData;
+			}
+			delete slideData[newSlideId].hotspots[oldHotspotId];
+		}
+
+		//Change ids in hotspot actions
+		for (var hotspotId in slideData[newSlideId].hotspots) {
+			var hotspot = slideData[newSlideId].hotspots[hotspotId];
+			slideData[newSlideId].hotspots[hotspotId].actions = _changeIdsInActions(hotspot.actions,hotspotId,oldSlideId,newSlideId,hotspotIdsMapping);
+		}
+
+		//Hotzones ids are changed by copyHotzones after drawing
+	};
+
+	var _changeIdsInActions = function(actions,elementId,oldSlideId,newSlideId,idsMapping){
+		if (Array.isArray(actions)) {
+			var nActions = actions.length;
+			for(var i=0; i<nActions; i++){
+				var action = actions[i];
+				switch(action.actionType){
+					case 'openView':
+						//open the same view but in the copy screen
+						if((action.actionParams)&&(typeof action.actionParams.view === "string")){
+							var oldViewId = action.actionParams.view;
+							if (oldViewId.startsWith(oldSlideId)) {
+							  var newViewId = newSlideId + oldViewId.slice(oldSlideId.length);
+							  actions[i].actionParams.view = newViewId;
 							}
-							break;
-						case 'hideElement':
-							//Keep behaviour if the hotspot hide itself
-							if((action.actionParams)&&(typeof action.actionParams.elementId === "string")){
-								var oldHotspotId = Object.keys(hotspotIdsMapping).find(k => hotspotIdsMapping[k] === key);
-								if(action.actionParams.elementId === oldHotspotId){
-									action.actionParams.elementId = key;
-								}
+						}
+						break;
+					case 'hideHotspot':
+						//Keep behaviour if the hotspot hide itself
+						if((action.actionParams)&&(typeof action.actionParams.hotspotId === "string")){
+							var oldHotspotId = Object.keys(idsMapping).find(k => idsMapping[k] === elementId);
+							if(action.actionParams.hotspotId === oldHotspotId){
+								action.actionParams.hotspotId = elementId;
 							}
-							break;
-					}
+						}
+						break;
+					case 'disableHotzone':
+						//Keep behaviour if the hotzone disable itself
+						if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
+							var oldHotzoneId = Object.keys(idsMapping).find(k => idsMapping[k] === elementId);
+							if(action.actionParams.hotzoneId === oldHotzoneId){
+								action.actionParams.hotzoneId = elementId;
+							}
+						}
+						break;
 				}
 			}
 		}
+		return actions;
 	};
 
 	var _onSelectHotspot = function($hotspot){
@@ -982,10 +1055,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	return {
 		init 								: init,
 		drawSlideWithMakers					: drawSlideWithMakers,
-		drawHotspots 						: drawHotspots,
-		drawHotzones						: drawHotzones,
 		refreshDraggables					: refreshDraggables,
-		copyHotspotConfig					: copyHotspotConfig,
+		copyMarkerConfig					: copyMarkerConfig,
+		copyHotzones						: copyHotzones,
 		addHotspot							: addHotspot,
 		addHotzone							: addHotzone,
 		onClick 							: onClick,

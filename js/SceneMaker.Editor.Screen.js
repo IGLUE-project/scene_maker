@@ -248,13 +248,14 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
 	var copyScreen = function(screenToCopy,options){
-		if(typeof screenToCopy == "undefined"){
+		if(typeof screenToCopy === "undefined"){
 			return;
 		}
 
+		var oldScreenId = $(screenToCopy).attr("id");
 		SM.Editor.Slides.cleanTextAreasOfSlide(screenToCopy);
 		screenToCopy = _replaceIdsForCopyScreen(screenToCopy);
-		var newId = $(screenToCopy).attr("id");
+		var newScreenId = $(screenToCopy).attr("id");
 
 		var currentScreen = SM.Screen.getCurrentScreen();
 		if(currentScreen){
@@ -263,10 +264,10 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			$("section#slides_panel").append(screenToCopy);
 		}
 		
-		var screenCopied = $("#"+newId);
+		var screenCopied = $("#"+newScreenId);
 
-		//Restore draggables
 		SM.Editor.Marker.refreshDraggables(screenCopied);
+		SM.Editor.Marker.copyHotzones(oldScreenId,newScreenId);
 		
 		//Restore text areas
 		if(options.textAreas){
@@ -291,64 +292,47 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	};
 
 	var _replaceIdsForCopyScreen = function(screen){
-		var oldScreenId = $(screen).attr("id");
+		var $screen = $(screen);
+		var oldScreenId = $screen.attr("id");
 		var newScreenId  = SM.Utils.getId("article");
-		$(screen).attr("id",newScreenId);
+		$screen.attr("id",newScreenId);
 
 		//Background
-		var backgroundImg = $(screen).find("img.slide_background#" + oldScreenId + "_background");
+		var backgroundImg = $screen.find("img.slide_background#" + oldScreenId + "_background");
 		$(backgroundImg).attr("id",newScreenId + "_background");
 
-		//Hotspots
-		var hotspotIdsMapping = {};
-		$(screen).children("img.hotspot").each(function(index, hotspot) {
-			var oldHotspotId = $(hotspot).attr("id");
-			var newHotspotId = SM.Utils.getId("hotspot-");
-			$(hotspot).attr("id",newHotspotId);
-			hotspotIdsMapping[oldHotspotId] = newHotspotId;
-		});
-		// Copy hotspot config
-		SM.Editor.Marker.copyHotspotConfig(oldScreenId,newScreenId,hotspotIdsMapping);
+		SM.Editor.Marker.copyMarkerConfig($screen,oldScreenId,newScreenId);
 
-		var views = $(screen).children("article");
-		$(views).each(function(index, view) {
-			_replaceIdsForCopyView(view,newScreenId,oldScreenId);
+		var $views = $screen.children("article");
+		$views.each(function(index, view) {
+			_replaceIdsForCopyView(view,newScreenId);
 		});
 		return screen;
 	};
 
 	var _replaceIdsForCopyView = function(view,newScreenId){
-		switch($(view).attr("type")){
+		var $view = $(view);
+		switch($view.attr("type")){
 			case SM.Constant.VIEW_IMAGE:
-				return _replaceIdsForCopyViewImage(view,newScreenId);
+				return _replaceIdsForCopyViewImage($view,newScreenId);
 			case SM.Constant.VIEW_CONTENT:
-				return _replaceIdsForCopyViewContent(view,newScreenId);
+				return _replaceIdsForCopyViewContent($view,newScreenId);
 		}
 	};
 
-	var _replaceIdsForCopyViewImage = function(view,newScreenId){
-		var oldViewId = $(view).attr("id");
+	var _replaceIdsForCopyViewImage = function($view,newScreenId){
+		var oldViewId = $view.attr("id");
 		var newViewId = SM.Utils.getId(newScreenId + "_article");
-		$(view).attr("id",newViewId);
-
-		//Hotspots
-		var hotspotIdsMapping = {};
-		$(view).children("img.hotspot").each(function(index, hotspot) {
-			var oldHotspotId = $(hotspot).attr("id");
-			var newHotspotId = SM.Utils.getId("hotspot-");
-			$(hotspot).attr("id",newHotspotId);
-			hotspotIdsMapping[oldHotspotId] = newHotspotId;
-		});
-		// Copy hotspot config
-		SM.Editor.Marker.copyHotspotConfig(oldViewId,newViewId,hotspotIdsMapping);
+		$view.attr("id",newViewId);
+		SM.Editor.Marker.copyMarkerConfig($view,oldViewId,newViewId);
 	};
 
-	var _replaceIdsForCopyViewContent = function(view,newScreenId){
+	var _replaceIdsForCopyViewContent = function($view,newScreenId){
 		var viewId = SM.Utils.getId(newScreenId + "_article");
-		$(view).attr("id",viewId);
+		$view.attr("id",viewId);
 
 		//Replace zone Ids
-		$(view).children("div[id].view_content_zone").each(function(index, zone) {
+		$view.children("div[id].view_content_zone").each(function(index, zone) {
 			zone = _replaceIdsForCopyZone(zone,viewId);
 		});
 	};
