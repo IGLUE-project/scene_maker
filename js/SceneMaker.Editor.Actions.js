@@ -102,22 +102,41 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			});
 		});
 		
-		//Fill action template with current element ids (hotspots and hotzones)
-		var currentOptionsElementIds = [];
+		//Fill action template with current hotspots and hotzones
+		var currentOptionsHotspotIds = [];
 		//Hotspots
 		$('img.hotspot').each(function() {
 			var $hotspot = $(this);
-			currentOptionsElementIds.push({
+			currentOptionsHotspotIds.push({
 				value: $hotspot.attr('id'),
 				text: $hotspot.attr('id')
 			});
 		});
 
-		$actionTemplateDiv.find("div.actionParamsElementId select").each(function() {
+		$actionTemplateDiv.find("div.actionParamsHotspotId select").each(function() {
 			var $select = $(this);
 			$select.empty();
 			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsElementIds, function(_, opt) {
+			$.each(currentOptionsHotspotIds, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+
+		var currentOptionsHotzonesIds = [];
+		//Hotzones
+		$('g.a9s-annotation[data-id]').each(function() {
+			var $hotzone = $(this);
+			currentOptionsHotzonesIds.push({
+				value: $hotzone.attr('data-id'),
+				text: $hotzone.attr('data-id')
+			});
+		});
+
+		$actionTemplateDiv.find("div.actionParamsHotzoneId select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
+			$.each(currentOptionsHotzonesIds, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
 		});
@@ -166,9 +185,13 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 							var $actionParamsUrlInput = $actionWrapper.find("div.actionParamsURL input");
 							$actionParamsUrlInput.val(action.actionParams.url);
 						}
-						if(typeof action.actionParams.elementId === "string"){
-							var $actionParamsElementIdSelect = $actionWrapper.find("div.actionParamsElementId select");
-							$actionParamsElementIdSelect.val(action.actionParams.elementId);
+						if(typeof action.actionParams.hotspotId === "string"){
+							var $actionParamsHotspotIdSelect = $actionWrapper.find("div.actionParamsHotspotId select");
+							$actionParamsHotspotIdSelect.val(action.actionParams.hotspotId);
+						}
+						if(typeof action.actionParams.hotzoneId === "string"){
+							var $actionParamsHotzoneIdSelect = $actionWrapper.find("div.actionParamsHotzoneId select");
+							$actionParamsHotzoneIdSelect.val(action.actionParams.hotzoneId);
 						}
 						if(typeof action.actionParams.puzzle === "string"){
 							var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
@@ -201,8 +224,10 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		var $textAreaText = $textAreaTextWrapper.find("textarea");
 		var $inputURLWrapper = $actionWrapperDiv.find("div.actionParamsURL");
 		var $inputURL = $inputURLWrapper.find("input");
-		var $selectElementIdWrapper = $actionWrapperDiv.find("div.actionParamsElementId");
-		var $selectElementId = $selectElementIdWrapper.find("select");
+		var $selectHotspotIdWrapper = $actionWrapperDiv.find("div.actionParamsHotspotId");
+		var $selectHotspotId = $selectHotspotIdWrapper.find("select");
+		var $selectHotzoneIdWrapper = $actionWrapperDiv.find("div.actionParamsHotzoneId");
+		var $selectHotzoneId = $selectHotzoneIdWrapper.find("select");
 		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.actionParamsPuzzle");
 		var $selectPuzzle = $selectPuzzleWrapper.find("select");
 		var $inputPuzzleSolutionWrapper = $actionWrapperDiv.find("div.actionParamsPuzzleSolution");
@@ -243,11 +268,17 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		} else {
 			$inputURLWrapper.hide();
 		}
-		if((option === "showElement")||(option === "hideElement")){
-			$selectElementId.prop("selectedIndex", 0);
-			$selectElementIdWrapper.show();
+		if((option === "showHotspot")||(option === "hideHotspot")){
+			$selectHotspotId.prop("selectedIndex", 0);
+			$selectHotspotIdWrapper.show();
 		} else {
-			$selectElementIdWrapper.hide();
+			$selectHotspotIdWrapper.hide();
+		}
+		if((option === "enableHotzone")||(option === "disableHotzone")){
+			$selectHotzoneId.prop("selectedIndex", 0);
+			$selectHotzoneIdWrapper.show();
+		} else {
+			$selectHotzoneIdWrapper.hide();
 		}
 		if(option === "solvePuzzle"){
 			$selectPuzzle.prop("selectedIndex", 0);
@@ -314,9 +345,13 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				if($actionParamsUrlInput.is(":visible")){
 					action.actionParams.url = SM.Editor.Utils.autocompleteUrls($actionParamsUrlInput.val());
 				}
-				var $actionParamsElementIdSelect = $actionWrapper.find("div.actionParamsElementId select");
-				if($actionParamsElementIdSelect.is(":visible")){
-					action.actionParams.elementId = $actionParamsElementIdSelect.val();
+				var $actionParamsHotspotIdSelect = $actionWrapper.find("div.actionParamsHotspotId select");
+				if($actionParamsHotspotIdSelect.is(":visible")){
+					action.actionParams.hotspotId = $actionParamsHotspotIdSelect.val();
+				}
+				var $actionParamsHotzoneIdSelect = $actionWrapper.find("div.actionParamsHotzoneId select");
+				if($actionParamsHotzoneIdSelect.is(":visible")){
+					action.actionParams.hotzoneId = $actionParamsHotzoneIdSelect.val();
 				}
 				var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
 				if($actionParamsPuzzleSelect.is(":visible")){

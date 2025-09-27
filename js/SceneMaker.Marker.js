@@ -336,18 +336,24 @@ SceneMaker.Marker = (function(SM,$,undefined){
 					_replaceScreen(screenId,screenReplacementId);
 				}
 				break;
-			case "showElement":
-			case "hideElement":
-				if((action.actionParams)&&(typeof action.actionParams.elementId === "string")){
-					var elementId = action.actionParams.elementId;
-					var $element = $("#" + elementId);
-					if ($element.length > 0) {
-						if(action.actionType === "showElement"){
-							$element.show();
+			case "showHotspot":
+			case "hideHotspot":
+				if((action.actionParams)&&(typeof action.actionParams.hotspotId === "string")){
+					var hotspotId = action.actionParams.hotspotId;
+					var $hotspot = $("#" + hotspotId);
+					if ($hotspot.length > 0) {
+						if(action.actionType === "showHotspot"){
+							$hotspot.show();
 						} else {
-							$element.hide();
+							$hotspot.hide();
 						}
 					}
+				}
+				break;
+			case "enableHotzone":
+			case "disableHotzone":
+				if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
+					//TODO
 				}
 				break;
 			case "playSound":
