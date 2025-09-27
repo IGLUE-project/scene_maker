@@ -2,12 +2,14 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var slideData;
 	var currentHotspot;
 	var currentHotzoneId;
+	var hotzoneIdsAlias;
 	var currentEditingMode = "NONE"; //Can be "NONE", "HOTSPOT" or "HOTZONE".
 	var hiddenLinkToInitHotspotSettings;
 	var hiddenLinkToInitHotzoneSettings;
 
 	var init = function(){
 		slideData = {};
+		hotzoneIdsAlias = {};
 
 		//Hotspot Settings
 		hiddenLinkToInitHotspotSettings = $('<a href="#hotspotSettings_fancybox" style="display:none"></a>');
@@ -107,6 +109,15 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var _drawHotzone = function(slideId,hotzoneJSON){
 		if(Array.isArray(hotzoneJSON.points)){
 			var hotzoneId = hotzoneJSON.id;
+			var hotzoneIdAlias;
+			if(typeof hotzoneJSON.id_alias === "string"){
+				hotzoneIdAlias = hotzoneJSON.id_alias;
+			} else {
+				hotzoneIdAlias = SM.Utils.getId("zone-");
+			}
+			hotzoneIdsAlias[hotzoneId] = hotzoneIdAlias;
+			SM.Utils.registerId(hotzoneIdAlias);
+
 			var annotation = SM.Marker.createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
 			var annotator = _createAnnotatorForSlide(slideId);
 			annotator.addAnnotation(annotation);
@@ -695,6 +706,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		});
 		annotator.setDrawingTool('polygon');
 		annotator.on('createAnnotation', (annotation) => {
+			hotzoneIdsAlias[annotation.id] = SM.Utils.getId("zone-");
 			slideData[slideId].hotzones[annotation.id] = {};
 			slideData[slideId].hotzones[annotation.id].visibility = "hidden";
 			slideData[slideId].hotzones[annotation.id].enabled = true;
@@ -734,7 +746,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var hotzoneSettings = slideData[slideId].hotzones[hotzoneId];
 
 		//ID
-		$("#hotzoneIdInput").val(hotzoneId);
+		$("#hotzoneIdInput").val(hotzoneIdsAlias[hotzoneId]);
 
 		//Visibility
 		if(typeof slideData[slideId].hotzones[hotzoneId].visibility === "string"){
@@ -793,11 +805,15 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		return currentHotzoneId;
 	};
 
-	var setCurrentHotzoneId = function(newHotszoneId){
-		currentHotzoneId = newHotszoneId;
-		if(typeof newHotszoneId === "undefined"){
+	var setCurrentHotzoneId = function(newHotzoneId){
+		currentHotzoneId = newHotzoneId;
+		if(typeof newHotzoneId === "undefined"){
 			cancelAnnotationSelectedForSlide($(SM.Slides.getCurrentSlide()).attr("id"));
 		}
+	};
+
+	var getAliasForHotzone = function(hotzoneId){
+		return hotzoneIdsAlias[hotzoneId];
 	};
 
 	var cancelAnnotationSelectedForSlide = function(slideId){
@@ -946,6 +962,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 						var points = annotation.target.selector.geometry.points;
 						var hotzoneJSON = {
 							"id": hotzoneId,
+							"id_alias": hotzoneIdsAlias[hotzoneId],
 							"points": points,
 							"visibility": hotzoneSettings.visibility,
 							"enabled": hotzoneSettings.enabled,
@@ -972,12 +989,13 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		addHotspot							: addHotspot,
 		addHotzone							: addHotzone,
 		onClick 							: onClick,
-		showHotspotSettings					: showHotspotSettings,
-		showHotzoneSettings					: showHotzoneSettings,
 		getCurrentHotspot					: getCurrentHotspot,
-		getCurrentHotzoneId					: getCurrentHotzoneId,
 		setCurrentHotspot					: setCurrentHotspot,
+		showHotspotSettings					: showHotspotSettings,
+		getCurrentHotzoneId					: getCurrentHotzoneId,
 		setCurrentHotzoneId					: setCurrentHotzoneId,
+		getAliasForHotzone					: getAliasForHotzone,
+		showHotzoneSettings					: showHotzoneSettings,
 		cancelAnnotationSelectedForSlide	: cancelAnnotationSelectedForSlide,
 		deleteCurrentHotmarker				: deleteCurrentHotmarker,
 		onHotspotImageSourceChange			: onHotspotImageSourceChange,

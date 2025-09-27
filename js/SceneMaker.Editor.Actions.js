@@ -126,9 +126,10 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		//Hotzones
 		$('g.a9s-annotation[data-id]').each(function() {
 			var $hotzone = $(this);
+			var hotzoneId = $hotzone.attr('data-id');
 			currentOptionsHotzonesIds.push({
-				value: $hotzone.attr('data-id'),
-				text: $hotzone.attr('data-id')
+				value: hotzoneId,
+				text: SM.Editor.Marker.getAliasForHotzone(hotzoneId)
 			});
 		});
 

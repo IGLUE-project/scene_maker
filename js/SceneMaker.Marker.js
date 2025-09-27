@@ -438,6 +438,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	return {
 		init 							: init,
 		getDefaultHotspotImg			: getDefaultHotspotImg,
+		getHotzoneDOM					: getHotzoneDOM,
 		drawSlideWithMarkers			: drawSlideWithMarkers,
 		createAnnotationFromPointsArray : createAnnotationFromPointsArray
 	};
