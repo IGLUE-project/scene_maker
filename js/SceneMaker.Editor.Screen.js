@@ -324,6 +324,8 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var oldViewId = $view.attr("id");
 		var newViewId = SM.Utils.getId(newScreenId + "_article");
 		$view.attr("id",newViewId);
+		var backgroundImg = $view.find("img.slide_background#" + oldViewId + "_background");
+		$(backgroundImg).attr("id",newViewId + "_background");
 		SM.Editor.Marker.copyMarkerConfig($view,oldViewId,newViewId);
 	};
 
