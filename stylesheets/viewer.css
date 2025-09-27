@@ -185,9 +185,19 @@ section.slides:not(.slides_editor) .a9s-annotationlayer.hover {
     cursor: default;
 }
 
-section.slides:not(.slides_editor) .a9s-annotation[hotzone_visibility="visible_hover"]:hover {
+section.slides:not(.slides_editor) .a9s-annotation[hotzone_enabled="true"][hotzone_visibility="visible_hover"]:hover {
     cursor: pointer !important;
 }
+
+section.slides:not(.slides_editor) .a9s-annotation[hotzone_enabled="false"] {
+	display: none;
+}
+
+section.slides:not(.slides_editor) .a9s-annotation[hotzone_enabled="false"]:hover {
+    cursor: default !important;
+}
+
+
 
 /* Elements in content views */
 

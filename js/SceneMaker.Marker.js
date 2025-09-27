@@ -122,6 +122,11 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			if(hotzoneJSON.visibility === "visible_hover"){
 				$(hotzoneDOM).attr("hotzone_visibility",hotzoneJSON.visibility);
 			}
+			if(hotzoneJSON.enabled === false){
+				$(hotzoneDOM).attr("hotzone_enabled","false");
+			} else {
+				$(hotzoneDOM).attr("hotzone_enabled","true");
+			}
 			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length > 0)) {
 				hotzoneData[hotzoneId] = hotzoneJSON.actions;
 				for(i in hotzoneJSON.actions){
@@ -136,7 +141,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		var initTime = Date.now();
 		
 		function check() {
-			var $hotzoneDOM = $("[data-id='" + annotationId + "']");
+			var $hotzoneDOM = getHotzoneDOM(annotationId);
 			if ($hotzoneDOM.length > 0) {
 				clearInterval(timer);
 				callback($hotzoneDOM);
@@ -215,6 +220,10 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		return annotation;
 	};
 
+	var getHotzoneDOM = function(hotzoneId){
+		return $("g.[data-id='" + hotzoneId + "']");
+	};
+
 
 	/* Actions */
 
@@ -276,6 +285,10 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	};
 
 	var _onClickHotzone = function(hotzoneId){
+		var hotzoneDOM = getHotzoneDOM(hotzoneId);
+		if($(hotzoneDOM).attr("hotzone_enabled") === "false"){
+			return;
+		}
 		_performActions(hotzoneData[hotzoneId]);
 	};
 
@@ -353,7 +366,14 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			case "enableHotzone":
 			case "disableHotzone":
 				if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
-					//TODO
+					var $hotzoneDOM = getHotzoneDOM(action.actionParams.hotzoneId);
+					if ($hotzoneDOM.length > 0) {
+						if(action.actionType === "enableHotzone"){
+							$hotzoneDOM.attr("hotzone_enabled","true");
+						} else {
+							$hotzoneDOM.attr("hotzone_enabled","false");
+						}
+					}
 				}
 				break;
 			case "playSound":

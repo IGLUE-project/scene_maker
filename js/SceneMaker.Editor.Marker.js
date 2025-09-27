@@ -112,6 +112,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			annotator.addAnnotation(annotation);
 			slideData[slideId].hotzones[hotzoneId] = {};
 			slideData[slideId].hotzones[hotzoneId].visibility = hotzoneJSON.visibility;
+			slideData[slideId].hotzones[hotzoneId].enabled = hotzoneJSON.enabled;
 			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length>0)) {
 				slideData[slideId].hotzones[hotzoneId].actions = hotzoneJSON.actions;
 			}
@@ -696,6 +697,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		annotator.on('createAnnotation', (annotation) => {
 			slideData[slideId].hotzones[annotation.id] = {};
 			slideData[slideId].hotzones[annotation.id].visibility = "hidden";
+			slideData[slideId].hotzones[annotation.id].enabled = true;
 			_disableEditingMode("HOTZONE");
 		});
 
@@ -741,6 +743,13 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			$("#hotzoneVisibility").val("hidden");
 		}
 
+		//Enabled
+		if(slideData[slideId].hotzones[hotzoneId].enabled === false){
+			$("#hotzoneEnabled").val("false");
+		} else {
+			$("#hotzoneEnabled").val("true");
+		}
+
 		//Actions
 		SM.Editor.Actions.loadActions($("#hotzoneActions"),hotzoneSettings,"HOTZONE");
 	};
@@ -752,6 +761,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 		//Hotzone visibility
 		hotzoneSettings.visibility = $("#hotzoneVisibility").val();
+
+		//Hotzone enabled
+		hotzoneSettings.enabled = !($("#hotzoneEnabled").val()==="false");
 
 		//Hotzone actions
 		var actions = SM.Editor.Actions.getActionsJSON($("#hotzoneActions"));
@@ -927,6 +939,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 							"id": hotzoneId,
 							"points": points,
 							"visibility": hotzoneSettings.visibility,
+							"enabled": hotzoneSettings.enabled,
 						};
 						if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
 							hotzoneJSON.actions = hotzoneSettings.actions;
