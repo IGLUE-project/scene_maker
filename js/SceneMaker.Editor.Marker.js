@@ -795,6 +795,15 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var setCurrentHotzoneId = function(newHotszoneId){
 		currentHotzoneId = newHotszoneId;
+		if(typeof newHotszoneId === "undefined"){
+			cancelAnnotationSelectedForSlide($(SM.Slides.getCurrentSlide()).attr("id"));
+		}
+	};
+
+	var cancelAnnotationSelectedForSlide = function(slideId){
+		if((typeof slideData[slideId] !== "undefined")&&(typeof slideData[slideId].annotator !== "undefined")){
+			slideData[slideId].annotator.cancelSelected();
+		}
 	};
 
 	////////////////////
@@ -954,30 +963,31 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	};
 
 	return {
-		init 							: init,
-		drawSlideWithMakers				: drawSlideWithMakers,
-		drawHotspots 					: drawHotspots,
-		drawHotzones					: drawHotzones,
-		refreshDraggables				: refreshDraggables,
-		copyHotspotConfig				: copyHotspotConfig,
-		addHotspot						: addHotspot,
-		addHotzone						: addHotzone,
-		onClick 						: onClick,
-		showHotspotSettings				: showHotspotSettings,
-		showHotzoneSettings				: showHotzoneSettings,
-		getCurrentHotspot				: getCurrentHotspot,
-		getCurrentHotzoneId				: getCurrentHotzoneId,
-		setCurrentHotspot				: setCurrentHotspot,
-		setCurrentHotzoneId				: setCurrentHotzoneId,
-		deleteCurrentHotmarker			: deleteCurrentHotmarker,
-		onHotspotImageSourceChange		: onHotspotImageSourceChange,
-		onClickHotspotImageGallery		: onClickHotspotImageGallery,
-		checkHotspotImageURLPreview		: checkHotspotImageURLPreview,
-		onInputHotspotSizeWidth			: onInputHotspotSizeWidth,
-		onInputHotspotSizeHeight		: onInputHotspotSizeHeight,
-		onHotspotSettingsDone			: onHotspotSettingsDone,
-		onHotzoneSettingsDone			: onHotzoneSettingsDone,
-		saveSlideWithMarkers			: saveSlideWithMarkers
+		init 								: init,
+		drawSlideWithMakers					: drawSlideWithMakers,
+		drawHotspots 						: drawHotspots,
+		drawHotzones						: drawHotzones,
+		refreshDraggables					: refreshDraggables,
+		copyHotspotConfig					: copyHotspotConfig,
+		addHotspot							: addHotspot,
+		addHotzone							: addHotzone,
+		onClick 							: onClick,
+		showHotspotSettings					: showHotspotSettings,
+		showHotzoneSettings					: showHotzoneSettings,
+		getCurrentHotspot					: getCurrentHotspot,
+		getCurrentHotzoneId					: getCurrentHotzoneId,
+		setCurrentHotspot					: setCurrentHotspot,
+		setCurrentHotzoneId					: setCurrentHotzoneId,
+		cancelAnnotationSelectedForSlide	: cancelAnnotationSelectedForSlide,
+		deleteCurrentHotmarker				: deleteCurrentHotmarker,
+		onHotspotImageSourceChange			: onHotspotImageSourceChange,
+		onClickHotspotImageGallery			: onClickHotspotImageGallery,
+		checkHotspotImageURLPreview			: checkHotspotImageURLPreview,
+		onInputHotspotSizeWidth				: onInputHotspotSizeWidth,
+		onInputHotspotSizeHeight			: onInputHotspotSizeHeight,
+		onHotspotSettingsDone				: onHotspotSettingsDone,
+		onHotzoneSettingsDone				: onHotzoneSettingsDone,
+		saveSlideWithMarkers				: saveSlideWithMarkers
 	};
 
 }) (SceneMaker, jQuery);

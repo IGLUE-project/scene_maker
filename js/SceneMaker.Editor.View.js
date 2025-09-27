@@ -104,7 +104,6 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 
 	var openView = function(view){
 		var currentView = getCurrentView();
-
 		if(currentView){
 			closeView(currentView);
 		} else {
@@ -134,10 +133,12 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	};
 
 	var closeView = function(view){
+		var viewId = $(view).attr("id");
 		_setCurrentView(null);
 		SM.Editor.Thumbnails.selectViewThumbnail(null);
 		_hideView(view);
-		SM.Slides.triggerSlideLeaveEvent($(view).attr("id"));
+		SM.Editor.Marker.cancelAnnotationSelectedForSlide(viewId);
+		SM.Slides.triggerSlideLeaveEvent(viewId);
 	};
 
 

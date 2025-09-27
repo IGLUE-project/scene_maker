@@ -33,11 +33,11 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 				return false;
 			});
 			
-			//EditorAdapter
+			//Exit button
 			var options = SM.Utils.getOptions();
-			//Check exit option in menu
-			if(typeof options.exitURL != "string"){
+			if(typeof options.exitURL !== "string"){
 				$(".menu_option.menu_action[action='exit']").parent().hide();
+				$("#toolbar_exit_btn").hide();
 			} else {
 				SM.exitPath = options.exitURL;
 			}

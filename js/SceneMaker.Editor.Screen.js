@@ -83,6 +83,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 	var closeScreen = function(screen){
 		//Mark screen thumbnail as unselected
 		$("#screen_selected_img").removeClass("selectedScreenThumbnailInViews");
+		SM.Editor.Marker.cancelAnnotationSelectedForSlide($(screen).attr("id"));
 	};
 
 	var onDeleteScreenClicked = function(event){

@@ -30,6 +30,9 @@ window.SCENE_MAKER_OPTIONS = (function(){
 	//scene = undefined;
 	options.scene = scene;
 
+	//Exit URL
+	options.exitURL = "https://escapp.es";
+
 	//Specify a default language
 	options["lang"] = "en";
 

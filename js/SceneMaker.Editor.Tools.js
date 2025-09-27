@@ -323,7 +323,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	var _cleanElementToolbar = function(type){
 		if(type !== "hotspot"){
 			SM.Editor.Marker.setCurrentHotspot(undefined);
-		} else if(type !== "hotzone"){
+		} 
+		if(type !== "hotzone"){
 			SM.Editor.Marker.setCurrentHotzoneId(undefined);
 		}
 		$("#toolbar_element").children().hide();
@@ -341,14 +342,17 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
     */
 
   	var displaySettings = function(){
+  		_cleanElementToolbar();
 		SM.Editor.Settings.displaySettings();
 	};
 
   	var save = function(){
+  		_cleanElementToolbar();
 		SM.Editor.Tools.Menu.onSaveButtonClicked();
 	};
 
 	var preview = function(){
+		_cleanElementToolbar();
 		SM.Editor.Preview.preview();
 	};
 
