@@ -221,7 +221,7 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		var $visibleToolTips = $("div[data-tippy-root]:visible");
 		if ($visibleToolTips.length > 0) {
 			$visibleToolTips.each(function(index, tooltip){
-				$("img.hotspot[tooltipid=" + $(tooltip).attr("id") + "]").each(function(index, hotspot){
+				$("[markertooltipid=" + $(tooltip).attr("id") + "]").each(function(index, hotspot){
 					if(typeof hotspot._tippy !== "undefined"){
 						hotspot._tippy.hide();
 						hotspot._tippy.show();

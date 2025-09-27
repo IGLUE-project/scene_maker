@@ -116,13 +116,43 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		var hotzoneId = hotzoneJSON.id;
 		var annotator = _createAnnotatorForSlide(slideId);
 		var annotation = createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
-		annotator.setAnnotations([annotation]);
-		if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length > 0)) {
-			hotzoneData[hotzoneId] = hotzoneJSON.actions;
-			for(i in hotzoneJSON.actions){
-				_addActionToHotzone(hotzoneId, hotzoneJSON.actions[i]);
+		annotator.addAnnotation(annotation);
+		
+		_waitForAnnotationRendering(annotation.id, function(hotzoneDOM){
+			if(hotzoneJSON.visibility === "visible_hover"){
+				$(hotzoneDOM).attr("hotzone_visibility",hotzoneJSON.visibility);
 			}
+			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length > 0)) {
+				hotzoneData[hotzoneId] = hotzoneJSON.actions;
+				for(i in hotzoneJSON.actions){
+					_addActionToHotzone(hotzoneDOM,hotzoneId,hotzoneJSON.actions[i]);
+				}
+			}
+		});
+	};
+
+	var _waitForAnnotationRendering = function(annotationId, callback) {
+		var timer;
+		var initTime = Date.now();
+		
+		function check() {
+			var $hotzoneDOM = $("[data-id='" + annotationId + "']");
+			if ($hotzoneDOM.length > 0) {
+				clearInterval(timer);
+				callback($hotzoneDOM);
+				return true;
+			} else if (Date.now() - initTime >= 1000) {
+				clearInterval(timer);
+				return false;
+			}
+			return false;
 		}
+
+		setTimeout(function() {
+			if (!check()) {
+				timer = setInterval(check, 200);
+			}
+		}, 0);
 	};
 
 	var _createAnnotatorForSlide = function(slideId){
@@ -192,7 +222,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		switch(action.actionType){
 			case "showText":
 				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
-					_addTooltip($hotspot.attr("id"),action.actionParams.text);
+					_addTooltip($hotspot[0],action.actionParams.text);
 				};
 				break;
 			default:
@@ -200,12 +230,11 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		};
 	};
 
-	var _addActionToHotzone = function(hotzoneId, action){
+	var _addActionToHotzone = function(hotzoneDOM, hotzoneId, action){
 		switch(action.actionType){
 			case "showText":
 				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
-					// TO DO
-					//_addTooltip(hotzoneId,action.actionParams.text);
+					_addTooltip($(hotzoneDOM)[0],action.actionParams.text);
 				};
 				break;
 			default:
@@ -213,9 +242,8 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		};
 	};
 
-	var _addTooltip = function(elementId,text){
-		var $elementDOM = $('#'+elementId);
-		tippy(('#'+elementId), {
+	var _addTooltip = function(elementDOM,text){
+		tippy(elementDOM, {
 			content: text,
 			trigger: 'click',
 			placement: 'top',
@@ -238,7 +266,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			},
 			onCreate(instance) {
 				var toolTipId = instance.popper.id;
-				$elementDOM.attr("tooltipid",toolTipId);
+				$(elementDOM).attr("markertooltipid",toolTipId);
 			}
 		});
 	};

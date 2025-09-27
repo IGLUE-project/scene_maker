@@ -100,9 +100,6 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		if (Array.isArray(slideJSON.hotzones)) {
 			$(slideJSON.hotzones).each(function(index,hotzoneJSON){
 				_drawHotzone(slideJSON.id,hotzoneJSON);
-				if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length>0)) {
-					slideData[slideJSON.id].hotzones[hotzoneJSON.id].actions = hotzoneJSON.actions;
-				}
 			});
 		}
 	};
@@ -112,8 +109,12 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			var hotzoneId = hotzoneJSON.id;
 			var annotation = SM.Marker.createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
 			var annotator = _createAnnotatorForSlide(slideId);
-			annotator.setAnnotations([annotation]);
+			annotator.addAnnotation(annotation);
 			slideData[slideId].hotzones[hotzoneId] = {};
+			slideData[slideId].hotzones[hotzoneId].visibility = hotzoneJSON.visibility;
+			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length>0)) {
+				slideData[slideId].hotzones[hotzoneId].actions = hotzoneJSON.actions;
+			}
 		}
 	};
 
@@ -228,6 +229,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		}
 		if(typeof lockAspectRatio !== "boolean"){
 			lockAspectRatio = true;
+		}
+		if(typeof visibility !== "string"){
+			visibility = "visible";
 		}
 		if(typeof width !== "number"){
 			width = 42;
@@ -691,6 +695,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		annotator.setDrawingTool('polygon');
 		annotator.on('createAnnotation', (annotation) => {
 			slideData[slideId].hotzones[annotation.id] = {};
+			slideData[slideId].hotzones[annotation.id].visibility = "hidden";
 			_disableEditingMode("HOTZONE");
 		});
 
@@ -916,20 +921,16 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		
 					annotations.forEach(annotation => {
 						var hotzoneId = annotation.id;
+						var hotzoneSettings = slideData[slide.id].hotzones[hotzoneId];
 						var points = annotation.target.selector.geometry.points;
 						var hotzoneJSON = {
 							"id": hotzoneId,
 							"points": points,
+							"visibility": hotzoneSettings.visibility,
 						};
-
-						if((typeof slideData[slide.id].hotzones !== "undefined")&&(typeof slideData[slide.id].hotzones[hotzoneId] !== "undefined")){
-							var hotzoneSettings = slideData[slide.id].hotzones[hotzoneId];
-							//console.log("hotzoneSettings", hotzoneSettings);
-							if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
-								hotzoneJSON.actions = hotzoneSettings.actions;
-							}
+						if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {
+							hotzoneJSON.actions = hotzoneSettings.actions;
 						}
-						
 						slide.hotzones.push(hotzoneJSON);
 					});
 				}
