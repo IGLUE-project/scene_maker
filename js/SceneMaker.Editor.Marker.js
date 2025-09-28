@@ -565,9 +565,24 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/pin.png" },
 			{ src: SM.ImagesPath + "vicons/close.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/key.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/painting.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_basic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_retro.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/safebox_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/safebox_retro.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/safebox_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/signal_generator.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_off.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_on.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_off.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_on.png" },
+			
 		];
 
 		var carouselImages = [];
