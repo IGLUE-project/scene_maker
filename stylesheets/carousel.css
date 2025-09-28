@@ -1,0 +1,165 @@
+div.caroufredsel_wrapper {
+	overflow-y: visible;
+	overflow-x: visible;
+	padding-top: 3px;
+	padding-right: 1px;
+}
+
+div.image_carousel {
+	position: relative;
+	overflow: hidden;
+	margin-left: 0px;
+}
+
+div.image_carousel img {
+	background-color: white;
+	display: block;
+	float: left;
+	cursor: pointer;
+	object-fit: contain;
+	border: 1px solid transparent;
+	opacity: 0.7;
+}
+
+div.image_carousel img.selected {
+  border: 1px solid black;
+  opacity: 1;
+}
+
+div.image_carousel img:hover {
+	opacity: 1;
+}
+
+div.image_carousel img:active {
+	opacity: 1;
+}
+
+div.image_carousel_single_row {
+	padding: 0px 0 0px 0px;
+	margin-left: -12px;
+}
+
+div.image_carousel_multiple_row {
+	padding: 102px 0 60px 0px;
+}
+
+div.image_carousel_single_row > div.caroufredsel_wrapper {
+	margin-left: 37px !important;
+	margin-bottom: 0px !important;
+}
+
+div.image_carousel_multiple_row > div.caroufredsel_wrapper {
+	margin-left: 46px !important;
+	margin-bottom: 30px !important;
+}
+
+div.image_carousel_multiple_row_hotspotgallery > div.caroufredsel_wrapper {
+	margin-bottom: 30px !important;
+}
+
+div.image_carousel a.prev, div.image_carousel a.next {
+	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) no-repeat transparent;
+	width: 45px;
+	height: 50px;
+	display: block;
+	position: absolute;
+	outline: none;
+}
+div.image_carousel a.prev {
+	left: 0px;
+	background-position: 0 0; 
+}
+div.image_carousel a.prev:hover {      
+	background-position: 0 -50px; 
+}
+div.image_carousel a.prev.disabled {   
+	background-position: 0 -100px !important;  
+}
+div.image_carousel a.next {  
+	right: 0px;
+	background-position: -50px 0; 
+}
+div.image_carousel a.next:hover {      
+	background-position: -50px -50px; 
+}
+div.image_carousel a.next.disabled {   
+	background-position: -50px -100px !important;  
+}
+div.image_carousel a.prev.disabled, a.next.disabled {
+	cursor: default;
+}
+div.image_carousel a.prev span, div.image_carousel a.next span {
+	display: none;
+}
+div.image_carousel div.pagination {
+	text-align: center;
+	margin-right: 0px;
+	margin-top: 12px;
+}
+div.image_carousel div.pagination a {
+	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) 0 -259px no-repeat transparent;
+	width: 17px;
+	height: 17px;
+	margin: 0 5px 0 0;
+	display: inline-block;
+	outline: none;
+}
+div.image_carousel div.pagination a.selected {
+	background-position: -25px -259px;
+	cursor: default;
+}
+div.image_carousel div.pagination a span {
+	display: none;
+}
+div.image_carousel div.clearfix {
+	float: none;
+	clear: both;
+}
+
+
+/* Default style for single and multiple row */
+
+div.image_carousel a.prev_single_row, div.image_carousel a.next_single_row {
+	top: 20px;
+}
+
+div.image_carousel a.prev_multiple_row, div.image_carousel a.next_multiple_row {
+	top: 245px;
+}
+
+div.carousel_element_single_row {
+	float: left;
+	width: 78px;
+	height: 78px;
+	max-width: 78px;
+	max-height: 78px;
+	margin-left: 10px;
+}
+
+div.carousel_element_single_row > img.carousel_element_single_row {
+	width: 78px;
+	height: 78px;
+	max-width: 78px;
+	max-height: 78px;
+	margin-left: -2px !important;
+	margin-top: 1px !important;
+}
+
+div.carousel_element_multiple_row {
+	width: 150px;
+	height: 155px;
+	max-width: 150px;
+	max-height: 155px;
+	float: left;
+	margin-left: 10px;
+}
+
+img.carousel_element_multiple_row {
+	width: 150px;
+	height: 150px;
+	max-width: 150px;
+	max-height: 150px;
+	margin-left: 0px;
+	padding: 0px 0px 0px 0px;
+	margin-top: 0px;
+}
