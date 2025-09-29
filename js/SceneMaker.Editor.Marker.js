@@ -300,14 +300,14 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		});
 	};
 
-	var _validateHotspotPosition = function($hotspot, margin = 4) {
+	var _validateHotspotPosition = function($hotspot, margin = 15) {
 		const $screen = $hotspot.parent();
 
 		if (!$screen.is('article[type="screen"]')) {
 		  return;
 		}
 
-		if (!_fullyInside($screen, $hotspot, margin)) {
+		if (_fullyOutside($screen, $hotspot, margin)) {
 			_moveInside($screen, $hotspot);
 		}
 	};
@@ -324,6 +324,21 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			pos.top  >= -margin &&
 			(pos.left + ew) <= (cw + margin) &&
 			(pos.top  + eh) <= (ch + margin)
+		);
+	};
+
+	var _fullyOutside = function($container, $el, margin = 0) {
+		const cw = $container.innerWidth();
+		const ch = $container.innerHeight();
+		const ew = $el.outerWidth();
+		const eh = $el.outerHeight();
+		const pos = $el.position();
+
+		return (
+			pos.left + ew <= +margin ||
+			pos.top + eh <= +margin ||
+			pos.left >= cw - margin ||
+			pos.top >= ch - margin
 		);
 	};
 
@@ -564,7 +579,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/pin.png" },
-			{ src: SM.ImagesPath + "vicons/close.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/close.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/key.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/painting.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },

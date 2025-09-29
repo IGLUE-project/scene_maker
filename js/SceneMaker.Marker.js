@@ -75,16 +75,16 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			return;
 		}
 		var coordinatesMargin = 10;
-		if((!hotspotJSON.x)||(hotspotJSON.x < (0-coordinatesMargin)||(hotspotJSON.x > (100+coordinatesMargin)))){
+		if(!hotspotJSON.x){
 			return;
 		}
-		if((!hotspotJSON.y)||(hotspotJSON.y < (0-coordinatesMargin)||(hotspotJSON.y > (100+coordinatesMargin)))){
+		if(!hotspotJSON.y){
 			return;
 		}
-		if((!hotspotJSON.width)||(hotspotJSON.width < 0)||(hotspotJSON.width > 100)){
+		if((!hotspotJSON.width)||(hotspotJSON.width <= 0)){
 			return;
 		}
-		if((!hotspotJSON.height)||(hotspotJSON.height < 0)||(hotspotJSON.height > 100)){
+		if((!hotspotJSON.height)||(hotspotJSON.height <= 0)){
 			return;
 		}
 		if(typeof hotspotJSON.image !== "string"){
