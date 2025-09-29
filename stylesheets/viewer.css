@@ -176,6 +176,16 @@ img.hotspot_with_actions {
 }
 
 /* Hotzones */
+
+section.slides .a9s-annotationlayer {
+	pointer-events: none;
+	z-index: 3;
+}
+
+section.slides .a9s-annotationlayer g {
+	pointer-events: auto;
+}
+
 section.slides:not(.slides_editor) .a9s-annotationlayer {
     cursor: default;
     opacity: 0;

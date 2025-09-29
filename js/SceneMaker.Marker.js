@@ -55,17 +55,17 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			$slide.append(imgBackground);
 		}
 
-		//Hotspots
-		if (Array.isArray(slideJSON.hotspots)&&(slideJSON.hotspots.length > 0)){
-			for(i in slideJSON.hotspots){
-				_drawHotspot($slide, slideJSON.hotspots[i]);
-			}
-		}
-
 		//Hotzones
 		if (Array.isArray(slideJSON.hotzones)&&(slideJSON.hotzones.length > 0)){
 			for(j in slideJSON.hotzones){
 				_drawHotzone($slide, slideJSON.hotzones[j]);
+			}
+		}
+
+		//Hotspots
+		if (Array.isArray(slideJSON.hotspots)&&(slideJSON.hotspots.length > 0)){
+			for(i in slideJSON.hotspots){
+				_drawHotspot($slide, slideJSON.hotspots[i]);
 			}
 		}
 	};
@@ -102,6 +102,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			extraClasses += " hotspot_hidden";
 		}
 
+		var $imgBackground = SM.Slides.getSlideBackgroundImg($slide);
 		var $hotspot = $('<img>', {
 			src: hotspotJSON.image,
 			class: ('hotspot' + extraClasses),
@@ -115,7 +116,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				height: (hotspotJSON.height + "%"),
 				transform: "rotate(" + rotationAngle + "deg)"
 			}
-		}).appendTo($slide);
+		}).appendTo($imgBackground.parent());
 
 		if (Array.isArray(hotspotJSON.actions)&&(hotspotJSON.actions.length > 0)) {
 			$hotspot.addClass("hotspot_with_actions");
