@@ -101,6 +101,10 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		if(visible === false){
 			extraClasses += " hotspot_hidden";
 		}
+		var cursorVisible = (hotspotJSON.cursorVisibility === "pointer");
+		if(cursorVisible === true){
+			extraClasses += " hotspot_cursor_pointer";
+		}
 
 		var $imgBackground = SM.Slides.getSlideBackgroundImg($slide);
 		var $hotspot = $('<img>', {
@@ -146,8 +150,8 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		annotator.addAnnotation(annotation);
 		
 		_waitForAnnotationRendering(annotation.id, function(hotzoneDOM){
-			if(hotzoneJSON.visibility === "visible_hover"){
-				$(hotzoneDOM).attr("hotzone_visibility",hotzoneJSON.visibility);
+			if(hotzoneJSON.cursorVisibility === "pointer"){
+				$(hotzoneDOM).attr("hotzone_cursor_visibility",hotzoneJSON.cursorVisibility);
 			}
 			if(hotzoneJSON.enabled === false){
 				$(hotzoneDOM).attr("hotzone_enabled","false");

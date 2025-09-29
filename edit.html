@@ -503,6 +503,13 @@
 						<option value="hidden" i18n-key="i.VisibilityHidden">Hidden</option>
 					</select>
 				</div>
+				<div class="new_marker_settings_field">
+					<label i18n-key="i.CursorVisibility">Cursor on hover:</label>
+					<select id="hotspotCursorVisibility">
+						<option value="pointer" i18n-key="i.CursorVisibilityPointer" selected>Pointer</option>
+						<option value="default" i18n-key="i.CursorVisibilityDefault">No change</option>
+					</select>
+				</div>
 				<div id="hotspotActions" class="actions_container new_marker_settings_field new_marker_settings_field_last">
 					<p i18n-key="i.HotspotActions">Actions to perform when the hotspot is clicked</p>
 					<button type="button" class="button add_action">
@@ -527,17 +534,17 @@
 					<input id="hotzoneIdInput" type="text" readonly>
 				</div>
 				<div class="new_marker_settings_field">
-					<label i18n-key="i.Visibility">Visibility:</label>
-					<select id="hotzoneVisibility">
-						<option value="hidden" i18n-key="i.VisibilityHidden" selected>Hidden</option>
-						<option value="visible_hover" i18n-key="i.VisibilityHover">Change cursor on hover</option>
-					</select>
-				</div>
-				<div class="new_marker_settings_field">
 					<label i18n-key="i.Enabled">Enabled:</label>
 					<select id="hotzoneEnabled">
 						<option value="true" i18n-key="i.Yes" selected>Yes</option>
 						<option value="false" i18n-key="i.No">No</option>
+					</select>
+				</div>
+				<div class="new_marker_settings_field">
+					<label i18n-key="i.CursorVisibility">Cursor on hover:</label>
+					<select id="hotzoneCursorVisibility">
+						<option value="pointer" i18n-key="i.CursorVisibilityPointer" selected>Pointer</option>
+						<option value="default" i18n-key="i.CursorVisibilityDefault">No change</option>
 					</select>
 				</div>
 				<div id="hotzoneActions" class="actions_container new_marker_settings_field new_marker_settings_field_last">

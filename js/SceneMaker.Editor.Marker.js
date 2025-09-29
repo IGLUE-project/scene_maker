@@ -85,12 +85,12 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 					slideContainerHeight = 600;
 				}
 
-				var hotspotX = hotspot.x*slideContainerWidth/100;
-				var hotspotY = hotspot.y*slideContainerHeight/100;
-				var hotspotWidth = hotspot.width*slideContainerWidth/100;
-				var hotspotHeight = hotspot.height*slideContainerHeight/100;
+				hotspot.x = (hotspot.x*slideContainerWidth/100);
+				hotspot.y = (hotspot.y*slideContainerHeight/100);
+				hotspot.width = (hotspot.width*slideContainerWidth/100);
+				hotspot.height = (hotspot.height*slideContainerHeight/100);
 
-				_drawHotspot(slideId,hotspot.id,hotspotX,hotspotY,hotspot.image,hotspot.lockAspectRatio,hotspot.visibility,hotspotWidth,hotspotHeight,hotspot.rotationAngle);
+				_drawHotspot(slideId,hotspot);
 				if (Array.isArray(hotspot.actions)&&hotspot.actions.length>0) {
 					slideData[slideId].hotspots[hotspot.id].actions = hotspot.actions;
 				}
@@ -115,8 +115,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 				hotzoneId = SM.Utils.getId("annotation-");
 			}
 			var hotzoneIdAlias;
-			if(typeof hotzoneJSON.id_alias === "string"){
-				hotzoneIdAlias = hotzoneJSON.id_alias;
+			if(typeof hotzoneJSON.idAlias === "string"){
+				hotzoneIdAlias = hotzoneJSON.idAlias;
 			} else {
 				hotzoneIdAlias = SM.Utils.getId("zone-");
 			}
@@ -127,7 +127,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			var annotator = _createAnnotatorForSlide(slideId);
 			annotator.addAnnotation(annotation);
 			slideData[slideId].hotzones[hotzoneId] = {};
-			slideData[slideId].hotzones[hotzoneId].visibility = hotzoneJSON.visibility;
+			slideData[slideId].hotzones[hotzoneId].cursorVisibility = hotzoneJSON.cursorVisibility;
 			slideData[slideId].hotzones[hotzoneId].enabled = hotzoneJSON.enabled;
 			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length>0)) {
 				slideData[slideId].hotzones[hotzoneId].actions = hotzoneJSON.actions;
@@ -236,28 +236,31 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var x = event.clientX - rect.left - hotspotSize/2;
 		var y = event.clientY - rect.top - hotspotSize/2;
 		
-		_drawHotspot(slideId,hotspotId,x,y);
+		_drawHotspot(slideId,{id: hotspotId, x: x, y: y});
 		_enableEditingMode("NONE");
 	};
 
-	var _drawHotspot = function(slideId,hotspotId,x,y,imgURL,lockAspectRatio,visibility,width,height,rotationAngle){
-		if(typeof imgURL !== "string"){
-			imgURL = SM.Marker.getDefaultHotspotImg();
+	var _drawHotspot = function(slideId,hotspotJSON){
+		if(typeof hotspotJSON.image !== "string"){
+			hotspotJSON.image = SM.Marker.getDefaultHotspotImg();
 		}
-		if(typeof lockAspectRatio !== "boolean"){
-			lockAspectRatio = true;
+		if(typeof hotspotJSON.lockAspectRatio !== "boolean"){
+			hotspotJSON.lockAspectRatio = true;
 		}
-		if(typeof visibility !== "string"){
-			visibility = "visible";
+		if(typeof hotspotJSON.visibility !== "string"){
+			hotspotJSON.visibility = "visible";
 		}
-		if(typeof width !== "number"){
-			width = 42;
+		if(typeof hotspotJSON.cursorVisibility !== "string"){
+			hotspotJSON.cursorVisibility = "pointer";
 		}
-		if(typeof height !== "number"){
-			height = 42;
+		if(typeof hotspotJSON.width !== "number"){
+			hotspotJSON.width = 42;
+		}
+		if(typeof hotspotJSON.height !== "number"){
+			hotspotJSON.height = 42;
 		}
 
-		var rotationAngle = parseFloat(rotationAngle);
+		var rotationAngle = parseFloat(hotspotJSON.rotationAngle);
 		if (typeof rotationAngle !== "number" || isNaN(rotationAngle) || rotationAngle < 0 || rotationAngle > 360) {
 			rotationAngle = 0;
 		}
@@ -265,16 +268,16 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var $slide = $("#"+slideId);
 		var $imgBackground = SM.Slides.getSlideBackgroundImg($slide);
 		var $hotspot = $('<img>', {
-			src: imgURL,
+			src: hotspotJSON.image,
 			class: 'hotspot',
-			id: hotspotId,
+			id: hotspotJSON.id,
 			rotationAngle: rotationAngle,
 			css: {
 				position: 'absolute',
-				left: x,
-				top: y,
-				width: (width + "px"),
-				height: (height + "px"),
+				left: hotspotJSON.x,
+				top: hotspotJSON.y,
+				width: (hotspotJSON.width + "px"),
+				height: (hotspotJSON.height + "px"),
 				transform: "rotate(" + rotationAngle + "deg)"
 			}
 		}).appendTo($imgBackground.parent());
@@ -283,9 +286,10 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		if(typeof slideData[slideId] === "undefined"){
 			slideData[slideId] = _getDefaultSlideConfig();
 		}
-		slideData[slideId].hotspots[hotspotId] = {};
-		slideData[slideId].hotspots[hotspotId].lockAspectRatio = lockAspectRatio;
-		slideData[slideId].hotspots[hotspotId].visibility = visibility;
+		slideData[slideId].hotspots[hotspotJSON.id] = {};
+		slideData[slideId].hotspots[hotspotJSON.id].lockAspectRatio = hotspotJSON.lockAspectRatio;
+		slideData[slideId].hotspots[hotspotJSON.id].visibility = hotspotJSON.visibility;
+		slideData[slideId].hotspots[hotspotJSON.id].cursorVisibility = hotspotJSON.cursorVisibility;
 
 		_enableDraggableHotspot($hotspot);
 	};
@@ -416,7 +420,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			var oldHotzoneId = hotzones[i].id;
 			hotzones[i].id = SM.Utils.getId("annotation-");
 			hotzoneIdsMapping[oldHotzoneId] = hotzones[i].id;
-			delete hotzones[i].id_alias;
+			delete hotzones[i].idAlias;
 		}
 
 		//Change ids in hotspot actions
@@ -554,6 +558,13 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			$("#hotspotVisibility").val(slideData[slideId].hotspots[hotspotId].visibility);
 		} else {
 			$("#hotspotVisibility").val("visible");
+		}
+
+		//Cursor visibility
+		if(typeof slideData[slideId].hotspots[hotspotId].cursorVisibility === "string"){
+			$("#hotspotCursorVisibility").val(slideData[slideId].hotspots[hotspotId].cursorVisibility);
+		} else {
+			$("#hotspotCursorVisibility").val("pointer");
 		}
 
 		//Actions
@@ -740,6 +751,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 		//Hotspot visibility
 		hotspotSettings.visibility = $("#hotspotVisibility").val();
+		hotspotSettings.cursorVisibility = $("#hotspotCursorVisibility").val();
 
 		//Validate position
 		_validateHotspotPosition($hotspot);
@@ -816,7 +828,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		annotator.on('createAnnotation', (annotation) => {
 			hotzoneIdsAlias[annotation.id] = SM.Utils.getId("zone-");
 			slideData[slideId].hotzones[annotation.id] = {};
-			slideData[slideId].hotzones[annotation.id].visibility = "hidden";
+			slideData[slideId].hotzones[annotation.id].cursorVisibility = "default";
 			slideData[slideId].hotzones[annotation.id].enabled = true;
 			_disableEditingMode("HOTZONE");
 		});
@@ -861,11 +873,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		//ID
 		$("#hotzoneIdInput").val(hotzoneIdsAlias[hotzoneId]);
 
-		//Visibility
-		if(typeof slideData[slideId].hotzones[hotzoneId].visibility === "string"){
-			$("#hotzoneVisibility").val(slideData[slideId].hotzones[hotzoneId].visibility);
+		//Cursor visibility
+		if(typeof slideData[slideId].hotzones[hotzoneId].cursorVisibility === "string"){
+			$("#hotzoneCursorVisibility").val(slideData[slideId].hotzones[hotzoneId].cursorVisibility);
 		} else {
-			$("#hotzoneVisibility").val("hidden");
+			$("#hotzoneCursorVisibility").val("default");
 		}
 
 		//Enabled
@@ -884,11 +896,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var hotzoneId = currentHotzoneId;
 		var hotzoneSettings = {};
 
-		//Hotzone visibility
-		hotzoneSettings.visibility = $("#hotzoneVisibility").val();
-
 		//Hotzone enabled
 		hotzoneSettings.enabled = !($("#hotzoneEnabled").val()==="false");
+
+		//Hotzone cursor visibility
+		hotzoneSettings.cursorVisibility = $("#hotzoneCursorVisibility").val();
 
 		//Hotzone actions
 		var actions = SM.Editor.Actions.getActionsJSON($("#hotzoneActions"));
@@ -1061,6 +1073,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 						"lockAspectRatio": hotspotSettings.lockAspectRatio,
 						"rotationAngle": hotspotDOM.attr("rotationAngle"),
 						"visibility": hotspotSettings.visibility,
+						"cursorVisibility": hotspotSettings.cursorVisibility,
 					};
 
 					if (Array.isArray(hotspotSettings.actions) && hotspotSettings.actions.length > 0) {
@@ -1083,9 +1096,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 						var points = annotation.target.selector.geometry.points;
 						var hotzoneJSON = {
 							"id": hotzoneId,
-							"id_alias": hotzoneIdsAlias[hotzoneId],
+							"idAlias": hotzoneIdsAlias[hotzoneId],
 							"points": points,
-							"visibility": hotzoneSettings.visibility,
+							"cursorVisibility": hotzoneSettings.cursorVisibility,
 							"enabled": hotzoneSettings.enabled,
 						};
 						if (Array.isArray(hotzoneSettings.actions) && hotzoneSettings.actions.length > 0) {

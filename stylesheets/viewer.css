@@ -171,7 +171,7 @@ img.hotspot {
 img.hotspot_hidden {
 	display: none;
 }
-img.hotspot_with_actions {
+img.hotspot_cursor_pointer.hotspot_with_actions {
 	cursor: pointer;
 }
 
@@ -195,7 +195,7 @@ section.slides:not(.slides_editor) .a9s-annotationlayer.hover {
     cursor: default;
 }
 
-section.slides:not(.slides_editor) .a9s-annotation[hotzone_enabled="true"][hotzone_visibility="visible_hover"]:hover {
+section.slides:not(.slides_editor) .a9s-annotation[hotzone_enabled="true"][hotzone_cursor_visibility="pointer"]:hover {
     cursor: pointer !important;
 }
 
