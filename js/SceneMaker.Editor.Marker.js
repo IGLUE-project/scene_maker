@@ -180,7 +180,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		switch(mode){
 			case "HOTSPOT":
 				$("#slides_panel").removeClass("hotspot_active");
-				currentHotspot = undefined;
+				setCurrentHotspot(undefined);
 				break;
 			case "HOTZONE":
 				$("#slides_panel").removeClass("hotzone_active");
@@ -491,7 +491,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	};
 
 	var _onSelectHotspot = function($hotspot){
-		currentHotspot = $hotspot;
+		setCurrentHotspot($hotspot);
 		SM.Editor.Tools.loadToolsForElement("hotspot");
 	};
 
@@ -910,6 +910,10 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var setCurrentHotspot = function(newHotspot){
 		currentHotspot = newHotspot;
+		$("img.hotspot").removeClass("hotspot_selected");
+		if(typeof newHotspot !== "undefined"){
+			$(newHotspot).addClass("hotspot_selected");
+		}
 	};
 
 	var getCurrentHotzoneId = function(){
@@ -975,7 +979,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 				var hotspotId = $hotspot.attr("id");
 				$hotspot.remove();
 				delete slideData[currentSlideId].hotspots[hotspotId];
-				currentHotspot = undefined;
+				setCurrentHotspot(undefined);
 			} else {
 				//Delete current hotzone
 				var annotator = slideData[currentSlideId].annotator;

@@ -1158,6 +1158,12 @@ img.hotspot.ui-draggable {
 	cursor: pointer;
 }
 
+img.hotspot_selected {
+	outline: 2px dotted #000;
+	outline-offset: 1px;
+	filter: drop-shadow(0 0 3px #fff);
+}
+
 
 /* Hotspot and Hotzone Settings */
 
