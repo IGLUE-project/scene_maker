@@ -1165,32 +1165,32 @@ img.hotspot_selected {
 }
 
 
-/* Hotspot and Hotzone Settings */
+/* Settings for hotspots, hotzones and captions */
 
-div.markerSettings_wrapper {
+div.sceneSettings_wrapper {
 	overflow: auto;
 	height: 555px;
 }
 
-div.new_marker_settings_field {
+div.scene_settings_field {
 	margin-left: 10px;
 	margin-top: 10px;
 }
 
-div.new_marker_settings_field label, div.new_marker_settings_field p, div.new_marker_settings_field input, div.new_marker_settings_field select {
+div.scene_settings_field label, div.scene_settings_field p, div.scene_settings_field input, div.scene_settings_field select {
 	font-size: 14px;
 }
 
-div.new_marker_settings_field.new_marker_settings_field_first {
+div.scene_settings_field.scene_settings_field_first {
 	margin-top: 5px;
 }
 
-div > div.new_marker_settings_field:not(.new_marker_settings_field_last) {
+div > div.scene_settings_field:not(.scene_settings_field_last) {
   border-bottom: 1px solid black;
   padding-bottom: 10px;
 }
 
-div.new_marker_settings_field p {
+div.scene_settings_field p {
 	margin: 0px 0px 5px 0px;
 }
 
@@ -1207,8 +1207,8 @@ div.settings_element_wrapper label {
 
 div.settings_element_wrapper input[type="text"], div.settings_element_wrapper textarea {
 	flex: 1;                 
-  	min-width: 0;
-  	padding: 4px 8px;
+	min-width: 0;
+	padding: 4px 8px;
 }
 
 div.settings_element_wrapper textarea {
@@ -1216,7 +1216,7 @@ div.settings_element_wrapper textarea {
 	overflow: auto;
 }
 
-div.markerSettings_wrapper input[readonly] {
+div.sceneSettings_wrapper input[readonly] {
 	background: #ddd;
 	width: 450px;
 	pointer-events: none;
@@ -1237,7 +1237,7 @@ div.actionParamsPuzzleSolution input[type="text"] {
   border: 1px solid white;
 }
 
-div.markerSettings_wrapper button.add_action {
+div.sceneSettings_wrapper button.add_action {
 	cursor: pointer;
 }
 
@@ -1262,7 +1262,6 @@ div.delete_action {
     background-size: 90% 90%;
     background-position: 75% 50%;
     cursor: pointer;
-
 }
 
 /* CKEditor */

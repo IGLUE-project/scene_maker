@@ -80,9 +80,11 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 				if(typeof SM.Slides.getSlideBackground(slide) !== "undefined"){
 					$("div.tool_action[action='addHotspot']").show();
 					$("div.tool_action[action='addHotzone']").show();
+					$("div.tool_action[action='addCaption']").show();
 				} else {
 					$("div.tool_action[action='addHotspot']").hide();
 					$("div.tool_action[action='addHotzone']").hide();
+					$("div.tool_action[action='addCaption']").hide();
 				}
 				break;
 			default:
@@ -376,6 +378,11 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		SM.Editor.Marker.addHotzone();
 	};
 
+	var addCaption = function(){
+		_cleanElementToolbar();
+		SM.Editor.Caption.addCaption();
+	};
+
 	var deleteHotmarker = function(){
 		SM.Editor.Marker.deleteCurrentHotmarker();
 	};
@@ -421,6 +428,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		changeBackground				: changeBackground,
 		addHotspot						: addHotspot,
 		addHotzone						: addHotzone,
+		addCaption						: addCaption,
 		deleteHotmarker 				: deleteHotmarker,
 		addTooltipsToSlide				: addTooltipsToSlide,
 		addTooltipToZone				: addTooltipToZone,

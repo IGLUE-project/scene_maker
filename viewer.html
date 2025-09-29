@@ -55,6 +55,7 @@
 	<script type="text/javascript" src="/js/SceneMaker.Screen.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.View.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Marker.js"></script>
+	<script type="text/javascript" src="/js/SceneMaker.Caption.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Slides.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.Events.js"></script>
 	<script type="text/javascript" src="/js/SceneMaker.EventsNotifier.js"></script>
@@ -75,10 +76,16 @@
 
 	<div id="viewerpreview" style="display:none"><span i18n-key="i.Preview">Preview</span></div>
 
-	<!-- NOTIFICATIONS -->
-	<!-- Hidden link to open notification template -->
+	<!-- Captions template -->
+	<div class="captionWrapper captionWrapperTemplate" style='display:none'>
+		<div class="captionSubWrapper">
+			<div class="captionHeaderWrapper"><img src="/images/vicons/close.png"/></div>
+			<div class="captionBodyWrapper"></div>
+		</div>
+	</div>
+
+	<!-- Notifications -->
 	<a id="link_to_notification_template" href="#notification_template_cloned"></a>
-	<!-- NOTIFICATION TEMPLATE -->
 	<div id="notification_template_wrapper" style='display:none'></div>
 
 	<!-- Copy HTML until here -->

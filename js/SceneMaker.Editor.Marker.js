@@ -48,10 +48,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		});
 	};
 
-	var _getDefaultSlideConfig = function(slideId){
+	var getDefaultSlideConfig = function(slideId){
 		var defaultConfig = {
 			hotspots: {},
-			hotzones: {}
+			hotzones: {},
+			caption: {}
 		};
 		return defaultConfig;
 	};
@@ -63,6 +64,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			};
 			_drawHotzones(slideJSON.id,slideJSON.hotzones);
 			_drawHotspots(slideJSON.id,slideJSON.hotspots);
+			SM.Editor.Caption.loadCaption(slideJSON.id,slideJSON.caption);
 		}
 	};
 
@@ -284,7 +286,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		_validateHotspotPosition($hotspot);
 
 		if(typeof slideData[slideId] === "undefined"){
-			slideData[slideId] = _getDefaultSlideConfig();
+			slideData[slideId] = getDefaultSlideConfig();
 		}
 		slideData[slideId].hotspots[hotspotJSON.id] = {};
 		slideData[slideId].hotspots[hotspotJSON.id].lockAspectRatio = hotspotJSON.lockAspectRatio;
@@ -375,7 +377,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var _copyMarkersInSlide = function(oldSlideId,newSlideId){
 		if(typeof slideData[newSlideId] === "undefined"){
-			slideData[newSlideId] = _getDefaultSlideConfig();
+			slideData[newSlideId] = getDefaultSlideConfig();
 		}
 		if(typeof slideData[oldSlideId] === "undefined"){
 			//Nothing to copy
@@ -805,7 +807,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var _createAnnotatorForSlide = function(slideId){
 		if(typeof slideData[slideId] === "undefined"){
-			slideData[slideId] = _getDefaultSlideConfig();
+			slideData[slideId] = getDefaultSlideConfig();
 		}
 		if(typeof slideData[slideId].annotator !== "undefined"){
 			return slideData[slideId].annotator; //already created
@@ -920,6 +922,10 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 
 	var getSlideData = function(){
 		return slideData;
+	};
+
+	var setSlideData = function(newSlideData){
+		slideData = newSlideData;
 	};
 
 	var getCurrentHotspot = function(){
@@ -1108,6 +1114,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 					});
 				}
 			}
+			//Save caption
+			slide = SM.Editor.Caption.saveCaption(slide);
 		}
 
 		return slide;
@@ -1122,6 +1130,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		addHotzone							: addHotzone,
 		onClick 							: onClick,
 		getSlideData						: getSlideData,
+		setSlideData						: setSlideData,
+		getDefaultSlideConfig 				: getDefaultSlideConfig,
 		getCurrentHotspot					: getCurrentHotspot,
 		setCurrentHotspot					: setCurrentHotspot,
 		showHotspotSettings					: showHotspotSettings,

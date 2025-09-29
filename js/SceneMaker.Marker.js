@@ -68,6 +68,11 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				_drawHotspot($slide, slideJSON.hotspots[i]);
 			}
 		}
+
+		//Caption
+		if (typeof slideJSON.caption !== "undefined"){
+			SM.Caption.drawCaption($slide, slideJSON.caption);
+		}
 	};
 
 	var _drawHotspot = function($slide, hotspotJSON){

@@ -158,6 +158,7 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		$("div.close_view").css("width",_closeButtonDimension+"px");
 		$("div.close_view").css("height",_closeButtonDimension+"px");
 
+
 		//Fs button
 		$("#page-fullscreen").width($("#page-fullscreen").height());
 

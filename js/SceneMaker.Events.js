@@ -19,6 +19,7 @@ SceneMaker.Events = (function(SM,$,undefined){
 		$('article').live('slideleave', SM.Viewer.onSlideLeaveViewer);
 
 		$(document).on('click','.close_view', SM.View.onCloseViewClicked);
+		$(document).on('click','.captionHeaderWrapper img', SM.Caption.onCaptionButtonClicked);
 
 		//Focus
 		// $(window).focus(function(){

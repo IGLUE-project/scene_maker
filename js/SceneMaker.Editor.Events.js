@@ -34,7 +34,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on("click", "#tab_object_from_url_content button.button_addContent", SM.Editor.Object.drawPreviewElement);
 			$(document).on("click", "#tab_video_from_url_content button.button_addContent", SM.Editor.Video.addContent);
 
-			//Hotspot Settings
+			//Marker settings
 			$(document).on("change", "#hotspotImageSource", SM.Editor.Marker.onHotspotImageSourceChange);
 			$(document).on("click", "#hotspotImageGallery img", SM.Editor.Marker.onClickHotspotImageGallery);
 			$(document).on("blur", "#hotspotImageURL", SM.Editor.Marker.checkHotspotImageURLPreview);
@@ -53,6 +53,9 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			
 			//Element settings
 			$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
+
+			//Captions
+			$(document).on("click", "#captionDone", SM.Editor.Caption.onCaptionDone);
 
 			$(document).on('click', handleClick);
 			$(document).bind('keydown', handleBodyKeyDown);

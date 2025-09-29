@@ -226,7 +226,7 @@ button.btn_toolbar:active {
 	box-shadow: inset 0px 0px 18px -3px rgba(0,0,0,0.15);
 }
 
-section.hotspot_active div.tool_action[action='addHotspot'],  section.hotzone_active div.tool_action[action='addHotzone']{
+section.hotspot_active div.tool_action[action='addHotspot'],  section.hotzone_active div.tool_action[action='addHotzone'] {
 	background-color: #326999;
 }
 
@@ -261,7 +261,7 @@ section.hotzone_active article[type='screen'], section.hotzone_active article[ty
 	top: -16px;
 }
 
-.subToolbar[action="changeBackground"] img, .subToolbar[action="addHotspot"] img, .subToolbar[action="addHotzone"] img {
+.subToolbar[action="changeBackground"] img, .subToolbar[action="addHotspot"] img, .subToolbar[action="addHotzone"] img, .subToolbar[action="addCaption"] img {
 	height: 31px;
 	top: -9px;
 }
@@ -276,7 +276,7 @@ section.hotzone_active article[type='screen'], section.hotzone_active article[ty
     top: -3px;
 }
 
-.subToolbar[action="changeBackground"] p, .subToolbar[action="addHotspot"] p, .subToolbar[action="addHotzone"] p {
+.subToolbar[action="changeBackground"] p, .subToolbar[action="addHotspot"] p, .subToolbar[action="addHotzone"] p, .subToolbar[action="addCaption"] p {
 	top: -9px;
 }
 
