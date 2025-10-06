@@ -198,6 +198,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 						if(typeof action.actionParams.puzzle === "string"){
 							var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
 							$actionParamsPuzzleSelect.val(action.actionParams.puzzle);
+							_onPuzzleChange(action.actionParams.puzzle,$actionWrapper);
 						}
 					}
 				}
@@ -211,7 +212,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		return $actionWrapperDiv;
 	};
 
-	var onActionChange = function(event){
+	var onActionTypeChange = function(event){
 		var option = event.target.value;
 		var $actionWrapperDiv = $(event.target).closest("div.actionWrapper");
 		var $selectScreenWrapper = $actionWrapperDiv.find("div.actionParamsScreen");
@@ -297,14 +298,18 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 	var onPuzzleChange = function(event){
 		var option = event.target.value;
 		var $actionWrapperDiv = $(event.target).closest("div.actionWrapper");
+		_onPuzzleChange(option,$actionWrapperDiv);
+	};
+
+	var _onPuzzleChange = function(option, $actionWrapperDiv){
 		var $inputPuzzleSolutionWrapper = $actionWrapperDiv.find("div.actionParamsPuzzleSolution");
 		var $inputPuzzleSolution = $inputPuzzleSolutionWrapper.find("input");
-		if(option != "none"){
+		if(option !== "none"){
 			var $actionContainer = $actionWrapperDiv.parent();
 			var inputPuzzleSolutionVal = "";
-			if (($actionContainer.hasClass("actions_container_HOTSPOT"))&&($("#hotspotIdInput").is(":visible"))) {
+			if ($actionContainer.hasClass("actions_container_HOTSPOT")) {
 				inputPuzzleSolutionVal = $("#hotspotIdInput").val();
-			} else if (($actionContainer.hasClass("actions_container_HOTZONE"))&&($("#hotzoneIdInput").is(":visible"))) {
+			} else if ($actionContainer.hasClass("actions_container_HOTZONE")) {
 				inputPuzzleSolutionVal = $("#hotzoneIdInput").val();
 			}
 			$inputPuzzleSolution.val(inputPuzzleSolutionVal);
@@ -374,7 +379,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 	return {
 		init 					: init,
 		loadActions				: loadActions,
-		onActionChange			: onActionChange,
+		onActionTypeChange		: onActionTypeChange,
 		addNewAction			: addNewAction,
 		onPuzzleChange			: onPuzzleChange,
 		onDeleteAction			: onDeleteAction,
