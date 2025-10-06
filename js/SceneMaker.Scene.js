@@ -1,8 +1,5 @@
 SceneMaker.Scene = (function(SM,undefined){
-	
-	/**
-	 * Function to initialize and render the scene
-	 */
+
 	var init = function(scene,callback){
 		SM.ViewerAdapter.applyAspectRatio(scene.aspectRatio);
 		SM.Renderer.init();

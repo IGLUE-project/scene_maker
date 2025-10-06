@@ -36,8 +36,13 @@ window.SCENE_MAKER_OPTIONS = (function(){
 	//Specify a default language
 	options["lang"] = "en";
 
-	//Specify number of puzzles
+	//Specify number of puzzles (Only used by the editor)
 	options["nPuzzles"] = 5;
+
+	//Escapp settings
+	options["escapp"] = {
+		endpoint:"https://escapp.es/api/escapeRooms/id",
+	};
 
 	if((typeof window !== "undefined")&&(window.console) && (window.console.log)){
 		console.log("Scene Maker options", options);

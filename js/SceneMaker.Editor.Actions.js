@@ -195,10 +195,10 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 							var $actionParamsHotzoneIdSelect = $actionWrapper.find("div.actionParamsHotzoneId select");
 							$actionParamsHotzoneIdSelect.val(action.actionParams.hotzoneId);
 						}
-						if(typeof action.actionParams.puzzle === "string"){
+						if(typeof action.actionParams.puzzleId === "string"){
 							var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
-							$actionParamsPuzzleSelect.val(action.actionParams.puzzle);
-							_onPuzzleChange(action.actionParams.puzzle,$actionWrapper);
+							$actionParamsPuzzleSelect.val(action.actionParams.puzzleId);
+							_onPuzzleChange(action.actionParams.puzzleId,$actionWrapper);
 						}
 					}
 				}
@@ -365,7 +365,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				}
 				var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
 				if($actionParamsPuzzleSelect.is(":visible")){
-					action.actionParams.puzzle = $actionParamsPuzzleSelect.val();
+					action.actionParams.puzzleId = $actionParamsPuzzleSelect.val();
 				}
 				if (Object.keys(action.actionParams).length === 0) {
 					delete action.actionParams;

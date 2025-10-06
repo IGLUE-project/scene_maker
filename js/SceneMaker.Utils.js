@@ -211,6 +211,23 @@ SceneMaker.Utils = (function(SM,undefined){
 		}
 	};
 
+	var deepMerge = function(h1,h2){
+		if((typeof h1 === "object")&&(typeof h2 === "object")&&(!(h1 instanceof Array))){
+			let keys = Object.keys(Object.assign({},h1,h2));
+			let keysL = keys.length;
+			for(let i=0; i<keysL; i++){
+				h1[keys[i]] = deepMerge(h1[keys[i]],h2[keys[i]]);
+			}
+			return h1;
+		} else {
+			if(typeof h2 !== "undefined"){
+				return h2;
+			} else {
+				return h1;
+			}
+		}
+	};
+
 	/**
 	 * Fix JSONs with old format
 	 * Return null if JSON cannot be loaded
@@ -336,6 +353,28 @@ SceneMaker.Utils = (function(SM,undefined){
 			}
 			return params;
 		}
+	};
+
+	var getScreenNumberFromHash = function(){
+		try {
+			var location = window.location;
+			if(typeof location == "undefined"){
+				return;
+			}
+
+			var sNumber = Math.max(1,Math.min(SM.Screen.getScreensQuantity(),parseInt(location.hash.split("?")[0].split("#").pop())));
+			if(isNaN(sNumber)){
+				return undefined;
+			} else {
+				return sNumber;
+			}
+		} catch(err){
+			return undefined;
+		}
+	};
+
+	var removeHashFromUrlString = function(url){
+		return url.split("#")[0];
 	};
 
 	var getSrcFromCSS = function(css){
@@ -656,27 +695,6 @@ SceneMaker.Utils = (function(SM,undefined){
 		return vValue;
 	};
 
-	var getScreenNumberFromHash = function(){
-		try {
-			var location = window.location;
-			if(typeof location == "undefined"){
-				return;
-			}
-
-			var sNumber = Math.max(1,Math.min(SM.Screen.getScreensQuantity(),parseInt(location.hash.split("?")[0].split("#").pop())));
-			if(isNaN(sNumber)){
-				return undefined;
-			} else {
-				return sNumber;
-			}
-		} catch(err){
-			return undefined;
-		}
-	};
-
-	var removeHashFromUrlString = function(url){
-		return url.split("#")[0];
-	};
 
 	/* Temp shown */
 	var tempShownCounts = {};
@@ -755,6 +773,8 @@ SceneMaker.Utils = (function(SM,undefined){
 		getOptions 					: getOptions,
 		getId						: getId,
 		registerId					: registerId,
+		deepMerge					: deepMerge,
+		fixScene					: fixScene,
 		getOuterHTML 				: getOuterHTML,
 		getSrcFromCSS				: getSrcFromCSS,
 		addFontSizeToStyle 			: addFontSizeToStyle,
@@ -765,12 +785,11 @@ SceneMaker.Utils = (function(SM,undefined){
 		addParamToUrl				: addParamToUrl,
 		removeParamFromUrl			: removeParamFromUrl,
 		getParamsFromUrl			: getParamsFromUrl,
-		fixScene					: fixScene,
+		removeHashFromUrlString		: removeHashFromUrlString,
+		getScreenNumberFromHash		: getScreenNumberFromHash,
 		showDialog 					: showDialog,
 		showPNotValidDialog			: showPNotValidDialog,
 		isObseleteVersion			: isObseleteVersion,
-		removeHashFromUrlString		: removeHashFromUrlString,
-		getScreenNumberFromHash		: getScreenNumberFromHash,
 		addTempShown				: addTempShown,
 		removeTempShown				: removeTempShown,
 		checkUrlProtocol			: checkUrlProtocol,

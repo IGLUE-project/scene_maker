@@ -130,7 +130,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		if (Array.isArray(hotspotJSON.actions)&&(hotspotJSON.actions.length > 0)) {
 			$hotspot.addClass("hotspot_with_actions");
 			
-			hotspotData[hotspotJSON.id] = hotspotJSON.actions;
+			hotspotData[hotspotJSON.id] = hotspotJSON;
 			$hotspot.on('click', function(){
 				_onClickHotspot(hotspotJSON.id);
 			});
@@ -164,7 +164,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				$(hotzoneDOM).attr("hotzone_enabled","true");
 			}
 			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length > 0)) {
-				hotzoneData[hotzoneId] = hotzoneJSON.actions;
+				hotzoneData[hotzoneId] = hotzoneJSON;
 				for(i in hotzoneJSON.actions){
 					_addActionToHotzone(hotzoneDOM,hotzoneId,hotzoneJSON.actions[i]);
 				}
@@ -317,7 +317,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	};
 
 	var _onClickHotspot = function(hotspotId){
-		_performActions(hotspotData[hotspotId]);
+		_performActions(hotspotData[hotspotId].actions,hotspotId);
 	};
 
 	var _onClickHotzone = function(hotzoneId){
@@ -325,18 +325,18 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		if($(hotzoneDOM).attr("hotzone_enabled") === "false"){
 			return;
 		}
-		_performActions(hotzoneData[hotzoneId]);
+		_performActions(hotzoneData[hotzoneId].actions,hotzoneData[hotzoneId].idAlias);
 	};
 
-	var _performActions = function(actions){
+	var _performActions = function(actions,eventTargetId){
 		if (Array.isArray(actions)) {
 			actions.forEach((action, index) => {
-				_performAction(action);
+				_performAction(action,eventTargetId);
 			});
 		}
 	};
 
-	var _performAction = function(action){
+	var _performAction = function(action,eventTargetId){
 		switch(action.actionType){
 			case "goToScreen":
 				if((action.actionParams)&&(typeof action.actionParams.screen === "string")){
@@ -426,7 +426,9 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				}
 				break;
 			case "solvePuzzle":
-				//TODO
+				if((action.actionParams)&&(typeof action.actionParams.puzzleId === "string")){
+					SM.Escapp.submitPuzzleSolution(action.actionParams.puzzleId,eventTargetId);
+				}
 				break;
 			default:
 				break;

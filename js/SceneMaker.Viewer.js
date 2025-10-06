@@ -28,7 +28,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		SM.Utils.init();
 		SM.I18n.init(initOptions,scene);
 
-		SM.Debugging.log("\n\nScene Maker init with scene:\n"); 
+		SM.Debugging.log("\n\nScene Maker initiated with scene:\n"); 
 		SM.Debugging.log(JSON.stringify(scene));
 
 		scene = SM.Utils.fixScene(scene);
@@ -79,16 +79,15 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 			//Try to win focus
 			window.focus();
 		}
+
+		//Init Escapp client
+		SM.Escapp.init(options,scene);
 	};
 
-	
 	var getOptions = function(){	
 		return initOptions;
 	};
 
-	/**
-	* Function called when entering slide in viewer, we have to show the objects
-	*/
 	var onSlideEnterViewer = function(e){
 		var slide = e.target;
 		var cSlideNumber = SM.Screen.getCurrentScreenNumber();
@@ -124,9 +123,6 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		}
 	};
 
-	/**
-	* Function called when leaving a slide in viewer
-	*/
 	var onSlideLeaveViewer = function(e){
 		var slide = e.target;
 		var isView = SM.Slides.isView(slide);

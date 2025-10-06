@@ -59,7 +59,7 @@ div.image_carousel_multiple_row_hotspotgallery > div.caroufredsel_wrapper {
 }
 
 div.image_carousel a.prev, div.image_carousel a.next {
-	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) no-repeat transparent;
+	background: url(/images/libs/jquery.carouFredSel/carousel_sprite.png) no-repeat transparent;
 	width: 45px;
 	height: 50px;
 	display: block;
@@ -98,7 +98,7 @@ div.image_carousel div.pagination {
 	margin-top: 12px;
 }
 div.image_carousel div.pagination a {
-	background: url(/libs/jquery.carouFredSel/images/carousel_sprite.png) 0 -259px no-repeat transparent;
+	background: url(/images/libs/jquery.carouFredSel/carousel_sprite.png) 0 -259px no-repeat transparent;
 	width: 17px;
 	height: 17px;
 	margin: 0 5px 0 0;

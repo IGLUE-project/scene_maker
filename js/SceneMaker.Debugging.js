@@ -17,9 +17,9 @@ SceneMaker.Debugging = (function(SM,$,undefined){
 		}
 	};
 	
-	var log = function(text){
+	var log = function(...args){
 		if ((window.console && window.console.log) && (developping)) {
-			console.log(text);
+			console.log(...args);
 		}
 	};
 	
