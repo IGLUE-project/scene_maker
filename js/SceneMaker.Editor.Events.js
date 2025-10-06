@@ -47,6 +47,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on("click", "div.actions_container button.add_action", function(){
 				SM.Editor.Actions.addNewAction($(this).closest("div.actions_container"));
 			});
+			$(document).on("change", "select.actionEvent", SM.Editor.Actions.onActionEventChange);
 			$(document).on("change", "select.actionType", SM.Editor.Actions.onActionTypeChange);
 			$(document).on("click", "div.delete_action", SM.Editor.Actions.onDeleteAction);
 			$(document).on("change", "div.actionParamsPuzzle select", SM.Editor.Actions.onPuzzleChange);

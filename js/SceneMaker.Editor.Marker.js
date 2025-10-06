@@ -859,6 +859,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	};
 
 	var _onSelectHotzone = function(hotzoneId){
+		if(currentEditingMode === "HOTSPOT"){
+			_disableEditingMode("HOTSPOT");
+		}
 		currentHotzoneId = hotzoneId;
 		SM.Editor.Tools.loadToolsForElement("hotzone");
 	};

@@ -14,7 +14,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			}
 		}
 
-		$("div.actionWrapperTemplate div.actionParamsPuzzle select").each(function() {
+		$("div.actionWrapperTemplate div.actionParamsPuzzle select, div.actionWrapperTemplate div.actionEventParamsPuzzle select").each(function() {
 			var $select = $(this);
 			$select.empty();
 			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
@@ -24,7 +24,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		});
 	};
 
-	var _refreshActionTemplate = function(){
+	var _refreshActionTemplate = function(elType){
 		var $actionTemplateDiv = $("div.actionWrapperTemplate");
 
 		var currentOptionsScreens = [];
@@ -78,11 +78,33 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			}
 		});
 
+		var viewsForActionParamsView;
+		if(elType === "SCENE"){
+			viewsForActionParamsView = currentOptionsViews;
+		} else {
+			viewsForActionParamsView = currentOptionsScreenViews;
+		}
+
 		$actionTemplateDiv.find("div.actionParamsView select").each(function() {
 			var $select = $(this);
 			$select.empty();
 			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
-			$.each(currentOptionsScreenViews, function(_, opt) {
+			$.each(viewsForActionParamsView, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+		});
+
+		//Fill action template with current slides
+		$actionTemplateDiv.find("div.actionEventParamsSlide select").each(function() {
+			var $select = $(this);
+			$select.empty();
+			$select.append($('<option>', { value: "none", text: SM.I18n.getTrans("i.Unspecified") }))
+			//Fill with screens
+			$.each(currentOptionsScreens, function(_, opt) {
+				$select.append($("<option>", { value: opt.value, text: opt.text }));
+			});
+			//Fill with views
+			$.each(currentOptionsViews, function(_, opt) {
 				$select.append($("<option>", { value: opt.value, text: opt.text }));
 			});
 		});
@@ -148,7 +170,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		//Remove prior actions
 		$(container).find("div.actionWrapper:not(.actionWrapperTemplate)").remove();
 
-		_refreshActionTemplate();
+		_refreshActionTemplate(elType);
 
 		$(container).addClass("actions_container");
 		if(typeof elType === "string"){
@@ -161,6 +183,24 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				var action = elSettings.actions[i];
 				if((typeof action.actionType === "string")&&(action.actionType !== "none")){
 					var $actionWrapper = addNewAction(container);
+
+					//Action event
+					if((typeof action.event !== "undefined")&&(typeof action.event.eventType === "string")&&(action.event.eventType !== "none")){
+						$actionWrapper.find("select.actionEvent").val(action.event.eventType).trigger('change');
+						if(typeof action.event.eventParams !== "undefined"){
+							if(typeof action.event.eventParams.puzzleId === "string"){
+								var $actionEventParamsPuzzleSelect = $actionWrapper.find("div.actionEventParamsPuzzle select");
+								$actionEventParamsPuzzleSelect.val(action.event.eventParams.puzzleId);
+							}
+
+							if(typeof action.event.eventParams.slide === "string"){
+								var $actionEventParamsSlideSelect = $actionWrapper.find("div.actionEventParamsSlide select");
+								$actionEventParamsSlideSelect.val(action.event.eventParams.slide);
+							}
+						}
+					}
+
+					//Action type and params
 					$actionWrapper.find("select.actionType").val(action.actionType).trigger('change');
 					if(typeof action.actionParams !== "undefined"){
 						if(typeof action.actionParams.screen === "string"){
@@ -208,8 +248,47 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 
 	var addNewAction = function(container){
 		var $actionWrapperDiv = $("div.actionWrapperTemplate").clone().removeClass("actionWrapperTemplate").show();
+		var $container = $(container);
+
+		if($container.hasClass("actions_container_SCENE")){
+			//Limit available actions
+			var availableActions = ["none","goToScreen","openView","showHotspot","hideHotspot","enableHotzone","disableHotzone","changeBackground","changeScreen","playSound","stopSound"];
+			$actionWrapperDiv.find("select.actionType option").each(function() {
+				var value = $(this).val();
+				if (!availableActions.includes(value)) {
+					$(this).remove();
+				}
+			});
+		} else {
+			//Hide events
+			$actionWrapperDiv.find("div.setting_scene").remove();
+		}
+
 		$(container).append($actionWrapperDiv);
 		return $actionWrapperDiv;
+	};
+
+	var onActionEventChange = function(event){
+		var option = event.target.value;
+		var $actionWrapperDiv = $(event.target).closest("div.actionWrapper");
+		var $selectSlideWrapper = $actionWrapperDiv.find("div.actionEventParamsSlide");
+		var $selectSlide = $selectSlideWrapper.find("select");
+		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.actionEventParamsPuzzle");
+		var $selectPuzzle = $selectPuzzleWrapper.find("select");
+
+		if(option === "puzzleSolved"){
+			$selectPuzzle.prop("selectedIndex", 0);
+			$selectPuzzleWrapper.show();
+		} else {
+			$selectPuzzleWrapper.hide();
+		}
+
+		if(option === "slideRevealed"){
+			$selectSlide.prop("selectedIndex", 0);
+			$selectSlideWrapper.show();
+		} else {
+			$selectSlideWrapper.hide();
+		}
 	};
 
 	var onActionTypeChange = function(event){
@@ -326,8 +405,11 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 
 	var getActionsJSON = function(container){
 		var actions = [];
+		var actionsForScene = $(container).hasClass("actions_container_SCENE");
 		$(container).find("div.actionWrapper").each(function(index, element) {
 			var $actionWrapper = $(this);
+
+			//Action type and params
 			var actionType = $actionWrapper.find("select.actionType").val();
 			if(actionType !== "none"){
 				var action = {actionType: actionType, actionParams: {}};
@@ -370,6 +452,25 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				if (Object.keys(action.actionParams).length === 0) {
 					delete action.actionParams;
 				}
+
+				//Event
+				var eventType = $actionWrapper.find("select.actionEvent").val();
+				if(eventType !== "none"){
+					action.event = {eventType: eventType, eventParams: {}};
+					var $actionEventParamsPuzzleSelect = $actionWrapper.find("div.actionEventParamsPuzzle select");
+					if($actionEventParamsPuzzleSelect.is(":visible")){
+						action.event.eventParams.puzzleId = $actionEventParamsPuzzleSelect.val();
+					}
+					var $actionEventParamsSlideSelect = $actionWrapper.find("div.actionEventParamsSlide select");
+					if($actionEventParamsSlideSelect.is(":visible")){
+						action.event.eventParams.slide = $actionEventParamsSlideSelect.val();
+					}
+				}
+				
+				if((actionsForScene)&&(typeof action.event === "undefined")){
+					return;
+				}
+
 				actions.push(action);
 			}
 		});
@@ -379,6 +480,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 	return {
 		init 					: init,
 		loadActions				: loadActions,
+		onActionEventChange		: onActionEventChange,
 		onActionTypeChange		: onActionTypeChange,
 		addNewAction			: addNewAction,
 		onPuzzleChange			: onPuzzleChange,

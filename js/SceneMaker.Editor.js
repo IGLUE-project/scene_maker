@@ -365,7 +365,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		var scene = {};
 
 		//Save settings
-		scene = SM.Editor.Settings.saveSettings();
+		scene = SM.Editor.Settings.getSettings();
 		scene.screens = [];
 
 		//Load and show all objects

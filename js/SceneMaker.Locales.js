@@ -15,6 +15,9 @@ var SceneMaker = SceneMaker || {};
 
 SceneMaker.Locales = {
 	"en": {
+		"i.ActionEvent"						: "Triggering event:",
+		"i.ActionEventPuzzleSolved"			: "Puzzle solved",
+		"i.ActionEventSlideRevealed"		: "Screen or view accessed for the first time",
 		"i.ActionParamsPuzzle"              : "Puzzle:",
 		"i.ActionParamsPuzzleSolution"      : "Puzzle solution:",
 		"i.ActionParamsScreen"              : "Screen:",
@@ -96,6 +99,7 @@ SceneMaker.Locales = {
 		"i.saveAndExit"                     : "save and exit",
 		"i.Saved"                           : "Saved",
 		"i.Saving"                          : "Saving",
+		"i.SceneActions"					: "Actions",
 		"i.SceneCaption"					: "Scene caption",
 		"i.SceneCaptionText"				: "Text",
 		"i.SceneCaptionMode"				: "Display mode:",
@@ -130,6 +134,9 @@ SceneMaker.Locales = {
 		"i.ZoneTooltip"                     : "Click here to add content"
 	},
 	"es": {
+		"i.ActionEvent"						: "Evento desencadenante:",
+		"i.ActionEventPuzzleSolved"			: "Reto resuelto",
+		"i.ActionEventSlideRevealed"		: "Pantalla o vista accedida por primera vez",
 		"i.ActionParamsPuzzle"              : "Reto:",
 		"i.ActionParamsPuzzleSolution"      : "Solución del reto:",
 		"i.ActionParamsScreen"              : "Pantalla:",
@@ -211,6 +218,7 @@ SceneMaker.Locales = {
 		"i.saveAndExit"                     : "guardar y salir",
 		"i.Saved"                           : "Guardado",
 		"i.Saving"                          : "Guardando",
+		"i.SceneActions"					: "Acciones",
 		"i.SceneCaption"					: "Rótulo de la escena",
 		"i.SceneCaptionText"				: "Texto",
 		"i.SceneCaptionMode"				: "Modo de visualización:",

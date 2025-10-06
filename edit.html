@@ -281,22 +281,33 @@
 				<div id="settings_header">
 					<img id="scene_details_logo" src="/images/logos/scene_maker.png">
 				</div>
-				<div id="scene_details_fields_row1">
-					<div id="scene_details_fields_row1_column1">
-						<div id="scene_details_title">
-							<span class="scene_details_text" i18n-key="i.Title">Title</span>
-							<input id="scene_details_input_title" class="scene_details_input" type="text" placeholder="Untitled" i18n-key="i.Untitled" maxlength="100">
+				<div id="scene_details_fields_row1" class="scene_details_fields_row">
+					<div id="scene_details_title" class="scene_details_field">
+						<div class="scene_details_fieldTitle" i18n-key="i.Title">Title</div>
+						<div class="scene_details_fieldContent">
+							<input id="scene_details_input_title" type="text" placeholder="Untitled" i18n-key="i.Untitled" maxlength="100">
 						</div>
-						<div id="scene_details_aspectRatio">
-							<span class="scene_details_text" i18n-key="i.AspectRatio">Aspect ratio</span>
+					</div>
+					<div id="scene_details_aspectRatio" class="scene_details_field">
+						<div class="scene_details_fieldTitle" i18n-key="i.AspectRatio">Aspect ratio</div>
+						<div class="scene_details_fieldContent">
 							<select id="scene_details_select_aspectRatio" class="scene_details_select">
 								<option value="4:3" selected>4:3</option>
 								<option value="16:9">16:9</option>
 							</select>
 						</div>
 					</div>
+					<div id="sceneActions" class="actions_container scene_details_field">
+						<div class="scene_details_fieldTitle" i18n-key="i.SceneActions">Actions</div>
+						<div class="scene_details_fieldContent">
+							<button type="button" class="button add_action">
+								<i class="icon-plus"></i> 
+								<span i18n-key="i.NewAction">Add action</span> 
+							</button>
+						</div>
+					</div>
 				</div>
-				<div id="scene_details_fields_row2">
+				<div id="scene_details_fields_row2" class="scene_details_fields_row">
 					<button id="save_scene_details" type="button" class="button" i18n-key="i.Continue" i18n-key-disabledtooltip="i.tooltip.continueDisabled">Continue</button>
 				</div>
 			</div>
@@ -569,6 +580,22 @@
 	<!-- Teamplate to add new actions -->
 	<div class="actionWrapper actionWrapperTemplate" style='display:none'>
 		<div class="delete_action"></div>
+		<div class="settings_element_wrapper setting_scene">
+			<label i18n-key="i.ActionEvent">Triggering event:</label>
+			<select class="actionEvent">
+				<option value="none" i18n-key="i.Unspecified">Undefined</option>
+				<option value="puzzleSolved" i18n-key="i.ActionEventPuzzleSolved">Puzzle solved</option>
+				<option value="slideRevealed" i18n-key="i.ActionEventSlideRevealed">Screen or view accessed for the first time</option>
+			</select>
+		</div>
+		<div class="settings_element_wrapper actionEventParamsSlide setting_scene" style='display:none'>
+			<label i18n-key="i.ActionParamsSlide">Screen or view:</label>
+			<select></select>
+		</div>
+		<div class="settings_element_wrapper actionEventParamsPuzzle setting_scene" style='display:none'>
+			<label i18n-key="i.ActionParamsPuzzle">Puzzle:</label>
+			<select></select>
+		</div>
 		<div class="settings_element_wrapper">
 			<label i18n-key="i.ActionType">Action:</label>
 			<select class="actionType">
