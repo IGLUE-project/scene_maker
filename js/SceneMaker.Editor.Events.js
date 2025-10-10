@@ -17,7 +17,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 			$(document).on('click', '#addViewButton', SM.Editor.View.onClickAddViewButton);
 			$(document).on('click', '#screen_selected_img', SM.Editor.Screen.onClickOpenScreen);
 					
-			$(document).on('click', '#save_scene_details', SM.Editor.Settings.onSaveSceneDetailsButtonClicked);
+			$(document).on('click', '#save_scene_details', SM.Editor.Settings.onSaveSceneSettingsButtonClicked);
 			$(document).on('click','div.viewthumb', SM.Editor.onViewThumbClicked);
 
 			$(document).on('click','.editable', SM.Editor.onEditableClicked);

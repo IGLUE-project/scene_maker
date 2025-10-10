@@ -1,38 +1,41 @@
-SceneMaker.Escapp = (function(SM,undefined){
-	var escapp;
+SceneMaker.Escapp = (function(SM,$,undefined){
+	var _escapp;
+	var _puzzlesSolved;
+	var _linkedPuzzleIds;
+	var _relatedPuzzleIds;
+	var _actionsForRelatedPuzzles;
 
 	var init = function(options, scene){
-		var linkedPuzzleIds = _getLinkedPuzzleIdsForScene(scene);
-		var relatedPuzzleIds = _getRelatedPuzzleIdsForScene(scene);
-		if((linkedPuzzleIds.length === 0)&&(relatedPuzzleIds.length === 0)){
+		_puzzlesSolved = [];
+		_actionsForRelatedPuzzles = {};
+		_linkedPuzzleIds = _getLinkedPuzzleIdsForScene(scene);
+		_relatedPuzzleIds = _getRelatedPuzzleIdsForScene(scene);
+		if((_linkedPuzzleIds.length === 0)&&(_relatedPuzzleIds.length === 0)){
 			//No need to use Escapp.
 			return;
 		}
 
-		var defaultEscappSettings = _getDefaultEscappSettings(options, scene, linkedPuzzleIds, relatedPuzzleIds);
+		var defaultEscappSettings = _getDefaultEscappSettings(options, scene);
 		var escappSettings = SM.Utils.deepMerge((options.escapp || {}), defaultEscappSettings);
 
 		//Add callbacks
 		escappSettings.onNewErStateCallback = function(erState){
-			//TODO
-			//console.log("onNewErStateCallback");
-			//console.log(erState);
+			_updateSceneState(erState);
 		};
 		escappSettings.onErRestartCallback = function(erState){
-			//TODO
-			//console.log("onErRestartCallback");
-			//console.log(erState);
+			_puzzlesSolved = [];
+			_updateSceneState(erState);
 		};
 
-		escapp = new ESCAPP(escappSettings);
-		SM.Debugging.log("Escapp client initiated with settings:", escapp.getSettings());
+		_escapp = new ESCAPP(escappSettings);
+		SM.Debugging.log("Escapp client initiated with settings:", _escapp.getSettings());
 
 		//Authenticate user in Escapp
-		escapp.validate((success, erState) => {
+		_escapp.validate((success, erState) => {
 			try {
-				//console.log("Escapp validation", success, erState);
+				SM.Debugging.log("Escapp validation", success, erState);
 				if(success){
-					_restoreSceneState(erState);
+					_updateSceneState(erState);
 				}
 			} catch (e){
 				SM.Debugging.log("Error in escapp validate callback", e);
@@ -40,17 +43,16 @@ SceneMaker.Escapp = (function(SM,undefined){
 		});
 	};
 
-	var _getDefaultEscappSettings = function(options, scene, linkedPuzzleIds, relatedPuzzleIds){
+	var _getDefaultEscappSettings = function(options, scene){
 		var settings = {
 			imagesPath: SM.ImagesPath + "libs/escapp/",
-			resourceId: scene.id,
-			linkedPuzzleIds: linkedPuzzleIds,
-			relatedPuzzleIds: relatedPuzzleIds,
-			preview: false,
-			silent: false,
+			linkedPuzzleIds: _linkedPuzzleIds,
+			relatedPuzzleIds: _relatedPuzzleIds,
+			preview: SM.Status.isPreview(),
+			silent: true,
 			forceValidation: true,
 			notifications: "FALSE",
-			rtc: false,
+			rtc: true,
 			restoreState: "AUTO",
 			I18n: {
 				locale: SM.I18n.getLanguage(),
@@ -100,33 +102,89 @@ SceneMaker.Escapp = (function(SM,undefined){
 	};
 
 	var _getRelatedPuzzleIdsForScene = function(scene){
-		var relatedPuzzleIds = [];
+		var relatedPuzzleIds = _getRelatedPuzzleIdsForActions(scene.actions);
+		//Include _linkedPuzzleIds
+		relatedPuzzleIds = (relatedPuzzleIds.map(Number).filter(n => !isNaN(n))).concat(_linkedPuzzleIds);
 
-		//TODO
-
-		//Remove duplicates and convert to numbers
-		relatedPuzzleIds = [...new Set(relatedPuzzleIds
-		.map(Number)
-		.filter(n => !isNaN(n))
-		)].sort((a, b) => a - b);
+		//Remove duplicates
+		relatedPuzzleIds = [...new Set(relatedPuzzleIds)].sort((a, b) => a - b);
 
 		return relatedPuzzleIds;
 	};
 
-	var _restoreSceneState = function(erState){
-		//TODO
+	var _getRelatedPuzzleIdsForActions = function(actions){
+		var relatedPuzzleIds = [];
+		if (Array.isArray(actions)){
+			for (var actionIndex in actions) {
+				var action = actions[actionIndex];
+				if(typeof action.event !== "undefined"){
+					var event = action.event;
+					if((event.eventType === "puzzleSolved")&&(typeof event.eventParams !== "undefined")&&(typeof event.eventParams.puzzleId === "string")){
+						relatedPuzzleIds.push(event.eventParams.puzzleId);
+						if(typeof _actionsForRelatedPuzzles[event.eventParams.puzzleId] === "undefined"){
+							_actionsForRelatedPuzzles[event.eventParams.puzzleId] = [];
+						}
+						_actionsForRelatedPuzzles[event.eventParams.puzzleId].push(action);
+					}
+				}
+			};
+		}
+		return relatedPuzzleIds;
+	};
+
+	var _updateSceneState = function(erState){
+		if((typeof erState !== "undefined")&&(Array.isArray(erState.puzzlesSolved))){
+			var newPuzzles = erState.puzzlesSolved.filter(
+				puzzleId => !_puzzlesSolved.includes(puzzleId) && _relatedPuzzleIds.includes(puzzleId)
+			).sort((a, b) => a - b);
+
+			var actions = [];
+			newPuzzles.forEach(function(puzzleId) {
+				_puzzlesSolved.push(puzzleId);
+				var actionsForPuzzle = _actionsForRelatedPuzzles[puzzleId];
+				if(Array.isArray(actionsForPuzzle)){
+					actions = actions.concat(actionsForPuzzle);
+				}
+			});
+			_puzzlesSolved = _puzzlesSolved.sort((a, b) => a - b);
+			_updateSceneWithActions(actions);
+		}
+	};
+
+	var _updateSceneWithActions = function(actions){
+		//If there are several actions with type "goToScreen" or "openView", apply only the last one.
+		var lastIndexSlideMovement = actions.map(a => a.actionType).reduce((last, type, i) => 
+			(type === "goToScreen" || type === "openView") ? i : last, -1
+		);
+		actions = actions.filter((a, i) =>
+			!(a.actionType === "goToScreen" || a.actionType === "openView") || i === lastIndexSlideMovement
+		);
+
+		//If there are several actions with type "playSound", apply only the last one.
+		var lastIndexPlaySound = actions.map(a => a.actionType).reduce((last, type, i) => 
+			(type === "playSound") ? i : last, -1
+		);
+		actions = actions.filter((a, i) =>
+			!(a.actionType === "playSound") || i === lastIndexPlaySound
+		);
+		
+		SM.Actions.performActions(actions);
 	};
 
 	var submitPuzzleSolution = function(puzzleId, puzzleSolution){
-		if(typeof escapp !== "undefined"){
-			escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, erState) => {
-				SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, erState);
+		var puzzleId = Number(puzzleId);
+		if((!isNaN(puzzleId))&&(typeof _escapp !== "undefined")&&(_linkedPuzzleIds.includes(puzzleId))&&(!_puzzlesSolved.includes(puzzleId))){
+			_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, erState) => {
+				//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, erState);
+				if(success){
+					_updateSceneState(erState);
+				}
 			});
 		}
 	};
 
 	var getEscapp = function(){
-		return escapp;
+		return _escapp;
 	};
 
 	return {
@@ -135,4 +193,4 @@ SceneMaker.Escapp = (function(SM,undefined){
 		submitPuzzleSolution	: submitPuzzleSolution
 	};
 
-}) (SceneMaker);
+}) (SceneMaker, jQuery);

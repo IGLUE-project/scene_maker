@@ -89,7 +89,7 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		return true;
 	};
 
-	var onSaveSceneDetailsButtonClicked = function(event){
+	var onSaveSceneSettingsButtonClicked = function(event){
 		event.preventDefault();
 		if($(event.target).hasClass("buttonDisabledOnSettings")){
 			return;
@@ -131,7 +131,7 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		loadSceneSettings						: loadSceneSettings,
 		getSettings								: getSettings,
 		displaySettings							: displaySettings,
-		onSaveSceneDetailsButtonClicked			: onSaveSceneDetailsButtonClicked
+		onSaveSceneSettingsButtonClicked		: onSaveSceneSettingsButtonClicked
 	};
 
 }) (SceneMaker, jQuery);

@@ -51,6 +51,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		SM.Screen.init();
 		SM.View.init();
 		SM.Marker.init();
+		SM.Actions.init();
 		SM.Caption.init();
 		SM.Slides.init();
 		SM.I18n.translateUI();

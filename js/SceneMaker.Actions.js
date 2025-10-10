@@ -1,0 +1,199 @@
+SceneMaker.Actions = (function(SM,$,undefined){
+	var slideIdsAlias;
+
+	var init = function(){
+		slideIdsAlias = {};
+	};
+
+	var _getSlideIdAlias = function(slideId){
+		if(typeof slideIdsAlias[slideId] === "string"){
+			return slideIdsAlias[slideId];
+		}
+		return slideId;
+	};
+
+	var _registerSlideIdAlias = function(slideId,slideIdAlias){
+		if((typeof slideIdAlias !== "string")||(slideIdAlias === slideId)||($("#" + slideIdAlias).length === 0)){
+			return;
+		}
+		for (var _slideId in slideIdsAlias) {
+			if(slideId === slideIdsAlias[_slideId]){
+				if(_slideId === slideIdAlias){
+					delete slideIdsAlias[_slideId];
+					continue;
+				} else {
+					slideIdsAlias[_slideId] = slideIdAlias;
+				}
+			}
+		}
+		slideIdsAlias[slideId] = slideIdAlias;
+	};
+
+	var addActionToHotspot = function(hotspotDOM, action){
+		switch(action.actionType){
+			case "showText":
+				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+					_addTooltip($(hotspotDOM)[0],action.actionParams.text);
+				};
+				break;
+			default:
+				break;
+		};
+	};
+
+	var addActionToHotzone = function(hotzoneDOM, action){
+		switch(action.actionType){
+			case "showText":
+				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+					_addTooltip($(hotzoneDOM)[0],action.actionParams.text);
+				};
+				break;
+			default:
+				break;
+		};
+	};
+
+	var _addTooltip = function(elementDOM,text){
+		tippy(elementDOM, {
+			content: text,
+			trigger: 'click',
+			placement: 'top',
+			inlinePositioning: true,
+			arrow: true,
+			theme: '',
+			animation: 'scale', //fade, scale,
+			duration: 1000,
+			inertia: false,
+			interactive: false,
+			interactiveBorder: 2,
+			hideOnClick: true,
+			maxWidth: 'none',
+			offset: [2, 6],
+			delay: [0, 0],
+			popperOptions: {
+				modifiers: [
+					{ name: 'eventListeners', options: { scroll: false, resize: false } },
+				],
+			},
+			onCreate(instance) {
+				var toolTipId = instance.popper.id;
+				$(elementDOM).attr("markertooltipid",toolTipId);
+			}
+		});
+	};
+
+	var performActions = function(actions,eventTargetId){
+		if (Array.isArray(actions)) {
+			actions.forEach((action, index) => {
+				_performAction(action,eventTargetId);
+			});
+		}
+	};
+
+	var _performAction = function(action,eventTargetId){
+		switch(action.actionType){
+			case "goToScreen":
+				if((action.actionParams)&&(typeof action.actionParams.screen === "string")){
+					var screenId = _getSlideIdAlias(action.actionParams.screen);
+					var $screen = $("#" + screenId);
+					if ($screen.length > 0) {
+						if($screen[0] === SM.Screen.getCurrentScreen()){
+							var currentView = SM.View.getCurrentView();
+							if((typeof currentView !== "undefined")&&(currentView !== null)){
+								SM.View.closeView($(currentView).attr("id"));
+							}
+						}
+						SM.Screen.goToScreenWithNumber($screen.attr("slideNumber"));
+					}
+				}
+				break;
+			case "openView":
+				if((action.actionParams)&&(typeof action.actionParams.view === "string")){
+					var viewId = action.actionParams.view;
+					var $view = $("#" + viewId);
+					if ($view.length > 0) {
+						SM.View.openView(viewId);
+					}
+				}
+				break;	
+			case "openLink":
+				if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+					window.open(action.actionParams.url, '_blank', 'noopener,noreferrer');
+				}
+				break;
+			case "showText":
+				//Do nothing. Tooltips are handled automatically by Tippy.
+				// if((action.actionParams)&&(typeof action.actionParams.text === "string")){
+				// 	alert(action.actionParams.text);
+				// };
+				break;
+			case "changeBackground":
+				if((action.actionParams)&&(typeof action.actionParams.slide === "string")&&(typeof action.actionParams.url === "string")){
+					SM.Slides.changeSlideBackground($("#" + action.actionParams.slide),action.actionParams.url);
+				}
+				break;
+			case "changeScreen":
+				if((action.actionParams)&&(typeof action.actionParams.screen === "string")&&(typeof action.actionParams.screenReplacement === "string")){
+					var screenId = action.actionParams.screen;
+					var screenReplacementId = action.actionParams.screenReplacement;
+					_registerSlideIdAlias(screenId,screenReplacementId);
+					if($(SM.Screen.getCurrentScreen()).attr("id") === screenId){
+						_performAction({actionType: "goToScreen", actionParams:{screen: screenId}});
+					}
+				}
+				break;
+			case "showHotspot":
+			case "hideHotspot":
+				if((action.actionParams)&&(typeof action.actionParams.hotspotId === "string")){
+					var hotspotId = action.actionParams.hotspotId;
+					var $hotspot = $("#" + hotspotId);
+					if ($hotspot.length > 0) {
+						if(action.actionType === "showHotspot"){
+							$hotspot.show();
+						} else {
+							$hotspot.hide();
+						}
+					}
+				}
+				break;
+			case "enableHotzone":
+			case "disableHotzone":
+				if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
+					var $hotzoneDOM = SM.Marker.getHotzoneDOM(action.actionParams.hotzoneId);
+					if ($hotzoneDOM.length > 0) {
+						if(action.actionType === "enableHotzone"){
+							$hotzoneDOM.attr("hotzone_enabled","true");
+						} else {
+							$hotzoneDOM.attr("hotzone_enabled","false");
+						}
+					}
+				}
+				break;
+			case "playSound":
+				if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+					SM.Audio.HTML5.playAudio(action.actionParams.url);
+				}
+				break;
+			case "stopSound":
+				if((action.actionParams)&&(typeof action.actionParams.url === "string")){
+					SM.Audio.HTML5.stopAudio(action.actionParams.url);
+				}
+				break;
+			case "solvePuzzle":
+				if((action.actionParams)&&(typeof action.actionParams.puzzleId === "string")){
+					SM.Escapp.submitPuzzleSolution(action.actionParams.puzzleId,eventTargetId);
+				}
+				break;
+			default:
+				break;
+		}
+	};
+
+	return {
+		init 							: init,
+		addActionToHotspot				: addActionToHotspot,
+		addActionToHotzone				: addActionToHotzone,
+		performActions					: performActions
+	};
+
+}) (SceneMaker, jQuery);
