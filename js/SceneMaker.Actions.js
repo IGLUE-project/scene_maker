@@ -1,13 +1,45 @@
 SceneMaker.Actions = (function(SM,$,undefined){
-	var slideIdsAlias;
+	var _slideIdsAlias;
+	var _actionsSlideRevealedFirstTime;
+	var _actionsSlideRevealed;
+	
 
-	var init = function(){
-		slideIdsAlias = {};
+	var init = function(scene){
+		_slideIdsAlias = {};
+		_actionsSlideRevealedFirstTime = {};
+		_actionsSlideRevealed = {};
+
+		//Load actions
+		if(Array.isArray(scene.actions)){
+			var actionsWithEvents = scene.actions.filter(
+				item => ((typeof item.event !== "undefined") && (typeof item.event.eventType === "string"))
+			);
+			//Actions for the slideRevealedFirstTime event
+			actionsWithEvents.filter(
+				item => ((item.event.eventType === "slideRevealedFirstTime")&&(typeof item.event.eventParams !== "undefined")&&(typeof item.event.eventParams.slide === "string"))
+			).forEach(item => {
+				var slide = item.event.eventParams.slide;
+				if (!_actionsSlideRevealedFirstTime[slide]) {
+					_actionsSlideRevealedFirstTime[slide] = {performed: false, actions: []};
+				}
+				_actionsSlideRevealedFirstTime[slide].actions.push(item);
+			});
+			//Actions for the slideRevealed event
+			actionsWithEvents.filter(
+				item => ((item.event.eventType === "slideRevealed")&&(typeof item.event.eventParams !== "undefined")&&(typeof item.event.eventParams.slide === "string"))
+			).forEach(item => {
+				var slide = item.event.eventParams.slide;
+				if (!_actionsSlideRevealed[slide]) {
+					_actionsSlideRevealed[slide] = {actions: []};
+				}
+				_actionsSlideRevealed[slide].actions.push(item);
+			});
+		}
 	};
 
 	var _getSlideIdAlias = function(slideId){
-		if(typeof slideIdsAlias[slideId] === "string"){
-			return slideIdsAlias[slideId];
+		if(typeof _slideIdsAlias[slideId] === "string"){
+			return _slideIdsAlias[slideId];
 		}
 		return slideId;
 	};
@@ -16,17 +48,17 @@ SceneMaker.Actions = (function(SM,$,undefined){
 		if((typeof slideIdAlias !== "string")||(slideIdAlias === slideId)||($("#" + slideIdAlias).length === 0)){
 			return;
 		}
-		for (var _slideId in slideIdsAlias) {
-			if(slideId === slideIdsAlias[_slideId]){
+		for (var _slideId in _slideIdsAlias) {
+			if(slideId === _slideIdsAlias[_slideId]){
 				if(_slideId === slideIdAlias){
-					delete slideIdsAlias[_slideId];
+					delete _slideIdsAlias[_slideId];
 					continue;
 				} else {
-					slideIdsAlias[_slideId] = slideIdAlias;
+					_slideIdsAlias[_slideId] = slideIdAlias;
 				}
 			}
 		}
-		slideIdsAlias[slideId] = slideIdAlias;
+		_slideIdsAlias[slideId] = slideIdAlias;
 	};
 
 	var addActionToHotspot = function(hotspotDOM, action){
@@ -189,11 +221,24 @@ SceneMaker.Actions = (function(SM,$,undefined){
 		}
 	};
 
+	var checkActionsForSlideEnterEvent = function(slideId){
+		if(typeof _actionsSlideRevealedFirstTime[slideId] !== "undefined"){
+			if(_actionsSlideRevealedFirstTime[slideId].performed !== true){
+				_actionsSlideRevealedFirstTime[slideId].performed = true;
+				performActions(_actionsSlideRevealedFirstTime[slideId].actions);
+			}
+		}
+		if(typeof _actionsSlideRevealed[slideId] !== "undefined"){
+			performActions(_actionsSlideRevealed[slideId].actions);
+		}
+	};
+
 	return {
 		init 							: init,
 		addActionToHotspot				: addActionToHotspot,
 		addActionToHotzone				: addActionToHotzone,
-		performActions					: performActions
+		performActions					: performActions,
+		checkActionsForSlideEnterEvent	: checkActionsForSlideEnterEvent
 	};
 
 }) (SceneMaker, jQuery);

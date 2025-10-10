@@ -51,7 +51,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		SM.Screen.init();
 		SM.View.init();
 		SM.Marker.init();
-		SM.Actions.init();
+		SM.Actions.init(scene);
 		SM.Caption.init();
 		SM.Slides.init();
 		SM.I18n.translateUI();
@@ -91,54 +91,47 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 
 	var onSlideEnterViewer = function(e){
 		var slide = e.target;
-		var cSlideNumber = SM.Screen.getCurrentScreenNumber();
 		var isView = SM.Slides.isView(slide);
-		var isScreen = ((!isView)&&(SM.Slides.isScreen(slide)));
+		var cSlide = SM.Slides.getCurrentSlide();
 
 		//Prevent parent to trigger onSlideEnterViewer
 		//Use to prevent screens to be called when enter in one of their views
 		e.stopPropagation();
 
-		var timeToLoadObjects = 500;
-
-		setTimeout(function(){
-			if(!isView){
-				if(cSlideNumber!==SM.Screen.getCurrentScreenNumber()){
-					//Prevent objects to load when the slide isn't focused
-					return;
+		//Load objects
+		if(isView){
+			setTimeout(function(){
+				var $slide = $(slide);
+				if($slide.hasClass(SM.Constant.OBJECT)){
+					//Prevent objects to load when the view isn't focused
+					if(cSlide === SM.Slides.getCurrentSlide()){
+						SM.ObjectPlayer.loadObject($slide);
+					}
 				}
-			}
-			if(!isScreen){
-				if($(slide).hasClass(SM.Constant.OBJECT)){
-					SM.ObjectPlayer.loadObject($(slide));
-				}
-			}
-		},timeToLoadObjects);
-
-		if(!isScreen){
+			}, 400);
 			SM.Video.HTML5.playMultimedia(slide);
-		}
-
-		if(isScreen){
+		} else {
+			//isScreen
 			SM.Screen.onEnterScreen(slide);
 		}
+
+		//Check actions
+		SM.Actions.checkActionsForSlideEnterEvent(slide.id);
 	};
 
 	var onSlideLeaveViewer = function(e){
 		var slide = e.target;
 		var isView = SM.Slides.isView(slide);
-		var isScreen = ((!isView)&&(SM.Slides.isScreen(slide)));
 
 		e.stopPropagation();
 
-		if(!isScreen){
+		if(isView){
 			if($(slide).hasClass(SM.Constant.OBJECT)){
 				SM.ObjectPlayer.unloadObject($(slide));
-			} else if($(slide).hasClass(SM.Constant.SNAPSHOT)){
-				SM.SnapshotPlayer.unloadSnapshot($(slide));
 			}
 			SM.Video.HTML5.stopMultimedia(slide);
 		} else {
+			//isScreen
 			SM.Screen.onLeaveScreen(slide);
 		}
 	};

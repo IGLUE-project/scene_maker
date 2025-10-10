@@ -283,7 +283,7 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			$selectPuzzleWrapper.hide();
 		}
 
-		if(option === "slideRevealed"){
+		if((option === "slideRevealedFirstTime")||(option === "slideRevealed")){
 			$selectSlide.prop("selectedIndex", 0);
 			$selectSlideWrapper.show();
 		} else {

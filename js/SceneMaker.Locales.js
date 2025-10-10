@@ -17,7 +17,8 @@ SceneMaker.Locales = {
 	"en": {
 		"i.ActionEvent"						: "Triggering event:",
 		"i.ActionEventPuzzleSolved"			: "Puzzle solved",
-		"i.ActionEventSlideRevealed"		: "Screen or view accessed for the first time",
+		"i.ActionEventSlideRevealed"		: "Screen or view accessed",
+		"i.ActionEventSlideRevealedFirstTime"	: "Screen or view accessed for the first time",
 		"i.ActionParamsPuzzle"              : "Puzzle:",
 		"i.ActionParamsPuzzleSolution"      : "Puzzle solution:",
 		"i.ActionParamsScreen"              : "Screen:",
@@ -136,7 +137,8 @@ SceneMaker.Locales = {
 	"es": {
 		"i.ActionEvent"						: "Evento desencadenante:",
 		"i.ActionEventPuzzleSolved"			: "Reto resuelto",
-		"i.ActionEventSlideRevealed"		: "Pantalla o vista accedida por primera vez",
+		"i.ActionEventSlideRevealed"		: "Pantalla o vista accedida",
+		"i.ActionEventSlideRevealedFirstTime"	: "Pantalla o vista accedida por primera vez",
 		"i.ActionParamsPuzzle"              : "Reto:",
 		"i.ActionParamsPuzzleSolution"      : "Solución del reto:",
 		"i.ActionParamsScreen"              : "Pantalla:",

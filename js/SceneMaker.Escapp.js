@@ -14,6 +14,9 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 			//No need to use Escapp.
 			return;
 		}
+		if(SM.Status.isPreview() === true){
+			return;
+		}
 
 		var defaultEscappSettings = _getDefaultEscappSettings(options, scene);
 		var escappSettings = SM.Utils.deepMerge((options.escapp || {}), defaultEscappSettings);
@@ -137,7 +140,6 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 			var newPuzzles = erState.puzzlesSolved.filter(
 				puzzleId => !_puzzlesSolved.includes(puzzleId) && _relatedPuzzleIds.includes(puzzleId)
 			).sort((a, b) => a - b);
-
 			var actions = [];
 			newPuzzles.forEach(function(puzzleId) {
 				_puzzlesSolved.push(puzzleId);
@@ -173,13 +175,22 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 
 	var submitPuzzleSolution = function(puzzleId, puzzleSolution){
 		var puzzleId = Number(puzzleId);
-		if((!isNaN(puzzleId))&&(typeof _escapp !== "undefined")&&(_linkedPuzzleIds.includes(puzzleId))&&(!_puzzlesSolved.includes(puzzleId))){
-			_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, res) => {
-				//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, res);
-				if(success){
-					_updateSceneState(res.erState);
+		if((!isNaN(puzzleId))&&(_linkedPuzzleIds.includes(puzzleId))&&(!_puzzlesSolved.includes(puzzleId))){
+			if(SM.Status.isPreview() !== true){
+				if(typeof _escapp !== "undefined"){
+					_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, res) => {
+						//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, res);
+						if(success){
+							_updateSceneState(res.erState);
+						}
+					});
 				}
-			});
+			} else {
+				//Preview
+				var erState = {puzzlesSolved: JSON.parse(JSON.stringify(_puzzlesSolved))};
+				erState.puzzlesSolved.push(puzzleId);
+				_updateSceneState(erState);
+			}
 		}
 	};
 
