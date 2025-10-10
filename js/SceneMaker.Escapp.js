@@ -174,10 +174,10 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 	var submitPuzzleSolution = function(puzzleId, puzzleSolution){
 		var puzzleId = Number(puzzleId);
 		if((!isNaN(puzzleId))&&(typeof _escapp !== "undefined")&&(_linkedPuzzleIds.includes(puzzleId))&&(!_puzzlesSolved.includes(puzzleId))){
-			_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, erState) => {
-				//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, erState);
+			_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, res) => {
+				//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, res);
 				if(success){
-					_updateSceneState(erState);
+					_updateSceneState(res.erState);
 				}
 			});
 		}
