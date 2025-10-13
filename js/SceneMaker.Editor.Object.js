@@ -346,7 +346,7 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		//Load Settings
 		var oSettings = {};
 		var unloadObject = (isReusablePuzzleInstance===false);
-		var addEscappCredentialsToObject = isReusablePuzzleInstance;
+		var addPreviewParamToObject = isReusablePuzzleInstance;
 		
 		try {
 			oSettings = JSON.parse($area.attr("elSettings"));
@@ -355,19 +355,19 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		if(typeof oSettings.unloadObject !== "undefined"){
 			unloadObject = oSettings.unloadObject;
 		}
-		if(typeof oSettings.addEscappCredentialsToObject !== "undefined"){
-			addEscappCredentialsToObject = oSettings.addEscappCredentialsToObject;
+		if(typeof oSettings.addPreviewParamToObject !== "undefined"){
+			addPreviewParamToObject = oSettings.addPreviewParamToObject;
 		}
 
 		//Fill and reset form
 		var $unloadObjectCheckbox = $oSF.find("input[type='checkbox'][name='unloadObject']");
 		$unloadObjectCheckbox.prop('checked', unloadObject);
-		var $addEscappCredentialsToObjectCheckbox = $oSF.find("input[type='checkbox'][name='addEscappCredentialsToObject']");
-		$addEscappCredentialsToObjectCheckbox.prop('checked', addEscappCredentialsToObject);
-		$addEscappCredentialsToObjectCheckbox.attr("defaultvalue",isReusablePuzzleInstance);
+		var $addPreviewParamToObjectCheckbox = $oSF.find("input[type='checkbox'][name='addPreviewParamToObject']");
+		$addPreviewParamToObjectCheckbox.prop('checked', addPreviewParamToObject);
+		$addPreviewParamToObjectCheckbox.attr("defaultvalue",isReusablePuzzleInstance);
 
 		SM.Editor.Utils.enableElementSettingsField($unloadObjectCheckbox,true);
-		SM.Editor.Utils.enableElementSettingsField($addEscappCredentialsToObjectCheckbox,(isReusablePuzzleInstance===false));
+		SM.Editor.Utils.enableElementSettingsField($addPreviewParamToObjectCheckbox,(isReusablePuzzleInstance===false));
 	};
 
 	var onObjectSettingsDone = function(){
@@ -386,7 +386,7 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		
 		//Get new settings
 		oSettings.unloadObject = $oSF.find("input[type='checkbox'][name='unloadObject']").is(":checked");
-		oSettings.addEscappCredentialsToObject = $oSF.find("input[type='checkbox'][name='addEscappCredentialsToObject']").is(":checked");
+		oSettings.addPreviewParamToObject = $oSF.find("input[type='checkbox'][name='addPreviewParamToObject']").is(":checked");
 
 		//Save Settings
 		var oSSerialized = JSON.stringify(oSettings);
@@ -395,10 +395,10 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		//Apply settings
 		var objectURL = $object.attr("src");
 		//var objectURL = oSettings.url;
-		if(oSettings.addEscappCredentialsToObject){
-			objectURL = SM.Utils.addEscappCrendentialsToUrl(objectURL);
+		if(oSettings.addPreviewParamToObject){
+			objectURL = SM.Utils.addParamToUrl(objectURL,"escapp_preview",(""+SM.Status.isPreview()));
 		} else {
-			objectURL = SM.Utils.removeEscappCrendentialsFromUrl(objectURL);
+			objectURL = SM.Utils.removeParamFromUrl(objectURL,"escapp_preview");
 		}
 
 		$object.attr("src",objectURL);

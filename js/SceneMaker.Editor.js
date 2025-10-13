@@ -489,7 +489,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 				var object = $(wrapper).children()[0];
 				var $myObject = $(object).clone();
 				$myObject.removeAttr("style");
-				var myObjectSrc = SM.Utils.removeEscappCrendentialsFromUrl($myObject.attr("src"));
+				var myObjectSrc = SM.Utils.removeParamFromUrl($myObject.attr("src"),"escapp_preview");
 				$myObject.attr("src",myObjectSrc);
 				element.body   = SM.Utils.getOuterHTML($myObject);
 				element.style  = SM.Editor.Utils.getStylesForFitContent();

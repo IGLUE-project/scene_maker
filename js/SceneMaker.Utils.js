@@ -773,35 +773,11 @@ SceneMaker.Utils = (function(SM,undefined){
 				var endpointDomain = new URL(options.escapp.endpoint).hostname;
 				var urlDomain = new URL(url).hostname;
 				if (endpointDomain === urlDomain) {
-					return addEscappCrendentialsToUrl(url);
+					//Add preview param
+					return SM.Utils.addParamToUrl(url,"escapp_preview",(""+SM.Status.isPreview()));
 				}
 			} catch(e){}
 		}
-		return url;
-	};
-
-	var addEscappCrendentialsToUrl = function(url){
-		if(typeof url !== "string"){
-			return url;
-		}
-		var options = SM.Utils.getOptions();
-		if((typeof options !== "undefined")&&(typeof options.user !== "undefined")&&(typeof options.user.email === "string")&&(typeof options.user.token === "string")){
-			var url = addParamToUrl(url,"escapp_email",options.user.email);
-			url = addParamToUrl(url,"escapp_token",options.user.token);
-			if((typeof options.escapp !== "undefined")&&(typeof options.escapp.endpoint === "string")){
-				url = addParamToUrl(url,"escapp_endpoint",options.escapp.endpoint);
-			}
-		}
-		return url;
-	};
-
-	var removeEscappCrendentialsFromUrl = function(url){
-		if(typeof url !== "string"){
-			return url;
-		}
-		url = removeParamFromUrl(url,"escapp_email");
-		url = removeParamFromUrl(url,"escapp_token");
-		url = removeParamFromUrl(url,"escapp_endpoint");
 		return url;
 	};
 
@@ -822,8 +798,6 @@ SceneMaker.Utils = (function(SM,undefined){
 		addParamToUrl					: addParamToUrl,
 		removeParamFromUrl				: removeParamFromUrl,
 		getParamsFromUrl				: getParamsFromUrl,
-		addEscappCrendentialsToUrl		: addEscappCrendentialsToUrl,
-		removeEscappCrendentialsFromUrl	: removeEscappCrendentialsFromUrl,
 		removeHashFromUrlString			: removeHashFromUrlString,
 		getScreenNumberFromHash			: getScreenNumberFromHash,
 		showDialog 						: showDialog,
