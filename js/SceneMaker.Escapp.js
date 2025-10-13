@@ -52,7 +52,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 			linkedPuzzleIds: _linkedPuzzleIds,
 			relatedPuzzleIds: _relatedPuzzleIds,
 			preview: SM.Status.isPreview(),
-			silent: true,
+			silent: (SM.Debugging.isDevelopping()!==true),
 			forceValidation: true,
 			notifications: "FALSE",
 			rtc: true,

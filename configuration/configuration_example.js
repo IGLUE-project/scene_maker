@@ -39,10 +39,16 @@ window.SCENE_MAKER_OPTIONS = (function(){
 	//Specify number of puzzles (Only used by the editor)
 	options["nPuzzles"] = 5;
 
-	//Escapp settings
+	//Escapp client settings
 	options["escapp"] = {
 		endpoint:"https://escapp.es/api/escapeRooms/id",
 	};
+
+	//User credentials
+	// options["user"] = {
+	// 	email: "user@domain.com", 
+	// 	token: "userToken",
+	// }
 
 	if((typeof window !== "undefined")&&(window.console) && (window.console.log)){
 		console.log("Scene Maker options", options);

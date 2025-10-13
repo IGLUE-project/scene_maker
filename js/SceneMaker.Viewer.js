@@ -104,7 +104,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 				var $slide = $(slide);
 				if($slide.hasClass(SM.Constant.OBJECT)){
 					//Prevent objects to load when the view isn't focused
-					if(cSlide === SM.Slides.getCurrentSlide()){
+					if($(cSlide).attr("id") === $(SM.Slides.getCurrentSlide()).attr("id")){
 						SM.ObjectPlayer.loadObject($slide);
 					}
 				}
