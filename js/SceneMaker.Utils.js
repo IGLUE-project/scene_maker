@@ -25,7 +25,7 @@ SceneMaker.Utils = (function(SM,undefined){
 			return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
 		};
 
-		// if (!Array.prototype.filter){
+		if (!Array.prototype.filter){
 			Array.prototype.filter = function(fun /*, thisArg */){
 				"use strict";
 
@@ -55,7 +55,7 @@ SceneMaker.Utils = (function(SM,undefined){
 
 				return res;
 			};
-		// };
+		};
 
 		//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 		if(!Array.prototype.map){
@@ -237,20 +237,6 @@ SceneMaker.Utils = (function(SM,undefined){
 			return null;
 		}
 		return scene;
-	};
-
-	var showPNotValidDialog = function(){
-		var options = {};
-		options.width = 650;
-		options.height = 220;
-		options.text = SM.I18n.getTrans("i.WrongResource");
-		var button1 = {};
-		button1.text = SM.I18n.getTrans("i.Ok");
-		button1.callback = function(){
-			$.fancybox.close();
-		}
-		options.buttons = [button1];
-		SM.Utils.showDialog(options);
 	};
 
 	var getOuterHTML = function(tag){
@@ -496,6 +482,20 @@ SceneMaker.Utils = (function(SM,undefined){
 		return filterStyle;
 	};
 
+	var showPNotValidDialog = function(){
+		var options = {};
+		options.width = 650;
+		options.height = 220;
+		options.text = SM.I18n.getTrans("i.WrongResource");
+		var button1 = {};
+		button1.text = SM.I18n.getTrans("i.Ok");
+		button1.callback = function(){
+			$.fancybox.close();
+		}
+		options.buttons = [button1];
+		SM.Utils.showDialog(options);
+	};
+
 	var showDialog = function(options){
 		_cleanDialog();
 
@@ -673,10 +673,6 @@ SceneMaker.Utils = (function(SM,undefined){
 		$(notificationWrapper).append(notificationTemplate);
 	};
 
-	/////////////
-	// VERSION MANAGEMENT
-	////////////
-
 	var isObseleteVersion = function(version){
 		return _getVersionValue(SM.VERSION) > _getVersionValue(version);
 	};
@@ -695,10 +691,7 @@ SceneMaker.Utils = (function(SM,undefined){
 		return vValue;
 	};
 
-
-	/* Temp shown */
 	var tempShownCounts = {};
-
 	var addTempShown = function(els){
 		$(els).each(function(index,el){
 			var elId = $(el).attr("id");
@@ -760,40 +753,87 @@ SceneMaker.Utils = (function(SM,undefined){
 		return url;
 	};
 
-	var checkUrlProtocolInStringTag = function(stringTag){
-		var htmlElement = $(stringTag);
-		if(typeof $(htmlElement).attr("src") != "undefined"){
-			$(htmlElement).attr("src",SM.Utils.checkUrlProtocol($(htmlElement).attr("src")));
+	var checkWebUrl = function(url){
+		if(typeof url !== "string"){
+			return url;
 		}
-		return SM.Utils.getOuterHTML(htmlElement);
+		url = checkUrlProtocol(url);
+		return url;
+	};
+
+	var checkReusablePuzzleInstanceUrl = function(url){
+		if(typeof url !== "string"){
+			return url;
+		}
+		url = checkUrlProtocol(url);
+
+		var options = SM.Utils.getOptions();
+		if((typeof options !== "undefined")&&(typeof options.escapp !== "undefined")&&(typeof options.escapp.endpoint === "string")){
+			try {
+				var endpointDomain = new URL(options.escapp.endpoint).hostname;
+				var urlDomain = new URL(url).hostname;
+				if (endpointDomain === urlDomain) {
+					return addEscappCrendentialsToUrl(url);
+				}
+			} catch(e){}
+		}
+		return url;
+	};
+
+	var addEscappCrendentialsToUrl = function(url){
+		if(typeof url !== "string"){
+			return url;
+		}
+		var options = SM.Utils.getOptions();
+		if((typeof options !== "undefined")&&(typeof options.user !== "undefined")&&(typeof options.user.email === "string")&&(typeof options.user.token === "string")){
+			var url = addParamToUrl(url,"escapp_email",options.user.email);
+			url = addParamToUrl(url,"escapp_token",options.user.token);
+			if((typeof options.escapp !== "undefined")&&(typeof options.escapp.endpoint === "string")){
+				url = addParamToUrl(url,"escapp_endpoint",options.escapp.endpoint);
+			}
+		}
+		return url;
+	};
+
+	var removeEscappCrendentialsFromUrl = function(url){
+		if(typeof url !== "string"){
+			return url;
+		}
+		url = removeParamFromUrl(url,"escapp_email");
+		url = removeParamFromUrl(url,"escapp_token");
+		url = removeParamFromUrl(url,"escapp_endpoint");
+		return url;
 	};
 
 	return {
-		init 						: init,
-		getOptions 					: getOptions,
-		getId						: getId,
-		registerId					: registerId,
-		deepMerge					: deepMerge,
-		fixScene					: fixScene,
-		getOuterHTML 				: getOuterHTML,
-		getSrcFromCSS				: getSrcFromCSS,
-		addFontSizeToStyle 			: addFontSizeToStyle,
-		getFontSizeFromStyle 		: getFontSizeFromStyle,
-		getWidthFromStyle   		: getWidthFromStyle,
-		getHeightFromStyle  		: getHeightFromStyle,
-		getPixelDimensionsFromStyle : getPixelDimensionsFromStyle,
-		addParamToUrl				: addParamToUrl,
-		removeParamFromUrl			: removeParamFromUrl,
-		getParamsFromUrl			: getParamsFromUrl,
-		removeHashFromUrlString		: removeHashFromUrlString,
-		getScreenNumberFromHash		: getScreenNumberFromHash,
-		showDialog 					: showDialog,
-		showPNotValidDialog			: showPNotValidDialog,
-		isObseleteVersion			: isObseleteVersion,
-		addTempShown				: addTempShown,
-		removeTempShown				: removeTempShown,
-		checkUrlProtocol			: checkUrlProtocol,
-		checkUrlProtocolInStringTag : checkUrlProtocolInStringTag
+		init 							: init,
+		getOptions 						: getOptions,
+		getId							: getId,
+		registerId						: registerId,
+		deepMerge						: deepMerge,
+		fixScene						: fixScene,
+		getOuterHTML 					: getOuterHTML,
+		getSrcFromCSS					: getSrcFromCSS,
+		addFontSizeToStyle 				: addFontSizeToStyle,
+		getFontSizeFromStyle 			: getFontSizeFromStyle,
+		getWidthFromStyle   			: getWidthFromStyle,
+		getHeightFromStyle  			: getHeightFromStyle,
+		getPixelDimensionsFromStyle 	: getPixelDimensionsFromStyle,
+		addParamToUrl					: addParamToUrl,
+		removeParamFromUrl				: removeParamFromUrl,
+		getParamsFromUrl				: getParamsFromUrl,
+		addEscappCrendentialsToUrl		: addEscappCrendentialsToUrl,
+		removeEscappCrendentialsFromUrl	: removeEscappCrendentialsFromUrl,
+		removeHashFromUrlString			: removeHashFromUrlString,
+		getScreenNumberFromHash			: getScreenNumberFromHash,
+		showDialog 						: showDialog,
+		showPNotValidDialog				: showPNotValidDialog,
+		isObseleteVersion				: isObseleteVersion,
+		addTempShown					: addTempShown,
+		removeTempShown					: removeTempShown,
+		checkUrlProtocol				: checkUrlProtocol,
+		checkWebUrl						: checkWebUrl,
+		checkReusablePuzzleInstanceUrl	: checkReusablePuzzleInstanceUrl
 	};
 
 }) (SceneMaker);

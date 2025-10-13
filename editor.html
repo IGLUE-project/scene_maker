@@ -691,8 +691,12 @@
 			<p class="elsettings_fancybox_title" i18n-key="i.Properties">Properties</p>
 			<input type="hidden" name="elId">
 			<div class="new_elsettings_field">
-				<span i18n-key="i.OSettingsUnload">Unload the object when the slide disappears</span>
 				<input type="checkbox" defaultvalue="true" name="unloadObject">
+				<span i18n-key="i.OSettingsUnload">Unload the web page when hiding the view.</span>
+			</div>
+			<div class="new_elsettings_field">
+				<input type="checkbox" defaultvalue="false" name="addEscappCredentialsToObject">
+				<span i18n-key="i.OSettingsEscapp">Include Escapp credentials in the URL.</span>
 			</div>
 			<div class="elSettingsButtonsWrapper">
 				<button id="objectSettingsDone" type="button" class="button" i18n-key="i.Done">Done</button>

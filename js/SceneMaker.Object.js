@@ -5,42 +5,35 @@ SceneMaker.Object = (function(SM,$,undefined){
 		SM.Object.GoogleDOC.init();
 	};
 
-	///////////////////////////////////////
-	/// OBJECT INFO
-	///////////////////////////////////////
-	
 	/*
 	 * Wrapper can be: "embed","object, "iframe", "video" or null if the object is a source url without wrapper.
-	 * Type is the source type and can be: "swf" , "youtube" , etc.
+	 * Type is the source type.
 	 */
 	function objectInfo(wrapper,source,sourceType){
 		this.wrapper=wrapper;
 		this.source = source;
 		this.type=sourceType;
-	}; 
+	};
 	
-	/*
-	 * Return object type
-	 */
 	var getObjectInfo = function(object){
 		var wrapper = null;
 		
 		//Determine wrapper
-		if(typeof object == "string"){
+		if(typeof object === "string"){
 			var videoPattern = new RegExp("^<video","g");
-			if(videoPattern.exec(object) != null){
+			if(videoPattern.exec(object) !== null){
 				wrapper = "VIDEO";
 			}
 
 			var audioPattern = new RegExp("^<audio","g");
-			if(audioPattern.exec(object) != null){
+			if(audioPattern.exec(object) !== null){
 				wrapper = "AUDIO";
 			}
 		}
 
-		if((wrapper===null)||(typeof wrapper == "undefined")){
+		if((wrapper===null)||(typeof wrapper === "undefined")){
 			var element = $(object)[0];
-			if(typeof element != 'undefined'){
+			if(typeof element !== 'undefined'){
 				wrapper = element.tagName;
 			}
 		}
@@ -57,7 +50,6 @@ SceneMaker.Object = (function(SM,$,undefined){
 				type = SM.Constant.MEDIA.HTML5_AUDIO;
 				break;
 			case "IFRAME":
-				//var objectTypeAttr = $(object).attr("objecttype");
 			default:
 				type = _getTypeFromSource(source);
 		};
@@ -105,71 +97,66 @@ SceneMaker.Object = (function(SM,$,undefined){
 		return source;
 	};
 
+	//Patterns
+	var http_urls_pattern=/(http(s)?:\/\/)([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
+	var www_urls_pattern = /(www[.])([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
+	var youtube_video_pattern=/(http(s)?:\/\/)?(((youtu.be\/)([aA-zZ0-9-]+))|((www.youtube.com\/((watch\?v=)|(embed\/)|(v\/)))([aA-z0-9-Z&=.])+))/g
+	var reusable_puzzle_instance_pattern = /^https?:\/\/[^\/]+\/escapeRooms\/[A-Za-z0-9]+\/reusablePuzzleInstances\/[A-Za-z0-9]+\/render$/
 
-	/**
-	 * Patterns
-	 */
+	var html5VideoFormats = ["mp4","webm","ogg"];
+	var imageFormats = ["jpg","jpeg","png","gif","bmp","svg"];
+	var audioFormats = ["mp3", "wav","ogg"];
+
 	var _getTypeFromSource = function(source){
-		if((typeof source == "object")&&(source !== null)&&(typeof source.length == "number")&&(source.length > 0)){
+		if((typeof source === "object")&&(source !== null)&&(typeof source.length === "number")&&(source.length > 0)){
 			source = source[0];
 		}
-
-		if(typeof source != "string"){
+		if(typeof source !== "string"){
 			return null;
 		}
 
+		if(source.match(reusable_puzzle_instance_pattern)!==null){
+			return SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE;
+		}
 
-		var http_urls_pattern=/(http(s)?:\/\/)([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
-		var www_urls_pattern = /(www[.])([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
-		var youtube_video_pattern=/(http(s)?:\/\/)?(((youtu.be\/)([aA-zZ0-9-]+))|((www.youtube.com\/((watch\?v=)|(embed\/)|(v\/)))([aA-z0-9-Z&=.])+))/g
-		
-		var html5VideoFormats = ["mp4","webm","ogg"];
-		var imageFormats = ["jpg","jpeg","png","gif","bmp","svg"];
-		var audioFormats = ["mp3", "wav","ogg"];
-
-
-		if(source.match(youtube_video_pattern)!=null){
+		if(source.match(youtube_video_pattern)!==null){
 			return SM.Constant.MEDIA.YOUTUBE_VIDEO;
 		}
-			
+
 		//Purge options
 		source = source.split('?')[0];
 
 		var extension = getExtensionFromSrc(source);
 
-		if(imageFormats.indexOf(extension)!="-1"){
+		if(imageFormats.indexOf(extension)!==-1){
 			return SM.Constant.MEDIA.IMAGE;
 		}
 
-		if(extension=="pdf"){
+		if(extension==="pdf"){
 			return SM.Constant.MEDIA.PDF;
 		}
 
-		if(html5VideoFormats.indexOf(extension)!="-1"){
+		if(html5VideoFormats.indexOf(extension)!==-1){
 			return SM.Constant.MEDIA.HTML5_VIDEO;
 		}
 
-		if(audioFormats.indexOf(extension)!="-1"){
+		if(audioFormats.indexOf(extension)!==-1){
 			return SM.Constant.MEDIA.HTML5_AUDIO;
 		}
 
-		if(extension=="json"){
+		if(extension==="json"){
 			return SM.Constant.MEDIA.JSON;
 		}
 
-		if((extension=="doc")||(extension=="docx")){
+		if((extension==="doc")||(extension==="docx")){
 			return SM.Constant.MEDIA.DOC;
 		}
 
-		if((extension=="ppt")||(extension=="pptx")){
+		if((extension==="ppt")||(extension==="pptx")||(extension==="odp")){
 			return SM.Constant.MEDIA.PPT;
 		}
 
-		if(extension=="odp"){
-			return SM.Constant.MEDIA.PPT;
-		}
-
-		if((source.match(http_urls_pattern)!=null)||(source.match(www_urls_pattern)!=null)){
+		if((source.match(http_urls_pattern)!==null)||(source.match(www_urls_pattern)!==null)){
 			return SM.Constant.MEDIA.WEB;
 		}
 

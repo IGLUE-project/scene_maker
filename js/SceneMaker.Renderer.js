@@ -116,19 +116,26 @@ SceneMaker.Renderer = (function(SM,$,undefined){
 		var loadingObjectClass = (objectSettings.unloadObject===false) ? "unloadableObject" : "";
 		
 		var objectInfo = SM.Object.getObjectInfo(element.body);
-
 		switch(objectInfo.type){
 			case SM.Constant.MEDIA.YOUTUBE_VIDEO:
 				return SM.Video.Youtube.renderVideoFromJSON(element,{extraClasses: "objectelement youtubeelement " + loadingObjectClass});
-				break;
 			case SM.Constant.MEDIA.PDF:
 				return SM.Object.PDF.renderPDFFromJSON(element,{extraClasses: loadingObjectClass, source: objectInfo.source});
-				break;
 			default:
+				var $body = $(element['body']);
+				var bodySrc = $body.attr("src");
+				if(typeof bodySrc !== "undefined"){
+					bodySrc = SM.Utils.checkWebUrl(bodySrc);
+					if(objectSettings.addEscappCredentialsToObject === true){
+						bodySrc = SM.Utils.addEscappCrendentialsToUrl(bodySrc);
+					}
+					$body.attr("src",bodySrc);
+				}
+				var body = SM.Utils.getOuterHTML($body);
+
 				var style = (element['style'])? element['style'] : "";
-				var body = SM.Utils.checkUrlProtocolInStringTag(element['body']);
+
 				return "<div id='"+ element['id'] +"' class='objectelement " + loadingObjectClass + "' objectStyle='" + style + "' objectWrapper='" + body + "'>" + "" + "</div>";
-				break;
 		}
 	};
 

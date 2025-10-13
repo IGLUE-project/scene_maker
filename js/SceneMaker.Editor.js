@@ -426,12 +426,12 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 		$(slideDOM).find('div.view_content_zone').each(function(i,div){
 			var element = {};
-			element.id		=	$(div).attr('id');
-			element.type	=	$(div).attr('type');
+			element.id	= $(div).attr('id');
+			element.type = $(div).attr('type');
 
 			//Save element settings
 			var elSettings = $(div).attr("elSettings");
-			if(typeof elSettings == "string"){
+			if(typeof elSettings === "string"){
 				try {
 					element.settings = JSON.parse(elSettings);
 				} catch(e){}
@@ -487,11 +487,13 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			} else if(element.type===SM.Constant.OBJECT){
 				var wrapper = $(div).find(".object_wrapper")[0];
 				var object = $(wrapper).children()[0];
-				var myObject = $(object).clone();
-				$(myObject).removeAttr("style");
-				element.body   = SM.Utils.getOuterHTML(myObject);
+				var $myObject = $(object).clone();
+				$myObject.removeAttr("style");
+				var myObjectSrc = SM.Utils.removeEscappCrendentialsFromUrl($myObject.attr("src"));
+				$myObject.attr("src",myObjectSrc);
+				element.body   = SM.Utils.getOuterHTML($myObject);
 				element.style  = SM.Editor.Utils.getStylesForFitContent();
-				element.subtype = SM.Object.getObjectInfo(myObject).type;
+				element.subtype = SM.Object.getObjectInfo($myObject).type;
 			} else if(typeof element.type == "undefined"){
 				//Empty element
 			}

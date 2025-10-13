@@ -1,19 +1,15 @@
 SceneMaker.Editor.Object = (function(SM,$,undefined){
-		
 	var contentToAdd = null;
 	var urlDivId = "tab_object_from_url_content";
 	var urlInputId = "object_web_input";
 
 	var _hiddenLinkToInitObjectSettings;
 		
-
 	var init = function(){
 		SM.Editor.Object.Web.init();
 		SM.Editor.Object.GoogleDOC.init();
 		SM.Editor.Object.PDF.init();
 
-		var urlInput = $("#"+urlDivId).find("input");
-		
 		//Load from URL (embed)
 		$("#" + urlDivId + " .previewButton").click(function(event){
 			if(SM.Validator.validateObject($("#" + urlInputId).val())){
@@ -121,8 +117,12 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		var objectInfo = SM.Object.getObjectInfo(object);
 		var objectType = objectInfo.type;
 		
-		if((options)&&(typeof options.forceType == "string")){
+		if((options)&&(typeof options.forceType === "string")){
 			objectType = options.forceType;
+		}
+
+		if(objectType === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE){
+			return SM.Editor.Object.Web.generatePreviewWrapperForReusablePuzzleInstance(objectInfo.source);
 		}
 
 		switch (objectInfo.wrapper){
@@ -131,46 +131,33 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 				switch (objectType) {
 					case SM.Constant.MEDIA.IMAGE:
 						return "<img class='imagePreview' src='" + object + "'></img>";
-						break;
 					case SM.Constant.MEDIA.PDF:
 						return SM.Editor.Object.PDF.generatePreviewWrapper(object);
-						break;
 					case SM.Constant.MEDIA.DOC:
 					case SM.Constant.MEDIA.PPT:
 						return SM.Editor.Object.GoogleDOC.generatePreviewWrapper(object);
-						break;
 					case SM.Constant.MEDIA.YOUTUBE_VIDEO:
 						return SM.Editor.Video.Youtube.generatePreviewWrapperForYoutubeVideoUrl(object);
-						break;
 					case SM.Constant.MEDIA.HTML5_VIDEO:
 						return SM.Editor.Video.HTML5.renderVideoWithURL(object,{loadSources: false, extraClasses: ["objectPreview"]});
-						break;
 					case SM.Constant.MEDIA.HTML5_AUDIO:
 						return SM.Editor.Audio.HTML5.renderAudioWithURL(object,{loadSources: false, extraClasses: ["objectPreview"]});
-						break;
 					case SM.Constant.MEDIA.WEB:
 						return SM.Editor.Object.Web.generatePreviewWrapperForWeb(object);
-						break;
 					default:
 						SM.Debugging.log("Unrecognized object source type");
-						break;
 				}
 				break;
 			case SM.Constant.WRAPPER.EMBED:
 				return _genericWrapperPreview(object);
-				break;
 			case SM.Constant.WRAPPER.OBJECT:
 				return _genericWrapperPreview(object);
-				break;
 			case SM.Constant.WRAPPER.IFRAME:
 				return _genericWrapperPreview(object);
-				break;
 			case SM.Constant.WRAPPER.VIDEO:
 				return SM.Editor.Video.HTML5.renderVideoFromWrapper(object,{loadSources: false, extraClasses: ["objectPreview"]});
-				break;
 			case SM.Constant.WRAPPER.AUDIO:
 				return SM.Editor.Audio.HTML5.renderAudioFromWrapper(object,{loadSources: false, extraClasses: ["objectPreview"]});
-				break;
 			default:
 				SM.Debugging.log("Unrecognized object wrapper: " + objectInfo.wrapper);
 				break;
@@ -184,7 +171,7 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		$(wrapperPreview).removeAttr('width');
 		$(wrapperPreview).removeAttr('height');
 		if(typeof $(wrapperPreview).attr("src") != "undefined"){
-			$(wrapperPreview).attr("src",SM.Utils.checkUrlProtocol($(wrapperPreview).attr("src")));
+			$(wrapperPreview).attr("src",SM.Utils.checkObjectUrl($(wrapperPreview).attr("src")));
 		}
 		//Force scrolling auto if the wrapper has specified the scrolling param
 		if(typeof $(wrapperPreview).attr("scrolling") != "undefined"){
@@ -227,6 +214,10 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 			}
 		}
 
+		if(objectInfo.type === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE){
+			return drawObject(SM.Editor.Object.Web.generateWrapperForReusablePuzzleInstance(objectInfo.source),options);
+		}
+
 		switch (objectInfo.wrapper) {
 			case null:
 				//Draw object from source
@@ -255,7 +246,6 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 						break;
 				}
 				break;
-
 			case SM.Constant.WRAPPER.EMBED:
 			case SM.Constant.WRAPPER.OBJECT:
 			case SM.Constant.WRAPPER.IFRAME:
@@ -345,44 +335,48 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 	};
 
 	var _onStartObjectSettingsFancybox = function(){
-		var oSF = $("#objectSettings_fancybox");
+		var $oSF = $("#objectSettings_fancybox");
 
 		//Get object
-		var area = SM.Editor.getCurrentArea();
-		var object = $(area).find("div.object_wrapper").children().first();
-		var objectInfo = SM.Object.getObjectInfo(object);
-
-		$(oSF).find("input[type='hidden'][name='elId']").val($(area).attr("id"));
+		var $area = $(SM.Editor.getCurrentArea());
+		var $object = $area.find("div.object_wrapper").children().first();
+		var isReusablePuzzleInstance = ($object.attr("reusablepuzzleinstance") === "true");
+		$oSF.find("input[type='hidden'][name='elId']").val($area.attr("id"));
 		
 		//Load Settings
 		var oSettings = {};
-		var unloadObject = true;
+		var unloadObject = (isReusablePuzzleInstance===false);
+		var addEscappCredentialsToObject = isReusablePuzzleInstance;
 		
 		try {
-			oSettings = JSON.parse($(area).attr("elSettings"));
+			oSettings = JSON.parse($area.attr("elSettings"));
 		} catch(e){}
 
-		if(typeof oSettings.unloadObject != "undefined"){
+		if(typeof oSettings.unloadObject !== "undefined"){
 			unloadObject = oSettings.unloadObject;
+		}
+		if(typeof oSettings.addEscappCredentialsToObject !== "undefined"){
+			addEscappCredentialsToObject = oSettings.addEscappCredentialsToObject;
 		}
 
 		//Fill and reset form
+		var $unloadObjectCheckbox = $oSF.find("input[type='checkbox'][name='unloadObject']");
+		$unloadObjectCheckbox.prop('checked', unloadObject);
+		var $addEscappCredentialsToObjectCheckbox = $oSF.find("input[type='checkbox'][name='addEscappCredentialsToObject']");
+		$addEscappCredentialsToObjectCheckbox.prop('checked', addEscappCredentialsToObject);
+		$addEscappCredentialsToObjectCheckbox.attr("defaultvalue",isReusablePuzzleInstance);
 
-		//Unload object
-		var unloadObjectCheckbox = $(oSF).find("input[type='checkbox'][name='unloadObject']");
-		$(unloadObjectCheckbox).prop('checked', unloadObject);
-
-		SM.Editor.Utils.enableElementSettingsField(unloadObjectCheckbox,true);
+		SM.Editor.Utils.enableElementSettingsField($unloadObjectCheckbox,true);
+		SM.Editor.Utils.enableElementSettingsField($addEscappCredentialsToObjectCheckbox,(isReusablePuzzleInstance===false));
 	};
 
 	var onObjectSettingsDone = function(){
-		var oSF = $("#objectSettings_fancybox");
+		var $oSF = $("#objectSettings_fancybox");
 
 		//Get area and object
-		var areaId = $(oSF).find("input[type='hidden'][name='elId']").val();
-		var area = $("#"+areaId);
-		var object = $(area).find("div.object_wrapper").children().first();
-		var objectInfo = SM.Object.getObjectInfo(object);
+		var areaId = $oSF.find("input[type='hidden'][name='elId']").val();
+		var $area = $("#"+areaId);
+		var $object = $area.find("div.object_wrapper").children().first();
 
 		//Get previous settings
 		var oSettings = {};
@@ -391,11 +385,23 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		} catch(e) {}
 		
 		//Get new settings
-		oSettings.unloadObject = $(oSF).find("input[type='checkbox'][name='unloadObject']").is(":checked");
+		oSettings.unloadObject = $oSF.find("input[type='checkbox'][name='unloadObject']").is(":checked");
+		oSettings.addEscappCredentialsToObject = $oSF.find("input[type='checkbox'][name='addEscappCredentialsToObject']").is(":checked");
 
 		//Save Settings
 		var oSSerialized = JSON.stringify(oSettings);
-		$(area).attr("elSettings",oSSerialized);
+		$area.attr("elSettings",oSSerialized);
+
+		//Apply settings
+		var objectURL = $object.attr("src");
+		//var objectURL = oSettings.url;
+		if(oSettings.addEscappCredentialsToObject){
+			objectURL = SM.Utils.addEscappCrendentialsToUrl(objectURL);
+		} else {
+			objectURL = SM.Utils.removeEscappCrendentialsFromUrl(objectURL);
+		}
+
+		$object.attr("src",objectURL);
 
 		$.fancybox.close();
 	};
