@@ -3,97 +3,10 @@
 <head>
 	<title>Scene Maker</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="/libs/jquery.fancybox-1.3.4.css"/>
-	<link rel="stylesheet" type="text/css" href="/libs/jquery-ui/jquery-ui-1.9.2.css"/>
-	<link rel="stylesheet" type="text/css" href="/libs/jquery.mCustomScrollbar.css"/>
-	<link rel="stylesheet" type="text/css" href="/libs/font-awesome/css/font-awesome.css"/>
-	<link rel="stylesheet" type="text/css" href="/fonts/fonts.css"/>
-	<link rel="stylesheet" type="text/css" href="/libs/annotorious/annotorious.css"/>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/viewer.css"/>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/carousel.css"/>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/toolbar.css"/>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/menu.css"/>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/editor.css"/>
-
-	<script type="text/javascript" src="/libs/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="/libs/jquery-1.7.2.js"></script>
-	<script type="text/javascript" src="/libs/jquery-ui/jquery-ui-1.9.2.js"></script>
-	<script type="text/javascript" src="/libs/jquery.mousewheel-3.0.4.js"></script>
-	<script type="text/javascript" src="/libs/jquery.carouFredSel/jquery.carouFredSel-6.2.0.js"></script>
-	<script type="text/javascript" src="/libs/jquery.fancybox-1.3.4.js"></script>
-	<script type="text/javascript" src="/libs/jquery.mCustomScrollbar.js"></script>
-	<script type="text/javascript" src="/libs/jquery.ui.touch-punch.0.2.3.js"></script>
-	<script type="text/javascript" src="/libs/annotorious/annotorious.js"></script>
-	
+	<link rel="stylesheet" type="text/css" href="/dist/scene_maker_editor.min.css"/>
 	<script type="text/javascript" src="/configuration/configuration.js"></script>
-	
-	<script type="text/javascript" src="/js/SceneMaker.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Locales.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Constant.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Configuration.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.User.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.I18n.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Object.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Object.PDF.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Object.GoogleDOC.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Renderer.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Scene.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.ObjectPlayer.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Video.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Video.Youtube.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Video.HTML5.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Audio.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Audio.HTML5.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Events.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.EventsNotifier.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Viewer.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Debugging.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Validator.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Status.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Status.Device.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Status.Device.Browser.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Status.Device.Features.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.ViewerAdapter.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Text.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Utils.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Utils.Loader.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Slides.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Screen.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.View.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Marker.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.FullScreen.js"></script>
-
-	<script type="text/javascript" src="/js/SceneMaker.Editor.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Slides.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Dummies.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Renderer.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Carousel.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Scrollbar.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Video.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Audio.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Audio.HTML5.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Video.HTML5.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Video.Youtube.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Image.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Object.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Object.Web.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Object.PDF.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Object.GoogleDOC.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Text.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Thumbnails.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Settings.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Tools.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Tools.Menu.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Utils.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Utils.Loader.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Screen.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.View.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Marker.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Actions.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Caption.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Preview.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Clipboard.js"></script>
-	<script type="text/javascript" src="/js/SceneMaker.Editor.Events.js"></script>
+	<script type="text/javascript" src="/libs/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/dist/scene_maker_editor.min.js"></script>
 </head>
 
 <body onload="SceneMaker.Editor.init()" style="display: none" class="loaded">

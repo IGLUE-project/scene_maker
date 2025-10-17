@@ -2,7 +2,10 @@ SceneMaker.Configuration = (function(SM,$,undefined){
   
   var configuration;
   
-  var init = function(_configuration){ 
+  var init = function(_configuration){
+    if(typeof _configuration === "undefined"){
+      _configuration = {};
+    }
     configuration = _configuration;
 
     SM.ImagesPath = configuration["ImagesPath"];
@@ -12,6 +15,9 @@ SceneMaker.Configuration = (function(SM,$,undefined){
   };
   
   var getConfiguration = function(){
+    if(typeof configuration === "undefined"){
+      return {};
+    }
     return configuration;
   };
   

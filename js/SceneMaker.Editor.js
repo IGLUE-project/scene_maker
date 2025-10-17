@@ -26,7 +26,9 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.Editing = true;
 		SM.Debugging.init(options);
 
+		var scene;
 		if(options){
+			scene = options.scene;
 			initOptions = options;
 			if((options.configuration)&&(SM.Configuration)){
 				SM.Configuration.init(options.configuration);
@@ -35,7 +37,6 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			initOptions = {};
 		}
 
-		var scene = options.scene;
 		if(scene){
 			isInitialScene = true;
 		}

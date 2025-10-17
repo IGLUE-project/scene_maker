@@ -8,10 +8,12 @@
     "type": "git",
     "url": "https://github.com/iglue-project/scene_maker"
   },
+  "type": "module",
   "scripts": {
     "build": "node tasks/build.js"
   },
   "devDependencies": {
-    "esbuild": "0.25.11"
+    "esbuild": "0.25.11",
+    "fs-extra": "^11.3.0"
   }
 }

@@ -86,7 +86,7 @@ SceneMaker.I18n = (function(SM,$,undefined){
 		if(typeof SM.Locales == "object"){
 			availableLocales.push(SM.Locales);
 		}
-		if(typeof configuration["locales"] == "object"){
+		if((typeof configuration === "object")&&(typeof configuration["locales"] === "object")){
 			availableLocales.push(configuration["locales"]);
 			_envLocales = configuration["locales"];
 		}
