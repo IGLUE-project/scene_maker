@@ -1,12 +1,6 @@
-/**
- * Scene Maker
- * Scene Maker is a web application for creating web scenes for escape rooms in a simple and user-friendly way
- */
 var SceneMaker = SceneMaker || {};
 
-SceneMaker.VERSION = '0.0.1';
-SceneMaker.AUTHORS = 'GING UPM';
-SceneMaker.URL = "https://github.com/agordillo/scene_maker";
+SceneMaker.VERSION = '1.0.0';
 
 SceneMaker.getOptions = function(){
 	try {

@@ -1,0 +1,17 @@
+{
+  "name": "SceneMaker",
+  "version": "1.0.0",
+  "description": "A web app for creating web scenes for escape rooms created with the Escapp platform",
+  "author": "GING UPM",
+  "license": "GNU General Public License v3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iglue-project/scene_maker"
+  },
+  "scripts": {
+    "build": "node tasks/build.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.11"
+  }
+}
