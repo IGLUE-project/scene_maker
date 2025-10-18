@@ -1,4 +1,8 @@
 /* General */
+body, select, input, textarea {
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
+}
+
 img {
   border: none;
 }
@@ -110,7 +114,7 @@ div.scene_details_field {
 }
 
 div.scene_details_fieldTitle {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-size: 1.6em;
 	font-weight: bold;
 	color: #428BCA;
@@ -124,8 +128,8 @@ div.scene_details_fieldContent {
 }
 
 div.scene_details_fieldContent #scene_details_input_title, div.scene_details_fieldContent #scene_details_select_aspectRatio {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
+	font-size: 16px;
 	border: 1px solid #aaa;
 	border-radius: 10px;
 	outline: 0 none;
@@ -157,9 +161,6 @@ div.scene_details_fieldContent select {
 
 #save_scene_details {
 	position: absolute;
-}
-
-#save_scene_details {
 	width: 180px;
 	right: 46px;
 }
@@ -525,7 +526,7 @@ div.view_content_zone[tooltip='true'] {
 .zone_tooltip {
 	text-align: center;
 	display: block;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-weight: 100;
 	color:  #888;
 }
@@ -698,7 +699,7 @@ body[aspectratio="16:9"] .viewthumb{
 	text-align: center;
 	font-size: 14px;
 	font-weight: 400;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	padding: 0px;
 	margin-top: 15px;
 	margin-bottom: 4px;
@@ -789,7 +790,7 @@ body.SceneMakerBody #fancybox-close:hover {
 .textfancy {
 	width: 85%;
 	position: relative;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	margin: 0px;
 	font-size: 19px;
 	color: #2D2D2D;
@@ -816,7 +817,7 @@ body.SceneMakerBody #fancybox-close:hover {
 }
 
 .input_text_fancy {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	background-color:#eee;
 	position:absolute;
@@ -930,7 +931,7 @@ body.SceneMakerBody #fancybox-close:hover {
 	background: #ffffff;
 	opacity: 0.8;
 	font-size: 15px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-weight: 400;
 	color: #000;
 }
@@ -999,7 +1000,7 @@ button.previewButton {
 
 .select_view_text {
 	font-size: 1.4em;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-weight: 400;
 	margin-bottom: 10px;
 	margin-top: -7px;
@@ -1061,7 +1062,7 @@ div.change_bg_button:hover {
 }
 
 .mCSB_container {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 }
 
 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
@@ -1108,7 +1109,7 @@ div.change_bg_button:hover {
 }
 
 p.elsettings_fancybox_title {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-size: 20px;
 	color: #aaa;
 	margin-top: 0px;
@@ -1127,7 +1128,7 @@ div.new_elsettings_subfield {
 
 div.new_elsettings_field span, div.new_elsettings_field p, div.new_elsettings_subfield span, div.new_elsettings_subfield p {
 	font-size: 16px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-weight: 300;
 }
 
@@ -1182,8 +1183,8 @@ div.scene_settings_field {
 	margin-top: 10px;
 }
 
-div.scene_settings_field label, div.scene_settings_field p, div.scene_settings_field input, div.scene_settings_field select {
-	font-size: 14px;
+div.scene_settings_field label, div.settings_element_wrapper label, div.scene_settings_field p, div.scene_settings_field input, div.settings_element_wrapper input, div.scene_settings_field select, div.settings_element_wrapper select {
+	font-size: 16px;
 }
 
 div.scene_settings_field.scene_settings_field_first {
@@ -1202,8 +1203,8 @@ div.scene_settings_field p {
 div.settings_element_wrapper {
 	margin-bottom: 5px;
 	display: flex;
-  	align-items: center;
-  	gap: 5px;
+	align-items: center;
+	gap: 5px;
 }
 
 div.settings_element_wrapper label {
@@ -1242,8 +1243,10 @@ div.actionParamsPuzzleSolution input[type="text"] {
   border: 1px solid white;
 }
 
-div.sceneSettings_wrapper button.add_action {
+button.add_action {
+	font-size: 15px;
 	cursor: pointer;
+	margin: 2px 0px 2px 0px;
 }
 
 div.actionWrapper {

@@ -293,7 +293,7 @@ html {
 }
 
 article {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 }
 
 article > div > p {
@@ -322,7 +322,7 @@ div#viewerpreview {
 	font-size: 1.9rem;
 	text-align: center; 
 	color: rgb(255, 255, 255); 
-	font-family: verdana, arial, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	-webkit-transform: rotate(-45deg); 
 	-webkit-transform-origin-x: 50%; 
 	-webkit-transform-origin-y: 0px; 
@@ -392,7 +392,7 @@ body.SceneMakerViewerBody #fancybox-close:hover {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 1.1em;
+	font-size: 15px;
 	border:none;
 }
 
@@ -445,7 +445,7 @@ body.SceneMakerViewerBody #fancybox-close:hover {
 
 .notification_text {
 	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-size: 2.1rem;
 	color: #666;
 	padding-bottom: 4%;
@@ -491,7 +491,7 @@ img.notificationIconDeleteHotspot {
 
 span.adverttext {
 	text-decoration:none;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
 	font-size: 2.6rem;
 	color:#CCC;
 	padding-bottom: 15px;
