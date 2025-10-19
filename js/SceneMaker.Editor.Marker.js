@@ -606,7 +606,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_on.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_off.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_on.png" },
-			
+			{ src: SM.ImagesPath + "hotspotgallery/chessboard_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/chessboard_realistic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/chessboard_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/chessbox_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png" }
 		];
 
 		var carouselImages = [];
