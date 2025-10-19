@@ -1,6 +1,6 @@
-This software is licensed under the GNU General Public License Version 3.
+Scene Maker is licensed under the GNU General Public License Version 3.
 
-This software is free software: you can redistribute it and/or modify
+Scene Maker is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -693,11 +693,11 @@ Public License instead of this License.  But first, please read
 
 Third-Party Dependencies
 
-This software uses or has parts based on the following third-party software (each third-party software is licensed under its respective license):
+Scene Maker (https://github.com/iglue-project/scene_maker) uses or has parts based on the following third-party software (each third-party software is licensed under its respective license):
 
-Annotorious | Copyright (c) 2023, Rainer Simon | BSD 3-Clause License (see libs/annotorious/annotorious.js.LICENSE)
+Annotorious | Copyright (c) 2023, Rainer Simon | BSD 3-Clause License (see https://github.com/iglue-project/scene_maker/blob/main/libs/annotorious/annotorious.js.LICENSE)
 CKEditor VERSION 3.6.6 | Copyright (c) 2003-2013, CKSource - Frederico Knabben | GNU General Public License Version 2 or later (the "GPL").
-Escapp client (https://github.com/iglue-project/escapp_client) | GNU General Public License Version 3 (see libs/escapp/escapp.js.LICENSE).
+Escapp client (https://github.com/iglue-project/escapp_client) | GNU General Public License Version 3 (see https://github.com/iglue-project/scene_maker/blob/main/libs/escapp/escapp.js.LICENSE).
 Font Awesome 3.2.1 by Dave Gandy (http://fontawesome.io) | Fonts: SIL OFL 1.1, Code: MIT License.
 jQuery v1.7.2 | (c) OpenJS Foundation and other contributors | jquery.org/license | MIT license.
 jQuery UI v1.9.2 | Copyright (c) 2012 jQuery Foundation and other contributors (http://jqueryui.com) | MIT license.

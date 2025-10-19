@@ -5,13 +5,13 @@ import path from "path";
 import { execSync } from 'child_process';
 
 const __dirname = path.resolve();
-const build_folder = path.join(__dirname, "dist");
+const buildFolder = path.join(__dirname, "dist");
 
 //Remove and recreate dist folder
-if (fs.existsSync(build_folder)) {
-  fs.removeSync(build_folder);
+if (fs.existsSync(buildFolder)) {
+  fs.removeSync(buildFolder);
 }
-fs.ensureDirSync(build_folder);
+fs.ensureDirSync(buildFolder);
 
 //Generate JS files
 const editorJSFiles = [
@@ -94,10 +94,64 @@ const editorJSFiles = [
   "js/SceneMaker.Editor.Events.js",
 ];
 
+const viewerJSFiles = [
+  "/js/SceneMaker.js",
+
+  "/libs/jquery-1.7.2.js",
+  "/libs/jquery-ui/jquery-ui-1.9.2.js",
+  "/libs/jquery.fancybox-1.3.4.js",
+  "/libs/jquery.ui.touch-punch.0.2.3.js",
+  "/libs/annotorious/annotorious.js",
+  "/libs/popper.js",
+  "/libs/tippy.js",
+  "/libs/escapp/escapp.js",
+
+  "/js/SceneMaker.Locales.js",
+  "/js/SceneMaker.Constant.js",
+  "/js/SceneMaker.Configuration.js",
+  "/js/SceneMaker.I18n.js",
+  "/js/SceneMaker.User.js",
+  "/js/SceneMaker.Object.js",
+  "/js/SceneMaker.Object.PDF.js",
+  "/js/SceneMaker.Object.GoogleDOC.js",
+  "/js/SceneMaker.Renderer.js",
+  "/js/SceneMaker.Debugging.js",
+  "/js/SceneMaker.Scene.js",
+  "/js/SceneMaker.Video.js",
+  "/js/SceneMaker.Video.HTML5.js",
+  "/js/SceneMaker.Video.Youtube.js",
+  "/js/SceneMaker.Audio.js",
+  "/js/SceneMaker.Audio.HTML5.js",
+  "/js/SceneMaker.ObjectPlayer.js",
+  "/js/SceneMaker.Viewer.js",
+  "/js/SceneMaker.Utils.js",
+  "/js/SceneMaker.Utils.Loader.js",
+  "/js/SceneMaker.Status.js",
+  "/js/SceneMaker.Status.Device.js",
+  "/js/SceneMaker.Status.Device.Browser.js",
+  "/js/SceneMaker.Status.Device.Features.js",
+  "/js/SceneMaker.ViewerAdapter.js",
+  "/js/SceneMaker.Text.js",
+  "/js/SceneMaker.Screen.js",
+  "/js/SceneMaker.View.js",
+  "/js/SceneMaker.Marker.js",
+  "/js/SceneMaker.Actions.js",
+  "/js/SceneMaker.Caption.js",
+  "/js/SceneMaker.Slides.js",
+  "/js/SceneMaker.Events.js",
+  "/js/SceneMaker.EventsNotifier.js",
+  "/js/SceneMaker.FullScreen.js",
+  "/js/SceneMaker.Escapp.js"
+];
+
 //Concat JS files
 const editorJSConcatPath = path.join(__dirname, "dist", "scene_maker_editor.js");
 const editorJSContent = editorJSFiles.map((f) => fs.readFileSync(path.join(__dirname, f), "utf8")).join("\n\n");
 fs.writeFileSync(editorJSConcatPath, editorJSContent, "utf8");
+
+const viewerJSConcatPath = path.join(__dirname, "dist", "scene_maker_viewer.js");
+const viewerJSContent = viewerJSFiles.map((f) => fs.readFileSync(path.join(__dirname, f), "utf8")).join("\n\n");
+fs.writeFileSync(viewerJSConcatPath, viewerJSContent, "utf8");
 
 //Minify JS files
 try {
@@ -106,6 +160,12 @@ try {
     { stdio: "inherit" }
   );
   console.log("✅ Build completed: dist/scene_maker_editor.min.js");
+
+  execSync(
+    `npx esbuild dist/scene_maker_viewer.js --minify --target=es2018 --global-name=SceneMaker --outfile=dist/scene_maker_viewer.min.js`,
+    { stdio: "inherit" }
+  );
+  console.log("✅ Build completed: dist/scene_maker_viewer.min.js");
 } catch (err) {
   console.error("❌ Error executing esbuild:", err.message);
   process.exit(1);
@@ -125,9 +185,25 @@ const editorCSSFiles = [
   "stylesheets/menu.css",
   "stylesheets/editor.css",
 ];
+
+const viewerCSSFiles = [
+  "/libs/jquery.fancybox-1.3.4.css",
+  "/libs/jquery-ui/jquery-ui-1.9.2.css",
+  "/libs/tippy.css",
+  "/libs/escapp/escapp.css",
+  "/fonts/fonts.css",
+  "/libs/annotorious/annotorious.css",
+  "/stylesheets/viewer.css"
+];
+
+//Concat CSS files
 const editorCSSConcatPath = path.join(__dirname, "dist", "scene_maker_editor.css");
 const editorCSSContent = editorCSSFiles.map((f) => fs.readFileSync(path.join(__dirname, f), "utf8")).join("\n\n");
 fs.writeFileSync(editorCSSConcatPath, editorCSSContent, "utf8");
+
+const viewerCSSConcatPath = path.join(__dirname, "dist", "scene_maker_viewer.css");
+const viewerCSSContent = viewerCSSFiles.map((f) => fs.readFileSync(path.join(__dirname, f), "utf8")).join("\n\n");
+fs.writeFileSync(viewerCSSConcatPath, viewerCSSContent, "utf8");
 
 //Minify CSS files
 try {
@@ -136,9 +212,21 @@ try {
     { stdio: "inherit" }
   );
   console.log("✅ Build completed: dist/scene_maker_editor.min.css");
+
+  execSync(
+    `npx esbuild dist/scene_maker_viewer.css --minify --outfile=dist/scene_maker_viewer.min.css`,
+    { stdio: "inherit" }
+  );
+  console.log("✅ Build completed: dist/scene_maker_viewer.min.css");
 } catch (err) {
   console.error("❌ Error executing esbuild:", err.message);
   process.exit(1);
+}
+
+//Copy LICENSE file
+const licensePath = path.join(__dirname, "LICENSE");
+if (fs.existsSync(licensePath)) {
+  fs.copySync(licensePath, path.join(buildFolder, "scene_maker.LICENSE"));
 }
 
 console.log("✅ Task finished");

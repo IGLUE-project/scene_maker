@@ -330,7 +330,6 @@ body[aspectratio="16:9"] #screens_list div.wrapper_slidethumbnail {
 }
 
 .selectedThumbnailBackground img.image_slidethumbnail {
-	/*border-color: transparent !important;*/
 	border: 1px solid #357ebd !important;
 }
 
@@ -380,9 +379,7 @@ body[aspectratio="16:9"] #screens_list img.image_slidethumbnail {
 }
 
 
-/* 
- * Views
- */
+/* Views */
 
 #views_list div.wrapper_slidethumbnail {
 	position: relative;
