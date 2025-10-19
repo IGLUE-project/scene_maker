@@ -23,7 +23,23 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 	};
 
 	var getSettings = function(){
+		settings.avatar = _getSceneAvatar();
 		return settings;
+	};
+
+	var _getSceneAvatar = function(){
+		var screens = $('section.slides > article');
+		for (var i = 0; i < screens.length; i++) {
+			var screenDOM = screens[i];
+			if (SM.Slides.isScreen(screenDOM)) {
+				var screenBackground = SM.Slides.getSlideBackground(screenDOM);
+				if (typeof screenBackground !== "undefined") {
+					return screenBackground;
+				}
+			}
+		}
+		// Return default avatar
+		return SM.ImagesPath + "logos/scene_maker_escapp_thumbnail.png";
 	};
 
 	var displaySettings = function(){
