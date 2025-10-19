@@ -586,11 +586,11 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/wheel.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/info.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/pin.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png", aspectRatio: 1.164 },
+			{ src: SM.ImagesPath + "hotspotgallery/pin.png", aspectRatio: 0.774 },
 			{ src: SM.ImagesPath + "hotspotgallery/close.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/key.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/painting.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/key.png", aspectRatio: 0.779 },
+			{ src: SM.ImagesPath + "hotspotgallery/painting.png", aspectRatio: 0.891 },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_futuristic.png" },
@@ -600,22 +600,25 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_futuristic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/safebox_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/safebox_retro.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/safebox_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/safebox_futuristic.png", aspectRatio: 1.286 },
 			{ src: SM.ImagesPath + "hotspotgallery/signal_generator.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_off.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_on.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_off.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_on.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_off.png", aspectRatio: 0.767 },
+			{ src: SM.ImagesPath + "hotspotgallery/basic_switch_on.png", aspectRatio: 0.767 },
+			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_off.png", aspectRatio: 0.743 },
+			{ src: SM.ImagesPath + "hotspotgallery/retro_switch_on.png", aspectRatio: 0.743 },
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_realistic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_futuristic.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/chessbox_standard.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png" }
+			{ src: SM.ImagesPath + "hotspotgallery/chessbox_standard.png", aspectRatio: 0.564 },
+			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png", aspectRatio: 0.564 }
 		];
 
 		var carouselImages = [];
 		$.each(hotspotGalleryImgs, function(index, image){
 			var myImg = $("<img src='" + image.src + "'/>");
+			if(typeof image.aspectRatio === "number"){
+				myImg.attr("aspectratio",image.aspectRatio);
+			}
 			carouselImages.push(myImg);
 		});
 
@@ -683,6 +686,18 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var $img = $(event.target);
 		$("#hotspotImageGallery").find("img").removeClass("selected");
 		$img.addClass("selected");
+
+		//Check and apply aspect ratio
+		var aspectRatio = parseFloat($img.attr("aspectratio"));
+		if(isNaN(parseFloat(aspectRatio))){
+			aspectRatio = 1;
+		}
+		var currentAspectRatio = $("#hotspotSizeWidth").val()/$("#hotspotSizeHeight").val();
+		if((aspectRatio !== currentAspectRatio)&&(aspectRatio > 0)){
+			var newHeight = Math.round($("#hotspotSizeWidth").val()/aspectRatio);
+			$("#hotspotSizeHeight").val(newHeight);
+			$("#hotspotAspectRatio").val(aspectRatio);
+		}
 	};
 
 	var onInputHotspotSizeWidth = function(event){
