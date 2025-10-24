@@ -608,6 +608,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/switch_retro_on.png", aspectRatio: 0.743 },
 			{ src: SM.ImagesPath + "hotspotgallery/switch_futuristic_off.png", aspectRatio: 0.762 },
 			{ src: SM.ImagesPath + "hotspotgallery/switch_futuristic_on.png", aspectRatio: 0.762 },
+			{ src: SM.ImagesPath + "hotspotgallery/switches_container_standard.png", aspectRatio: 1.779 },
+			{ src: SM.ImagesPath + "hotspotgallery/switches_container_retro.png", aspectRatio: 1.779 },
+			{ src: SM.ImagesPath + "hotspotgallery/switches_container_futuristic.png", aspectRatio: 16/9 },
 			{ src: SM.ImagesPath + "hotspotgallery/wires_container_standard.png", aspectRatio: 1.687 },
 			{ src: SM.ImagesPath + "hotspotgallery/wires_container_retro.png", aspectRatio: 1.930 },
 			{ src: SM.ImagesPath + "hotspotgallery/wires_container_futuristic.png", aspectRatio: 1.875 },
@@ -709,7 +712,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
 		if(lockAspectRatio){
 			var aspectRatio = parseFloat($("#hotspotAspectRatio").val());
-			$("#hotspotSizeHeight").val($("#hotspotSizeWidth").val()/aspectRatio);
+			var newHeight = Math.round($("#hotspotSizeWidth").val()/aspectRatio);
+			$("#hotspotSizeHeight").val(newHeight);
 		}
 	};
 
@@ -717,7 +721,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var lockAspectRatio = $("#hotspotLockAspectRatio").prop("checked");
 		if(lockAspectRatio){
 			var aspectRatio = parseFloat($("#hotspotAspectRatio").val());
-			$("#hotspotSizeWidth").val($("#hotspotSizeHeight").val()*aspectRatio);
+			var newWidth = Math.round($("#hotspotSizeHeight").val()*aspectRatio);
+			$("#hotspotSizeWidth").val(newWidth);
 		}
 	};
 
