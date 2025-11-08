@@ -1,5 +1,6 @@
 /*
  * Scene Maker initialization options
+ * Copy this file to configuration/configuration.js
  */
 
 window.SCENE_MAKER_OPTIONS = (function(){
