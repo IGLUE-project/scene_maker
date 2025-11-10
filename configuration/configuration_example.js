@@ -34,7 +34,7 @@ window.SCENE_MAKER_OPTIONS = (function(){
 	//Exit URL
 	//options.exitURL = "https://escapp.es";
 
-	//Default language
+	//Language
 	options["lang"] = "en";
 
 	//Escape room data

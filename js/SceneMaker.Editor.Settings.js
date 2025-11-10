@@ -23,8 +23,12 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 	};
 
 	var getSettings = function(){
-		settings.avatar = _getSceneAvatar();
-		return settings;
+		var rSettings = JSON.parse(JSON.stringify(settings));
+		if((typeof rSettings.title !== "string")||(rSettings.title.trim()==="")){
+			rSettings.title = SM.I18n.getTrans("i.Untitled");
+		}
+		rSettings.avatar = _getSceneAvatar();
+		return rSettings;
 	};
 
 	var _getSceneAvatar = function(){
@@ -121,7 +125,7 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		settings.SMVersion = SM.VERSION;
 
 		var title = $('#scene_details_input_title').val();
-		if((typeof title == "string")&&(title.trim()!="")){
+		if(typeof title === "string"){
 			settings.title = title;
 		}
 
