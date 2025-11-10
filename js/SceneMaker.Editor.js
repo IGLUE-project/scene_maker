@@ -552,14 +552,12 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			data    : params,
 			success : function(data) {
 				lastStoredSceneStringify = jsonScene;
-				if((createNewScene)&&(typeof data != "undefined")&&(data.uploadPath)){
+				if((createNewScene)&&(typeof data !== "undefined")&&(data.uploadPath)){
 					//Update SM.UploadScenePath because the scene exists now
 					//Future savings will update the existing scene
 					SM.UploadScenePath = SM.Utils.checkUrlProtocol(data.uploadPath);
 					if(SM.Status.getDevice().features.historypushState){
-						if(data.editPath){
-							window.top.history.replaceState("","",SM.Utils.checkUrlProtocol(data.editPath));
-						}
+						window.top.history.replaceState("","",SM.UploadScenePath);
 					}
 				}
 				if(typeof successCallback == "function"){
