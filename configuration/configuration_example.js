@@ -34,10 +34,13 @@ window.SCENE_MAKER_OPTIONS = (function(){
 	//Exit URL
 	//options.exitURL = "https://escapp.es";
 
-	//Specify a default language
+	//Default language
 	options["lang"] = "en";
 
-	//Specify number of puzzles (Only used by the editor)
+	//Escape room data
+	//Escape room ID
+	options["erId"] = 1;
+	//Number of puzzles
 	options["nPuzzles"] = 5;
 
 	//Escapp client settings

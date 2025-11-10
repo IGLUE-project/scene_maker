@@ -8,7 +8,7 @@ SceneMaker.Editor.Preview = (function(SM,$,undefined){
 		if(typeof SM.PreviewPath !== "undefined"){
 			$("#preview_action").attr("href", SM.PreviewPath + "#" + slideNumberToPreview);
 		}
-		window.SCENE_MAKER_OPTIONS_PREVIEW = JSON.parse(JSON.stringify(SM.getOptions()));
+		window.SCENE_MAKER_OPTIONS_PREVIEW = JSON.parse(JSON.stringify(SM.Utils.getOptions()));
 		window.SCENE_MAKER_OPTIONS_PREVIEW.preview = true;
 		window.SCENE_MAKER_OPTIONS_PREVIEW.scene = SM.Editor.saveScene();
 

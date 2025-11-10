@@ -365,8 +365,20 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		//Save the scene in JSON
 		var scene = {};
 
+		//Get options
+		var options = SM.Utils.getOptions();
+
 		//Save settings
 		scene = SM.Editor.Settings.getSettings();
+		
+		//Save data from options
+		if(options){
+			if(typeof options.erId === "number"){
+				scene.erId = options.erId;
+			}
+		}
+
+		//Save screens
 		scene.screens = [];
 
 		//Load and show all objects
@@ -521,13 +533,13 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		
 		var send_type;
 		if(createNewScene){
-			send_type = 'POST'; //if it is a new scene
+			send_type = 'POST'; //new scene
 		} else {
-			send_type = 'PUT';  //if we are editing an existing prsesentation or resaving a new scene
+			send_type = 'PUT';  //editing an existing scene
 		}
 
 		var params = {};
-		if(typeof SM.User.getToken() != "undefined"){
+		if(typeof SM.User.getToken() !== "undefined"){
 			params["authenticity_token"] = SM.User.getToken();
 		}
 
