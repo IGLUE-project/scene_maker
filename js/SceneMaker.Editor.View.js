@@ -30,6 +30,7 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 	var onClickAddViewButton = function(){
 		$("#addViewFancybox").trigger('click');
 		SM.Editor.Utils.loadTab('tab_views');
+		return false;
 	};
 
 	var onDeleteViewClicked = function(event){

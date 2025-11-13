@@ -34,6 +34,7 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 		var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:SM.Screen.getScreensQuantity()+1});
 		addScreen(screen);
 		$.fancybox.close();
+		return false;
 	};
 
 	var getViewsQuantity = function(screen){
