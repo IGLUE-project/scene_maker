@@ -95,7 +95,7 @@ SceneMaker.Status = (function(SM,$,undefined){
 
 	var _checkPreview = function(){
 		var options = SM.Utils.getOptions();
-		if(typeof options["preview"] == "boolean"){
+		if(typeof options["preview"] === "boolean"){
 			_isPreview = options["preview"];
 		} else {
 			_isPreview = false;
