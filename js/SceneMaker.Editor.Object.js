@@ -148,6 +148,8 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 						SM.Debugging.log("Unrecognized object source type");
 				}
 				break;
+			case SM.Constant.WRAPPER.IMAGE:
+				return "<img class='imagePreview' src='" + objectInfo.source + "'></img>";
 			case SM.Constant.WRAPPER.EMBED:
 				return _genericWrapperPreview(object);
 			case SM.Constant.WRAPPER.OBJECT:
@@ -246,6 +248,9 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 						SM.Debugging.log("Unrecognized object source type: " + objectInfo.type);
 						break;
 				}
+				break;
+			case SM.Constant.WRAPPER.IMAGE:
+				SM.Editor.Image.drawImage(objectInfo.source);
 				break;
 			case SM.Constant.WRAPPER.EMBED:
 			case SM.Constant.WRAPPER.OBJECT:

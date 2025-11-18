@@ -64,7 +64,9 @@ SceneMaker.Object = (function(SM,$,undefined){
 			case null:
 				source = object;
 				break;
+			case SM.Constant.WRAPPER.IMAGE:
 			case SM.Constant.WRAPPER.EMBED:
+			case SM.Constant.WRAPPER.IFRAME:
 				source = $(object).attr("src");
 				break;
 			case SM.Constant.WRAPPER.OBJECT:
@@ -73,9 +75,6 @@ SceneMaker.Object = (function(SM,$,undefined){
 				} else if (typeof $(object).attr("data") != 'undefined'){
 					source = $(object).attr("data");
 				}
-				break;
-			case SM.Constant.WRAPPER.IFRAME:
-				source = $(object).attr("src");
 				break;
 			case SM.Constant.WRAPPER.VIDEO:
 				return SM.Video.HTML5.getSources(object);

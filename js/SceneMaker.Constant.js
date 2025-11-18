@@ -44,3 +44,4 @@ SceneMaker.Constant.WRAPPER.OBJECT = "OBJECT";
 SceneMaker.Constant.WRAPPER.IFRAME = "IFRAME";
 SceneMaker.Constant.WRAPPER.VIDEO = "VIDEO";
 SceneMaker.Constant.WRAPPER.AUDIO = "AUDIO";
+SceneMaker.Constant.WRAPPER.IMAGE = "IMG";

@@ -9,9 +9,13 @@ SceneMaker.Editor.Image = (function(SM,$,undefined){
 	var init = function(){
 		//Load from URL
 		$("#" + urlDivId + " .previewButton").click(function(event){
-			if(SM.Validator.validateObject($("#" + urlInputId).val())){
-				contentToAdd = SM.Editor.Utils.autocompleteUrls($("#" + urlInputId).val());
-				SM.Editor.Object.drawPreview(urlDivId, contentToAdd, {"contentAddMode": contentAddMode});
+			var imageInputVal = $("#" + urlInputId).val();
+			if(SM.Validator.validateObject(imageInputVal)){
+				var imageURL = SM.Object.getObjectInfo(imageInputVal).source;
+				if(imageURL !== null){
+					contentToAdd = SM.Editor.Utils.autocompleteUrls(imageURL);
+					SM.Editor.Object.drawPreview(urlDivId, contentToAdd, {"contentAddMode": contentAddMode});
+				}
 			}
 		});	
 	};
