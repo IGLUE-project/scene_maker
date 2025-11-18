@@ -214,7 +214,8 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 			}
 		}
 
-		if(objectInfo.type === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE){
+		if((objectInfo.type === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE)&&(options.wrapperGenerated !== true)){
+			options.wrapperGenerated = true;
 			return drawObject(SM.Editor.Object.Web.generateWrapperForReusablePuzzleInstance(objectInfo.source),options);
 		}
 
