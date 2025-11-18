@@ -171,7 +171,7 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		$(wrapperPreview).removeAttr('width');
 		$(wrapperPreview).removeAttr('height');
 		if(typeof $(wrapperPreview).attr("src") != "undefined"){
-			$(wrapperPreview).attr("src",SM.Utils.checkObjectUrl($(wrapperPreview).attr("src")));
+			$(wrapperPreview).attr("src",SM.Utils.checkWebUrl($(wrapperPreview).attr("src")));
 		}
 		//Force scrolling auto if the wrapper has specified the scrolling param
 		if(typeof $(wrapperPreview).attr("scrolling") != "undefined"){
