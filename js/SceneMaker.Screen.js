@@ -75,13 +75,8 @@ SceneMaker.Screen = (function(SM,$,undefined){
 	};
 
 	var onLeaveScreen = function(screen){
-		//Look for opened views
-		var openedViews = $(screen).children("article.show_in_screen");
-		if(openedViews.length===1){
-			var openView = openedViews[0];
-			var viewId = $(openView).attr("id");
-			SM.Slides.triggerSlideLeaveEvent(viewId);
-		}
+		//Close current view, if any
+		SM.View.closeCurrentView();
 	};
 
 	var forwardOneScreen = function(event){
@@ -108,6 +103,8 @@ SceneMaker.Screen = (function(SM,$,undefined){
 		if((!SM.Editing)&&($.fancybox)){
 			$.fancybox.close();
 		}
+
+		SM.View.closeCurrentView();
 
 		_goToScreenWithNumber(no);
 	};

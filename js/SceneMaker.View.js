@@ -61,7 +61,14 @@ SceneMaker.View = (function(SM,$,undefined){
 		_currentViewId = null;
 		$("#" + viewId).removeClass("show_in_screen");
 		$("#" + viewId).addClass("hide_in_screen");
-		SM.Slides.triggerSlideLeaveEvent(viewId);	
+		SM.Slides.triggerSlideLeaveEvent(viewId);
+	};
+
+	var closeCurrentView = function(){
+		var currentView = getCurrentView();
+		if((typeof currentView !== "undefined")&&(currentView !== null)){
+			closeView($(currentView).attr("id"));
+		}
 	};
 
 	return {
@@ -71,7 +78,8 @@ SceneMaker.View = (function(SM,$,undefined){
 		getViewWithNumber		: getViewWithNumber,
 		onCloseViewClicked		: onCloseViewClicked,
 		openView				: openView,
-		closeView				: closeView
+		closeView				: closeView,
+		closeCurrentView		: closeCurrentView
 	};
 
 }) (SceneMaker, jQuery);

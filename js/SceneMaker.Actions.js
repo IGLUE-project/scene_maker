@@ -129,12 +129,6 @@ SceneMaker.Actions = (function(SM,$,undefined){
 					var screenId = _getSlideIdAlias(action.actionParams.screen);
 					var $screen = $("#" + screenId);
 					if ($screen.length > 0) {
-						if($screen[0] === SM.Screen.getCurrentScreen()){
-							var currentView = SM.View.getCurrentView();
-							if((typeof currentView !== "undefined")&&(currentView !== null)){
-								SM.View.closeView($(currentView).attr("id"));
-							}
-						}
 						SM.Screen.goToScreenWithNumber($screen.attr("slideNumber"));
 					}
 				}
