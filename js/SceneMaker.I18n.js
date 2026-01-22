@@ -165,6 +165,9 @@ SceneMaker.I18n = (function(SM,$,undefined){
 		if($(div).attr("title") != undefined){
 			$(div).attr("title", translation);
 		}
+		if($(div).attr("translateContent") === "true"){
+			$(div).html(translation);
+		}
 	};
 
 	var _translateTextArea = function(textArea,translation){

@@ -149,7 +149,7 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 	};
 
 	var loadLanguageCSS = function(){
-		var languagesWithCSS = ["es", "fr", "hu", "nl", "de"];
+		var languagesWithCSS = ["es", "sr"];
 		var language = SM.I18n.getLanguage();
 		if(languagesWithCSS.indexOf(language)!=-1){
 			//Load CSS for this language
