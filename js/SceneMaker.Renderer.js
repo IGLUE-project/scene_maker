@@ -135,9 +135,7 @@ SceneMaker.Renderer = (function(SM,$,undefined){
 					$body.attr("reusablepuzzleinstance","true");
 				}
 				var body = SM.Utils.getOuterHTML($body);
-
 				var style = (element['style'])? element['style'] : "";
-
 				return "<div id='"+ element['id'] +"' class='objectelement " + loadingObjectClass + "' objectStyle='" + style + "' objectWrapper='" + body + "'>" + "" + "</div>";
 		}
 	};

@@ -8,11 +8,6 @@ SceneMaker.ObjectPlayer = (function(SM,$,undefined){
 				$(objectWrapper).addClass('loadedObject');
 			}
 
-			if($(objectWrapper).hasClass('youtubeelement')){
-				SM.Video.Youtube.loadYoutubeObject(objectWrapper);
-				return;
-			}
-
 			var object = $($(objectWrapper).attr("objectWrapper"));
 			$(objectWrapper).html("<div style='" + $(objectWrapper).attr("objectStyle") + "'>" + SM.Utils.getOuterHTML(object) + "</div>");
 
@@ -34,7 +29,6 @@ SceneMaker.ObjectPlayer = (function(SM,$,undefined){
 			$(objectWrapper).html("");
 		});
 	};
-	
 	
 	var aftersetupSize = function(increase){
 		if($(".current").hasClass("object")){
