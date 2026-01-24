@@ -598,10 +598,10 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_futuristic.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_standard.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_basic.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_retro.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/decoderdisk_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoder_disk_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoder_disk_basic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoder_disk_retro.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/decoder_disk_futuristic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/safebox_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/safebox_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/safebox_futuristic.png", aspectRatio: 1.286 },
@@ -622,7 +622,14 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_realistic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_futuristic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/chessbox_standard.png", aspectRatio: 0.564 },
-			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png", aspectRatio: 0.564 }
+			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png", aspectRatio: 0.564 },
+			{ src: SM.ImagesPath + "hotspotgallery/hidden_path_tablet.png", aspectRatio: 16/9 },
+			{ src: SM.ImagesPath + "hotspotgallery/hidden_path_map.png", aspectRatio: 16/9 },
+			{ src: SM.ImagesPath + "hotspotgallery/hidden_path_futuristic.png", aspectRatio: 16/9 },
+			{ src: SM.ImagesPath + "hotspotgallery/basic_text_box.png", aspectRatio: 16/9 },
+			{ src: SM.ImagesPath + "hotspotgallery/clock_standard.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/clock_retro.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/clock_futuristic.png" }
 
 		];
 
