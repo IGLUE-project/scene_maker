@@ -579,6 +579,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		var hotspotGalleryImgs = [
 			{ src: SM.ImagesPath + "hotspotgallery/hotspot.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/arrow.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/arrow_turn.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/magnifying_glass.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/eye.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/hand.png" },
@@ -589,6 +590,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/dialogue2.png", aspectRatio: 1.164 },
 			{ src: SM.ImagesPath + "hotspotgallery/pin.png", aspectRatio: 0.774 },
 			{ src: SM.ImagesPath + "hotspotgallery/close.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/warning.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/warning_yellow.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/warning_red.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/key.png", aspectRatio: 0.779 },
 			{ src: SM.ImagesPath + "hotspotgallery/painting.png", aspectRatio: 0.891 },
 			{ src: SM.ImagesPath + "hotspotgallery/keypad_standard.png" },
@@ -619,6 +623,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/chessboard_futuristic.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/chessbox_standard.png", aspectRatio: 0.564 },
 			{ src: SM.ImagesPath + "hotspotgallery/chessbox_realistic.png", aspectRatio: 0.564 }
+
 		];
 
 		var carouselImages = [];
