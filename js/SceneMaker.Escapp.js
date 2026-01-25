@@ -135,7 +135,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 		return relatedPuzzleIds;
 	};
 
-	var _updateSceneState = function(erState){
+	var _updateSceneState = function(erState, afterSubmitPuzzle=false){
 		if((typeof erState !== "undefined")&&(Array.isArray(erState.puzzlesSolved))){
 			var newPuzzles = erState.puzzlesSolved.filter(
 				puzzleId => !_puzzlesSolved.includes(puzzleId) && _relatedPuzzleIds.includes(puzzleId)
@@ -149,11 +149,11 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 				}
 			});
 			_puzzlesSolved = _puzzlesSolved.sort((a, b) => a - b);
-			_updateSceneWithActions(actions);
+			_updateSceneWithActions(actions, afterSubmitPuzzle);
 		}
 	};
 
-	var _updateSceneWithActions = function(actions){
+	var _updateSceneWithActions = function(actions, afterSubmitPuzzle){
 		//If there are several actions with type "goToScreen" or "openView", apply only the last one.
 		var lastIndexSlideMovement = actions.map(a => a.actionType).reduce((last, type, i) => 
 			(type === "goToScreen" || type === "openView") ? i : last, -1
@@ -169,7 +169,17 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 		actions = actions.filter((a, i) =>
 			!(a.actionType === "playSound") || i === lastIndexPlaySound
 		);
-		
+
+		//Ignore delays.
+		if(afterSubmitPuzzle === false){
+			actions = actions.map(action => ({
+			  ...action,
+			  actionParams: action.actionParams
+			    ? (({ delay, ...rest }) => rest)(action.actionParams)
+			    : action.actionParams
+			}));
+		}
+
 		SM.Actions.performActions(actions);
 	};
 
@@ -181,7 +191,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 					_escapp.submitPuzzle(puzzleId, puzzleSolution, {}, (success, res) => {
 						//SM.Debugging.log("Solution submitted to Escapp", puzzleId, puzzleSolution, success, res);
 						if(success){
-							_updateSceneState(res.erState);
+							_updateSceneState(res.erState, true);
 						}
 					});
 				}
@@ -189,7 +199,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 				//Preview
 				var erState = {puzzlesSolved: JSON.parse(JSON.stringify(_puzzlesSolved))};
 				erState.puzzlesSolved.push(puzzleId);
-				_updateSceneState(erState);
+				_updateSceneState(erState, true);
 			}
 		}
 	};

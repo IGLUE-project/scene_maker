@@ -240,6 +240,13 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 							$actionParamsPuzzleSelect.val(action.actionParams.puzzleId);
 							_onPuzzleChange(action.actionParams.puzzleId,$actionWrapper);
 						}
+						if(typeof action.actionParams.delay === "string"){
+							const delayValue = parseInt(action.actionParams.delay, 10);
+							if (!Number.isNaN(delayValue) && delayValue > 0) {
+								var $actionParamsDelayInput = $actionWrapper.find("div.actionParamsDelay input");
+								$actionParamsDelayInput.val(delayValue);
+							}
+						}
 					}
 				}
 			}	
@@ -313,6 +320,8 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		var $selectPuzzleWrapper = $actionWrapperDiv.find("div.actionParamsPuzzle");
 		var $selectPuzzle = $selectPuzzleWrapper.find("select");
 		var $inputPuzzleSolutionWrapper = $actionWrapperDiv.find("div.actionParamsPuzzleSolution");
+		var $inputDelayWrapper = $actionWrapperDiv.find("div.actionParamsDelay");
+		var $inputDelay = $inputDelayWrapper.find("input");
 		var $warningChangeBackgroundWrapper = $actionWrapperDiv.find("div.ActionWarningChangeBackground");
 
 		if((option === "goToScreen")||(option === "changeScreen")){
@@ -370,6 +379,12 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			$selectPuzzleWrapper.show();
 		} else {
 			$selectPuzzleWrapper.hide();
+		}
+		if(option !== "none"){
+			$inputDelay.val("0");
+			$inputDelayWrapper.show();
+		} else {
+			$inputDelayWrapper.hide();
 		}
 		$inputPuzzleSolutionWrapper.hide();
 	};
@@ -448,6 +463,13 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				var $actionParamsPuzzleSelect = $actionWrapper.find("div.actionParamsPuzzle select");
 				if($actionParamsPuzzleSelect.is(":visible")){
 					action.actionParams.puzzleId = $actionParamsPuzzleSelect.val();
+				}
+				var $actionParamsDelayInput = $actionWrapper.find("div.actionParamsDelay input");
+				if($actionParamsDelayInput.is(":visible")){
+					const delayValue = parseInt($actionParamsDelayInput.val(), 10);
+					if (!Number.isNaN(delayValue) && delayValue > 0) {
+						action.actionParams.delay = (delayValue + "");
+					}
 				}
 				if (Object.keys(action.actionParams).length === 0) {
 					delete action.actionParams;

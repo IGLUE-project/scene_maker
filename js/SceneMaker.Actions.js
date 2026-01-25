@@ -65,7 +65,7 @@ SceneMaker.Actions = (function(SM,$,undefined){
 		switch(action.actionType){
 			case "showText":
 				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
-					_addTooltip($(hotspotDOM)[0],action.actionParams.text);
+					_addTooltip($(hotspotDOM)[0],action.actionParams.text,action.actionParams.delay);
 				};
 				break;
 			default:
@@ -77,7 +77,7 @@ SceneMaker.Actions = (function(SM,$,undefined){
 		switch(action.actionType){
 			case "showText":
 				if((action.actionParams)&&(typeof action.actionParams.text === "string")){
-					_addTooltip($(hotzoneDOM)[0],action.actionParams.text);
+					_addTooltip($(hotzoneDOM)[0],action.actionParams.text,action.actionParams.delay);
 				};
 				break;
 			default:
@@ -85,7 +85,15 @@ SceneMaker.Actions = (function(SM,$,undefined){
 		};
 	};
 
-	var _addTooltip = function(elementDOM,text){
+	var _addTooltip = function(elementDOM,text,delay){
+		let delayValue = 0;
+		if(typeof delay === "string"){
+			let delayValueParam = parseInt(delay, 10);
+			if (!Number.isNaN(delayValueParam) && delayValueParam > 0) {
+				delayValue = delayValueParam*1000;
+			}
+		}
+
 		tippy(elementDOM, {
 			content: text,
 			trigger: 'click',
@@ -101,7 +109,7 @@ SceneMaker.Actions = (function(SM,$,undefined){
 			hideOnClick: true,
 			maxWidth: 'none',
 			offset: [2, 6],
-			delay: [0, 0],
+			delay: [delayValue, 0],
 			popperOptions: {
 				modifiers: [
 					{ name: 'eventListeners', options: { scroll: false, resize: false } },
@@ -123,6 +131,20 @@ SceneMaker.Actions = (function(SM,$,undefined){
 	};
 
 	var _performAction = function(action,eventTargetId){
+		if((action)&&(action.actionParams)&&(typeof action.actionParams.delay === "string")){
+			const delayValue = parseInt(action.actionParams.delay, 10);
+			if (!Number.isNaN(delayValue) && delayValue > 0) {
+				setTimeout(function(){
+					_performActionWithoutDelay(action,eventTargetId);
+				}, (delayValue*1000));
+				return;
+			}
+		}
+		_performActionWithoutDelay(action,eventTargetId);
+		return;
+	};
+
+	var _performActionWithoutDelay = function(action,eventTargetId){
 		switch(action.actionType){
 			case "goToScreen":
 				if((action.actionParams)&&(typeof action.actionParams.screen === "string")){
