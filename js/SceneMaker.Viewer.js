@@ -45,7 +45,7 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 	};
 
 	var _initAferStatusLoaded = function(options,scene){
-		SM.Utils.Loader.loadLanguageCSS();
+		SM.ViewerAdapter.applyLanguageCSS();
 		SM.EventsNotifier.init();
 		SM.Object.init();
 		SM.Screen.init();

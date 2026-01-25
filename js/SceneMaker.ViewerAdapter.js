@@ -64,6 +64,13 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		return _sceneAspectRatioString;
 	};
 
+	var applyLanguageCSS = function(){
+		var locale = SM.I18n.getLanguage();
+		if(typeof locale !== "undefined"){
+			$("body").attr("locale", locale);
+		}
+	};
+
 	var updateInterface = function(){
 		if(typeof _sceneAspectRatio === "undefined"){
 			return;
@@ -241,6 +248,7 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 		init 							: init,
 		getAspectRatio					: getAspectRatio,
 		applyAspectRatio				: applyAspectRatio,
+		applyLanguageCSS				: applyLanguageCSS,
 		updateInterface 				: updateInterface
 	};
 

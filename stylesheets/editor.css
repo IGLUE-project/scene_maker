@@ -263,6 +263,10 @@ button.slidesScrollbarButton {
     user-select: none;
 }
 
+body[locale="sr"] #addViewButton > button.slidesScrollbarButton {
+	width: 110px !important;
+}
+
 button.slidesScrollbarButton:hover {
 	background-color: #357ebd;
 }

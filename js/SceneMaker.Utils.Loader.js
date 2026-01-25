@@ -93,70 +93,6 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 		}
 	};
 
-	var loadCSS = function(path,callback){
-		var url = path;
-		if(url.indexOf("http") != 0){
-			url = SM.StylesheetsPath + url;
-			if(SM.Status.getProtocol()==="file"){
-				if(url.indexOf("/") == 0){
-					url = url.replace("/","");
-				} 
-			}
-		}
-		
-		var head = document.getElementsByTagName('head')[0];
-		var link = document.createElement('link');
-		link.type = "text/css";
-		link.rel = "stylesheet"
-		link.href = url;
-
-		//Callback
-		if(typeof callback == "function"){
-
-			//Only call callback once
-			var callbackCalled = false;
-
-			var callCallback = function(){
-				if(!callbackCalled){
-					callbackCalled = true;
-					callback();
-				}
-			}
-
-			//calling a function after the css is loaded (Firefox & Google Chrome)
-			link.onload = callCallback;
-			link.onerror = callCallback;
-
-			var loadFunction = function(){
-				if((this.readyState == 'complete')||(this.readyState == 'loaded')){
-					callCallback();
-				}
-			};
-			//calling a function after the css is loaded (IE)
-			link.onreadystatechange = loadFunction;
-		};
-
-		head.appendChild(link);
-
-		if(typeof callback == "function"){
-			//Workaround for browsers that don't support LINK onload functions
-			var img = document.createElement('img');
-			img.onerror = function(){
-				callCallback();
-			}
-			img.src = url;
-		}
-	};
-
-	var loadLanguageCSS = function(){
-		var languagesWithCSS = ["es", "sr"];
-		var language = SM.I18n.getLanguage();
-		if(languagesWithCSS.indexOf(language)!=-1){
-			//Load CSS for this language
-			loadCSS("language/" + language + ".css");
-		}
-	};
-
 
 	/*
 	* Loading dialogs
@@ -234,8 +170,6 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 		init 							: init,
 		preloadResources				: preloadResources,
 		loadScript						: loadScript,
-		loadCSS							: loadCSS,
-		loadLanguageCSS					: loadLanguageCSS,
 		prepareFancyboxForFullLoading	: prepareFancyboxForFullLoading,
 		startLoading					: startLoading,
 		stopLoading						: stopLoading,

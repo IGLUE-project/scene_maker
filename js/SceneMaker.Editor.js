@@ -50,7 +50,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	};
 
 	var _initAferStatusLoaded = function(options,scene){
-		SM.Utils.Loader.loadLanguageCSS();
+		SM.ViewerAdapter.applyLanguageCSS();
 		SM.I18n.translateUI();
 		SM.Object.init();
 		SM.Editor.Dummies.init();
