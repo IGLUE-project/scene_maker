@@ -19,7 +19,6 @@ const editorJSFiles = [
 
   "libs/jquery-1.7.2.js",
   "libs/jquery-ui/jquery-ui-1.9.2.js",
-  "libs/jquery.mousewheel-3.0.4.js",
   "libs/jquery.carouFredSel/jquery.carouFredSel-6.2.0.js",
   "libs/jquery.fancybox-1.3.4.js",
   "libs/jquery.mCustomScrollbar.js",
