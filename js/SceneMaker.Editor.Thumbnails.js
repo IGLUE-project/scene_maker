@@ -216,7 +216,12 @@ SceneMaker.Editor.Thumbnails = (function(SM,$,undefined){
 		if($(slide).attr('type')===SM.Constant.VIEW_CONTENT){
 			return (SM.ImagesPath + "slidesthumbs/view_content_template.png");
 		} else {
-			return (SM.ImagesPath + "slidesthumbs/screen_template.png");
+			if(SM.ViewerAdapter.getAspectRatio() === "16:9"){
+				return (SM.ImagesPath + "slidesthumbs/screen_template_16-9.png");
+			} else {
+				return (SM.ImagesPath + "slidesthumbs/screen_template_4-3.png");
+			}
+			
 		}
 	};
 

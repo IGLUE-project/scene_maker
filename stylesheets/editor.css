@@ -677,11 +677,19 @@ body[aspectratio="16:9"] .viewthumb{
 }
 
 .viewthumb[type='view_image'] img {
-	background-image: url("/images/slidesthumbs/screen_template.png");
+	background-image: url("/images/slidesthumbs/screen_template_4-3.png");
 }
 
 .viewthumb[type='view_image'] img:hover {
-	background-image: url("/images/slidesthumbs/screen_templateh.png");
+	background-image: url("/images/slidesthumbs/screen_template_4-3_hover.png");
+}
+
+body[aspectratio="16:9"] .viewthumb[type='view_image'] img {
+	background-image: url("/images/slidesthumbs/screen_template_16-9.png");
+}
+
+body[aspectratio="16:9"] .viewthumb[type='view_image'] img:hover {
+	background-image: url("/images/slidesthumbs/screen_template_16-9_hover.png");
 }
 
 .viewthumb[type='view_content'] img {

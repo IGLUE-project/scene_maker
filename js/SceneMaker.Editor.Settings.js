@@ -17,7 +17,7 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		
 		//Aspect ratio
 		if((typeof settings.aspectRatio !== "string")||(["4:3","16:9"].indexOf(settings.aspectRatio)===-1)){
-			settings.aspectRatio = "4:3";
+			settings.aspectRatio = "16:9";
 		}
 		SM.ViewerAdapter.applyAspectRatio(settings.aspectRatio);
 	};
@@ -109,6 +109,13 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		return true;
 	};
 
+	var _applyAspectRatio = function(aspectRatio){
+		SM.ViewerAdapter.applyAspectRatio(aspectRatio);
+		SM.Editor.Thumbnails.drawScreenThumbnails(function(){
+			SM.Editor.Thumbnails.selectThumbnail(SM.Screen.getCurrentScreenNumber());
+		});
+	};
+
 	var onSaveSceneSettingsButtonClicked = function(event){
 		event.preventDefault();
 		if($(event.target).hasClass("buttonDisabledOnSettings")){
@@ -116,7 +123,7 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		}
 		settings = _saveSettings();
 
-		SM.ViewerAdapter.applyAspectRatio(settings.aspectRatio);
+		_applyAspectRatio(settings.aspectRatio);
 		$.fancybox.close();
 	};
 
