@@ -360,6 +360,11 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			$('.object_wrapper').hide();
 		}
 	};
+
+
+	////////////
+	// Save Scene to JSON
+	////////////
 	
 	var saveScene = function(){
 		//Save the scene in JSON
@@ -573,6 +578,28 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	};
 
 
+	////////////
+	// Export and import
+	////////////
+
+	var exportSceneToJSON = function(){
+		var scene = saveScene();
+		const sceneJSONString = JSON.stringify(scene, null, 2);
+		const sceneBlob = new Blob([sceneJSONString], { type: "application/json" });
+		const sceneURL = URL.createObjectURL(sceneBlob);
+		const sceneLink = document.createElement("a");
+		sceneLink.href = sceneURL;
+		sceneLink.download = SM.Editor.Utils.toPascalCase(scene.title) + "_" + SM.Editor.Utils.getDateISO() + ".json";
+		document.body.appendChild(sceneLink);
+		sceneLink.click();
+		document.body.removeChild(sceneLink);
+  		URL.revokeObjectURL(sceneLink);
+	};
+
+	var importSceneFromJSON = function(){
+		return false;
+	};
+
 	//////////////////
 	///  Getters and Setters
 	//////////////////
@@ -628,15 +655,15 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 	var isZoneEmpty = function(zone){
 		return ((zone)&&($(zone).find(".delete_content").length===0));
-	}
+	};
 
 	var getContentAddMode = function(){
 		return contentAddModeForSlides;
-	}
+	};
 
 	var setContentAddMode = function(mode){
 		contentAddModeForSlides = mode;
-	}
+	};
 
 	var hasSceneChanged = function(){
 		try {
@@ -672,6 +699,8 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		isZoneEmpty				: isZoneEmpty,
 		saveScene				: saveScene,
 		sendScene				: sendScene,
+		exportSceneToJSON		: exportSceneToJSON,
+		importSceneFromJSON		: importSceneFromJSON,
 		onSlideEnterEditor 		: onSlideEnterEditor,
 		onSlideLeaveEditor		: onSlideLeaveEditor,
 		onViewThumbClicked		: onViewThumbClicked,

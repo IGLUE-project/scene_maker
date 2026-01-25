@@ -130,8 +130,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		$("#toolbar_save").find("p.toolbar_scene_title").html(SM.I18n.getTrans("i.Save"));
 
 		//Menu
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").parent().removeClass("menu_item_disabled");
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").find("span").html(SM.I18n.getTrans("i.Save"));
+		$(".menu_option.menu_action[action='saveScene']").parent().removeClass("menu_item_disabled");
+		$(".menu_option.menu_action[action='saveScene']").find("span").html(SM.I18n.getTrans("i.Save"));
 	};
 
 	var _loadingSaveButton = function(){
@@ -144,8 +144,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		$("#toolbar_save").find("p.toolbar_scene_title").html(SM.I18n.getTrans("i.Saving"));
 
 		//Menu
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").parent().addClass("menu_item_disabled");
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").find("span").html(SM.I18n.getTrans("i.Saving"));
+		$(".menu_option.menu_action[action='saveScene']").parent().addClass("menu_item_disabled");
+		$(".menu_option.menu_action[action='saveScene']").find("span").html(SM.I18n.getTrans("i.Saving"));
 	};
 
 	var _disableSaveButton = function(){
@@ -163,8 +163,8 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		}, 5000);
 
 		//Menu
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").parent().addClass("menu_item_disabled");
-		$(".menu_option.menu_action[action='onSaveButtonClicked']").find("span").html(SM.I18n.getTrans("i.Saved"));
+		$(".menu_option.menu_action[action='saveScene']").parent().addClass("menu_item_disabled");
+		$(".menu_option.menu_action[action='saveScene']").find("span").html(SM.I18n.getTrans("i.Saved"));
 	};
 
 	var _stopSaveButtonTimeout = function(){
@@ -350,7 +350,7 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 
   	var save = function(){
   		_cleanElementToolbar();
-		SM.Editor.Tools.Menu.onSaveButtonClicked();
+		SM.Editor.Tools.Menu.saveScene();
 	};
 
 	var preview = function(){

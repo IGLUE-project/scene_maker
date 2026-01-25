@@ -1,7 +1,5 @@
 SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
-
 	var _initialized = false;
-	var _hoverMenu = false;
 	
 	/*
 	 * Init singleton
@@ -9,8 +7,6 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 	 */
 	var init = function(){
 		if(!_initialized){
-			_hoverMenu = true;
-			
 			//Add listeners to menu buttons
 			$.each($("#menu a.menu_action"), function(index, menuButton) {
 				$(menuButton).on("click", function(event){
@@ -73,32 +69,20 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 		});
 	};
 
-	var _enableMenuItem = function(items){
-		// $(items).show();
-		$(items).removeClass("menu_item_disabled").addClass("menu_item_enabled");
-	};
-
-	var _disableMenuItem = function(items){
-		// $(items).hide();
-		$(items).removeClass("menu_item_enabled").addClass("menu_item_disabled");
-	};
-
-	var disableMenu = function(){
-		$("#menu").hide();
-		$("#menu").attr("id","menuDisabled");
-	};
-
-	var enableMenu = function(){
-		$("#menuDisabled").show();
-		$("#menuDisabled").attr("id","menu");
+	var _hideMenuAfterAction = function(){
+		$("#menu li > ul.menu_option_main").hide();
 	};
 
 
 	//////////////////
-	/// SAVE
+	/// Actions
 	/////////////////
 
-	var onSaveButtonClicked = function(){
+	var displaySettings = function(){
+		SM.Editor.Settings.displaySettings();
+	};
+
+	var saveScene = function(){
 		if(SM.Screen.getScreens().length === 0){
 			var options = {};
 			options.width = 600;
@@ -128,17 +112,9 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 		});
 	};
 
-	/////////////////////
-	/// PREVIEW
-	///////////////////////
-
 	var preview = function(){
 		SM.Editor.Preview.preview();
 	};
-
-	////////////////
-	//More Actions
-	///////////////
 
 	var exit = function(){
 		if(SM.Editor.hasSceneChanged()){
@@ -205,29 +181,26 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 		return false; //Prevent iframe to move
 	};
 
-	var displaySettings = function(){
-		SM.Editor.Settings.displaySettings();
+	var exportToJSON = function(){
+		SM.Editor.exportSceneToJSON();
+		return false; //Prevent iframe to move
 	};
 
-	var _hideMenuAfterAction = function(){
-		if(_hoverMenu){
-			$("#menu ul.menu_option_main").addClass("temp_hidden");
-			setTimeout(function(){
-				$("#menu ul.menu_option_main").removeClass("temp_hidden");
-			},500);
-		}
+	var importFromJSON = function(){
+		SM.Editor.importSceneFromJSON();
+		return false; //Prevent iframe to move
 	};
 
 	return {
 		init							: init,
-		disableMenu 					: disableMenu,
-		enableMenu 						: enableMenu,
+		displaySettings					: displaySettings, 
+		saveScene 						: saveScene,
+		preview 						: preview,
 		addScreen						: addScreen,
 		addView							: addView,
-		displaySettings					: displaySettings, 
-		onSaveButtonClicked 			: onSaveButtonClicked,
-		preview 						: preview,
-		exit 							: exit
+		exportToJSON					: exportToJSON,
+		importFromJSON					: importFromJSON,
+		exit							: exit
 	};
 
 }) (SceneMaker, jQuery);

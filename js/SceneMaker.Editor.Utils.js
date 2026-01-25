@@ -150,6 +150,25 @@ SceneMaker.Editor.Utils = (function(SM,$,undefined){
 		}
 	};
 
+	var toPascalCase = function(str) {
+		return str
+		.trim()
+		.toLowerCase()
+		.replace(/[^a-z0-9\s]/g, "")
+		.replace(/\s+(.)/g, (_, c) => c.toUpperCase())
+		.replace(/^\w/, c => c.toUpperCase())
+		.replace(/\s/g, "");
+	};
+
+	var getDateISO = function(){
+		const d = new Date();
+		const pad = n => String(n).padStart(2, "0");
+		return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}` +
+		     `_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+	};
+
+
+
 	return {
 		dimentionsToDraw			: dimentionsToDraw,
 		setStyleInPixels  			: setStyleInPixels,		
@@ -159,7 +178,9 @@ SceneMaker.Editor.Utils = (function(SM,$,undefined){
 		loadTab						: loadTab,
 		hideNonDefaultTabs			: hideNonDefaultTabs,
 		showErrorDialog				: showErrorDialog,
-		enableElementSettingsField	: enableElementSettingsField
+		enableElementSettingsField	: enableElementSettingsField,
+		toPascalCase				: toPascalCase,
+		getDateISO					: getDateISO
 	};
 
 }) (SceneMaker, jQuery);
