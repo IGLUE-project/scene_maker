@@ -260,8 +260,7 @@ div.view_content_text {
 	width: 30px;
 	background: transparent;
 	background-repeat: no-repeat;
-	background-image: url("/images/vicons/fullscreen.png");
-	background-size: auto 600%;
+	background-size: 100% 100%;
 	text-align: center;
 	border: none;
 	opacity: 1;
@@ -270,19 +269,19 @@ div.view_content_text {
 }
 
 #page-fullscreen.fson {
-	background-position: center 80%;
+	background-image: url("/images/vicons/fullscreen_on.png");
 }
 
 #page-fullscreen.fson:hover {
-	background-position: center 100%;
+	background-image: url("/images/vicons/fullscreen_on_hover.png");
 }
 
 #page-fullscreen.fsoff {
-	background-position: center 0;
+	background-image: url("/images/vicons/fullscreen_off.png");
 }
 
 #page-fullscreen.fsoff:hover {
-	background-position: center 20%;
+	background-image: url("/images/vicons/fullscreen_off_hover.png");
 }
 
 
@@ -553,7 +552,7 @@ a.button_advert:hover {
 
 img.loading_fancy_img {
 	height: 15%;
-	margin-top: 30%;
+	margin-top: 20%;
 }
 
 .waitCursor {

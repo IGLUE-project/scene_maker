@@ -211,7 +211,7 @@ SceneMaker.Utils.Loader = (function(SM,undefined){
 	var startLoadingInContainer = function(container,options){
 		var loadImg = document.createElement("img");
 		$(loadImg).addClass("loading_fancy_img");
-		$(loadImg).attr("src", SM.ImagesPath + "lightbox-ico-loading.gif");
+		$(loadImg).attr("src", SM.ImagesPath + "icon_loader.gif");
 		if((options)&&(options.style)){
 			$(loadImg).addClass(options.style);
 		}
