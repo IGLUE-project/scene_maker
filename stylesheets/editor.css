@@ -531,7 +531,7 @@ div.view_content_zone[tooltip='true'] {
 .delete_content {
 	position: absolute;
 	bottom: -2px;
-	right: 0px;
+	right: -1px;
 	width: 40px;
 	height: 40px;
 	cursor:pointer;
@@ -726,27 +726,6 @@ body[aspectratio="16:9"] .viewthumb[type='view_image'] img:hover {
 }
 
 
-/* Delete buttons */
-
-.delete_slide {
-	position: absolute;
-	top: 5px;
-	right: 4px;
-	width: 26px;
-	height: 26px;
-	cursor:pointer;
-	background: url("/images/icons/ve_delete.png");
-	z-index: 1074;
-	background-size: 90%;
-	background-repeat: no-repeat;
-}
-
-.delete_slide:hover {
-	background: url("/images/icons/ve_delete_hover.png");
-	background-size: 90%;
-	background-repeat: no-repeat;
-}
-
 /* Fancybox */
 
 body.SceneMakerBody #fancybox-wrap {
@@ -802,6 +781,8 @@ body.SceneMakerBody #fancybox-close:hover {
 }
 
 .image_add_url {
+	width: 40px;
+	height: 40px;
 	margin-left: 23px;
 	position: relative;
 	float: left;
