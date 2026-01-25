@@ -11,11 +11,7 @@ SceneMaker.Editor.Video.Youtube = (function(SM,$,undefined){
 
 	var _generateWrapper = function(videoId){
 		var videoURL = "https://www.youtube.com/embed/"+videoId;
-		videoURL = SM.Utils.addParamToUrl(videoURL,"wmode","opaque");
-		var currentArea = SM.Editor.getCurrentArea();
-		var videoWContainer = ((typeof currentArea != "undefined")&&(currentArea != null)) ? currentArea : SM.Editor.getCurrentContainer();
-		var dimensionsToDraw = SM.Editor.Utils.dimentionsToDraw($(videoWContainer).width(), $(videoWContainer).height(),325,243);
-		var wrapper = "<iframe src='"+videoURL+"' frameborder='0' style='width:"+dimensionsToDraw.width+"px; height:"+dimensionsToDraw.height+"px;'></iframe>";
+		var wrapper = "<iframe src='"+videoURL+"' frameborder='0'></iframe>";
 		return wrapper;
 	};
 
