@@ -629,7 +629,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/basic_text_box.png", aspectRatio: 16/9 },
 			{ src: SM.ImagesPath + "hotspotgallery/clock_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/clock_retro.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/clock_futuristic.png" }
+			{ src: SM.ImagesPath + "hotspotgallery/clock_futuristic.png" },
+			{ src: SM.ImagesPath + "hotspotgallery/wired_bomb.png", aspectRatio: 0.82 }
 
 		];
 
