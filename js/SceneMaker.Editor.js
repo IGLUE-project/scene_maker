@@ -201,10 +201,12 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		var options = {};
 		options.width = 375;
 		options.height = 135;
-		var areaType = getCurrentArea().attr("type");
-		if(areaType === "audio"){
+		var currentArea = getCurrentArea();
+		var areaType = currentArea.attr("type");
+		if((areaType === "audio")||((areaType === "object")&&(currentArea.attr("object_type") === SM.Constant.MEDIA.YOUTUBE_VIDEO))){
 			areaType = "video";
 		}
+		
 		options.notificationIconSrc = SM.ImagesPath + "thumbs/" + areaType + ".png";
 		options.text = SM.I18n.getTrans("i.AreYouSureContent");
 		var button1 = {};

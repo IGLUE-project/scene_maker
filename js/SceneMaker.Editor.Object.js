@@ -262,7 +262,7 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 				if(([SM.Constant.MEDIA.PDF].indexOf(objectInfo.type)!=-1)&&(!options.wrapperGenerated)){
 					return drawObject(objectInfo.source,options);
 				}
-				drawObjectWithWrapper(object, current_area, object_style);
+				_drawObjectWithWrapper(object, objectInfo.type, current_area, object_style);
 				break;
 			case SM.Constant.WRAPPER.VIDEO:
 				SM.Editor.Video.HTML5.drawVideoWithWrapper(object);
@@ -279,8 +279,9 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		SM.Editor.Tools.loadToolsForZone(current_area);
 	};
 	
-	var drawObjectWithWrapper = function(wrapper, current_area, style){
+	var _drawObjectWithWrapper = function(wrapper, objectType, current_area, style){
 		current_area.attr('type', 'object');
+		current_area.attr('object_type', objectType);
 		var wrapperDiv = document.createElement('div');
 		if(style){
 			wrapperDiv.setAttribute('style', style);
