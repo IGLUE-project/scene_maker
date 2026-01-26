@@ -1,8 +1,7 @@
 SceneMaker.Editor = (function(SM,$,undefined){
-	
 	var initOptions;
 	var initialScene;
-	var isInitialScene = false;
+	var existingSceneLoaded = false;
 	var lastStoredSceneStringify;
 	//Pointers to the current and last zone
 	var currentZone;
@@ -13,13 +12,12 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	var contentAddModeForSlides = SM.Constant.NONE;
 
 	/**
-	 * Scene Maker initializer.
+	 * Scene Maker Editor initializer.
 	 */
-	var init = function(){
-		_init(SM.getOptions())
-	};
-
-	var _init = function(options){
+	var init = function(options){
+		if(typeof options === "undefined"){
+			options = SM.getOptions();
+		}
 		$("#waiting_overlay").show();
 		
 		$("body").addClass("SceneMakerBody");
@@ -37,9 +35,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			initOptions = {};
 		}
 
-		if(scene){
-			isInitialScene = true;
-		}
+		existingSceneLoaded = ((typeof scene === "object")&&(options.importedScene !== true));
 
 		SM.Utils.init();
 		SM.I18n.init(initOptions,scene);
@@ -70,8 +66,8 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		SM.Audio.init();
 		SM.Editor.Settings.init();
 		
-		if(isInitialScene){
-			var scene = SM.Utils.fixScene(scene);
+		if(typeof scene === "object"){
+			scene = SM.Utils.fixScene(scene);
 			if(scene===null){
 				$("#waiting_overlay").hide();
 				SM.Utils.showPNotValidDialog();
@@ -80,7 +76,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			initialScene = scene;
 			SM.Editor.Settings.loadSceneSettings(scene);
 			SM.Editor.Renderer.init(scene);
-			//remove focus from any zone
+			//Remove focus from any zone
 			_removeSelectableProperties();
 			_initAferSceneLoaded(options,scene);
 		} else {
@@ -90,7 +86,9 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	};
 	
 	var _initAferSceneLoaded = function(options,scene){
-		if(isInitialScene){
+		var isScene = (typeof scene === "object");
+
+		if(isScene){
 			//Set current slide
 			var slideFromHash = SM.Utils.getScreenNumberFromHash();
 			if(slideFromHash){
@@ -105,7 +103,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			SM.Editor.Thumbnails.moveThumbnailsToScreenWithNumber(SM.Screen.getCurrentScreenNumber());
 		});
 		
-		if(isInitialScene){
+		if(isScene){
 			//hide objects (the onSlideEnterEditor event will show the objects in the current slide)
 			$('.object_wrapper').hide();
 		}
@@ -130,15 +128,11 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			SM.Slides.triggerSlideEnterEvent($(SM.Screen.getCurrentScreen()).attr("id"));
 		}
 
-		//Add the first slide
-		if(!isInitialScene){
+		//Add the first slide and init settings
+		if(!isScene){
 			var screen = SM.Editor.Dummies.getDummy(SM.Constant.SCREEN,{slideNumber:1});
 			SM.Editor.Screen.addScreen(screen);
 			SM.Screen.goToScreenWithNumber(1);
-		}
-
-		//Init settings
-		if(!isInitialScene){
 			SM.Editor.Settings.displaySettings();
 		}
 
@@ -527,7 +521,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 		return slide;
 	};
 
-	var sendScene = function(scene,order,successCallback,failCallback){
+	var sendScene = function(scene,successCallback,failCallback){
 		if(SM.Debugging.isDevelopping()){
 			lastStoredSceneStringify = JSON.stringify(scene);
 			setTimeout(function(){
@@ -536,7 +530,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			return;
 		}
 
-		var createNewScene = ((typeof lastStoredSceneStringify == "undefined")&&(!isInitialScene));
+		var createNewScene = ((typeof lastStoredSceneStringify == "undefined")&&(!existingSceneLoaded));
 		
 		var send_type;
 		if(createNewScene){
@@ -643,8 +637,9 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			$('article[type="' + SM.Constant.SCREEN + '"]').remove();
 			SM.Editor.Marker.resetData();
 			SM.Utils.resetIds();
+			initOptions.importedScene = true;
 			initOptions.scene = scene;
-			_init(initOptions);
+			init(initOptions);
 		}
 	};
 

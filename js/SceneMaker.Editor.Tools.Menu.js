@@ -96,7 +96,7 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 
 		SM.Editor.Tools.changeSaveButtonStatus("loading");
 		var scene = SM.Editor.saveScene();
-		SM.Editor.sendScene(scene,"save",function(){
+		SM.Editor.sendScene(scene,function(){
 			//onSave succesfully
 			// SM.Debugging.log("onSave succesfully");
 			// SM.Debugging.log(scene);
@@ -142,7 +142,7 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 				$("#waiting_overlay").show();
 				SM.Editor.Tools.changeSaveButtonStatus("loading");
 				var scene = SM.Editor.saveScene();
-				SM.Editor.sendScene(scene,"save",function(){
+				SM.Editor.sendScene(scene,function(){
 					//onSave succesfully
 					SM.Editor.Tools.changeSaveButtonStatus("disabled");
 					_exitFromSM();
