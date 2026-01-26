@@ -1,15 +1,16 @@
 SceneMaker.Editor.Video = (function(SM,$,undefined){
-		
+	var initialized = false;
 	var contentToAdd = null;
 	var contentAddMode = SM.Constant.NONE;
-
 	var urlDivId = "tab_video_from_url_content";
 		
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+
 		SM.Editor.Video.HTML5.init();
 
 		var urlInput = $("#"+urlDivId).find("input");
-
 		$("#tab_video_from_url_content .previewButton").click(function(event){
 			if(SM.Validator.validateObject($(urlInput).val())){
 				contentToAdd = SM.Editor.Utils.autocompleteUrls($(urlInput).val());
@@ -18,7 +19,7 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 				contentToAdd = null;
 			}
 		});
-	};	
+	};
 
 	var onLoadTab = function(tab){
 		//Load Video from URL

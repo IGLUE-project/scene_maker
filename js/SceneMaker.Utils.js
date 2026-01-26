@@ -1,16 +1,15 @@
 SceneMaker.Utils = (function(SM,undefined){
-	
-	var ids;
-	// a list of all used ids
-	var domIds;
-	// myDomId = domIds['prefix'] returns a unicId for the specified prefix
+	var initialized = false;
+	var ids; // a list of all used ids
+	var domIds;	// myDomId = domIds['prefix'] returns a unicId for the specified prefix
 
 	var init = function(){
-		if(!domIds){
-			domIds = new Array();
-			ids = [];
-		}
+		if(initialized) return;
+		initialized = true;
 
+		ids = [];
+		domIds = new Array();
+		
 		//Extend JQuery functionality
 		jQuery.fn.cssNumber = function(prop){
 			var v = parseInt(this.css(prop),10);
@@ -211,6 +210,11 @@ SceneMaker.Utils = (function(SM,undefined){
 		}
 	};
 
+	var resetIds = function(){
+		ids = [];
+		domIds = new Array();
+	};
+
 	var deepMerge = function(h1,h2){
 		if((typeof h1 === "object")&&(typeof h2 === "object")&&(!(h1 instanceof Array))){
 			let keys = Object.keys(Object.assign({},h1,h2));
@@ -234,6 +238,15 @@ SceneMaker.Utils = (function(SM,undefined){
 	 */
 	var fixScene = function(scene){
 		if(typeof scene !== "object"){
+			return null;
+		}
+		if (!Array.isArray(scene.screens)) {
+			return null;
+		}
+		if (scene.screens.length < 1) {
+			return null;
+		}
+		if (typeof scene.SMVersion !== "string") {
 			return null;
 		}
 		return scene;
@@ -786,6 +799,7 @@ SceneMaker.Utils = (function(SM,undefined){
 		getOptions 						: getOptions,
 		getId							: getId,
 		registerId						: registerId,
+		resetIds						: resetIds,
 		deepMerge						: deepMerge,
 		fixScene						: fixScene,
 		getOuterHTML 					: getOuterHTML,

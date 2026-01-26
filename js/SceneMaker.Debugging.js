@@ -1,5 +1,4 @@
 SceneMaker.Debugging = (function(SM,$,undefined){
-	
 	var developping = false;
 	var settings;
 

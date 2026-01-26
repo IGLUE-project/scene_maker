@@ -1,18 +1,9 @@
-/*
- * Events for Viewer
- */
 SceneMaker.Events = (function(SM,$,undefined){
-
-	var _bindedViewerEventListeners = false;
+	var _initialized = false;
 
 	var init = function(){
-		bindViewerEventListeners();
-	};
-
-	var bindViewerEventListeners = function(){
-		if(_bindedViewerEventListeners){
-			return;
-		}
+		if(_initialized) return;
+		_initialized = true;
 
 		//Enter and leave events
 		$('article').live('slideenter', SM.Viewer.onSlideEnterViewer);
@@ -53,18 +44,14 @@ SceneMaker.Events = (function(SM,$,undefined){
 		window.onbeforeunload = function(){
 			SM.EventsNotifier.notifyEvent("EXIT");
 		};
-
-		_bindedViewerEventListeners = true;
 	};
-
 
 	var _onResizeActions = function(){
 		SM.ViewerAdapter.updateInterface();
 	};
 
 	return {
-			init 							: init,
-			bindViewerEventListeners		: bindViewerEventListeners
+			init : init
 	};
 
 }) (SceneMaker,jQuery);

@@ -1,45 +1,41 @@
 SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 	var _initialized = false;
 	
-	/*
-	 * Init singleton
-	 * Perform actions that must be executed only once
-	 */
 	var init = function(){
-		if(!_initialized){
-			//Add listeners to menu buttons
-			$.each($("#menu a.menu_action"), function(index, menuButton) {
-				$(menuButton).on("click", function(event){
-					event.preventDefault();
-					if($(menuButton).parent().hasClass("menu_item_disabled")){
-						//Disabled button
-						return false;
-					}
-					if(typeof SM.Editor.Tools.Menu[$(menuButton).attr("action")] == "function"){
-						SM.Editor.Tools.Menu[$(menuButton).attr("action")](this);
-						_hideMenuAfterAction();
-					}
-					return false;
-				});
-			});
+		if(_initialized) return;
+		_initialized = true;
 
-			//Prevent iframe to move
-			$("a.menu_option_main, a.menu_option:not('.menu_action')").on("click", function(event){
+		//Add listeners to menu buttons
+		$.each($("#menu a.menu_action"), function(index, menuButton) {
+			$(menuButton).on("click", function(event){
 				event.preventDefault();
+				if($(menuButton).parent().hasClass("menu_item_disabled")){
+					//Disabled button
+					return false;
+				}
+				if(typeof SM.Editor.Tools.Menu[$(menuButton).attr("action")] == "function"){
+					SM.Editor.Tools.Menu[$(menuButton).attr("action")](this);
+					_hideMenuAfterAction();
+				}
 				return false;
 			});
-			
-			//Exit button
-			var options = SM.Utils.getOptions();
-			if(typeof options.exitURL !== "string"){
-				$(".menu_option.menu_action[action='exit']").parent().hide();
-				$("#toolbar_exit_btn").hide();
-			} else {
-				SM.exitPath = options.exitURL;
-			}
-			
-			_initialized = true;
+		});
+
+		//Prevent iframe to move
+		$("a.menu_option_main, a.menu_option:not('.menu_action')").on("click", function(event){
+			event.preventDefault();
+			return false;
+		});
+		
+		//Exit button
+		var options = SM.Utils.getOptions();
+		if(typeof options.exitURL !== "string"){
+			$(".menu_option.menu_action[action='exit']").parent().hide();
+			$("#toolbar_exit_btn").hide();
+		} else {
+			SM.exitPath = options.exitURL;
 		}
+			
 		$("#menu").show();
 
 		//menu click show withouth css instead of hover
@@ -187,7 +183,7 @@ SceneMaker.Editor.Tools.Menu = (function(SM,$,undefined){
 	};
 
 	var importFromJSON = function(){
-		SM.Editor.importSceneFromJSON();
+		SM.Editor.importSceneFromJSONFancybox();
 		return false; //Prevent iframe to move
 	};
 

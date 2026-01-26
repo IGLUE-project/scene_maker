@@ -272,12 +272,14 @@
 	</section>
 
 	<div id="hidden_links" style="display: none;">
+		<!-- Hidden link to open scene settings -->
+		<a id="edit_scene_details" href="#scene_details"></a>
 		<!-- Hidden link to open preview -->
 		<a id="preview_action"></a>
 		<!-- Hidden link to open fancybox when adding a view -->
 		<a id="addViewFancybox" href="#thumbcontent"></a>
-		<!-- Hidden link to open scene settings -->
-		<a id="edit_scene_details" href="#scene_details"></a>
+		<!-- Hidden link to open fancybox when importing a scene -->
+		<a id="importSceneFancybox" href="#import_fancybox"></a>
 		<!-- Hidden link for loading fancybox -->
 		<a id="fancyLoad" href="#loading_fancy"></a>
 		<!-- Hidden link to open notification template -->
@@ -459,6 +461,24 @@
 						<button i18n-key="i.AddContent" type="button" class="button button_addContent">Add Content</button>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Import JSON files -->
+	<div style='display:none'>
+		<div id='import_fancybox'>
+			<div class='fancy_tabs' id='import_fancybox_tabs'>
+				<ul>
+					<li>
+						<a href="#" id="tab_import" class="fancy_tab tabbable" i18n-key="i.Import">Import</a>
+					</li>
+				</ul>
+			</div> 
+			<div id='tab_import_content' class="fancy_tab_content" style='display:none'> 
+				<p class="textfancy" i18n-key="i.ImportText">You can import a scene from a JSON file. If you do so, the current scene will be replaced by the imported one.</p>
+				<input id="import_file_input" type="file" name="file" accept=".json,application/json" />
+				<button id="import_file_button" type="button" class="button previewButton" i18n-key="i.Import">Import</button>
 			</div>
 		</div>
 	</div>

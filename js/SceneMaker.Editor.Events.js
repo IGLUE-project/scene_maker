@@ -3,151 +3,163 @@
  */
 SceneMaker.Editor.Events = (function(SM,$,undefined){
 	
-	var _bindedEditorEventListeners = false;
+	var _initialized = false;
 	var _confirmOnExit;
 	var _isCtrlKeyPressed = false;
 
 	var init = function(){
-		bindEditorEventListeners();
+		if(_initialized) return;
+		_initialized = true;
+
+		$(document).on('click', '#addScreenButton', SM.Editor.Screen.onClickAddScreenButton);
+		$(document).on('click', '#addViewButton', SM.Editor.View.onClickAddViewButton);
+		$(document).on('click', '#screen_selected_img', SM.Editor.Screen.onClickOpenScreen);
+				
+		$(document).on('click', '#save_scene_details', SM.Editor.Settings.onSaveSceneSettingsButtonClicked);
+		$(document).on('click','div.viewthumb', SM.Editor.onViewThumbClicked);
+
+		$(document).on('click','.editable', SM.Editor.onEditableClicked);
+		$(document).on('click','.selectable', SM.Editor.onSelectableClicked);
+		$(document).on('click',':not(".selectable"):not(".preventNoselectable")', SM.Editor.onNoSelectableClicked);
+		
+		$(document).on('click','.delete_screen', SM.Editor.Screen.onDeleteScreenClicked);
+		$(document).on('click','.delete_view', SM.Editor.View.onDeleteViewClicked);
+		$(document).on('click','.delete_content', SM.Editor.onDeleteItemClicked);
+
+		$(document).on("click", ".change_bg_button", SM.Editor.Tools.changeBackground);
+
+		$(document).on("click", "#tab_pic_from_url_content button.button_addContent", SM.Editor.Image.addContent);
+		$(document).on("click", "#tab_object_from_url_content button.button_addContent", SM.Editor.Object.drawPreviewElement);
+		$(document).on("click", "#tab_video_from_url_content button.button_addContent", SM.Editor.Video.addContent);
+
+		//Marker settings
+		$(document).on("change", "#hotspotImageSource", SM.Editor.Marker.onHotspotImageSourceChange);
+		$(document).on("click", "#hotspotImageGallery img", SM.Editor.Marker.onClickHotspotImageGallery);
+		$(document).on("blur", "#hotspotImageURL", SM.Editor.Marker.checkHotspotImageURLPreview);
+		$(document).on("input", "#hotspotSizeWidth", SM.Editor.Marker.onInputHotspotSizeWidth);
+		$(document).on("input", "#hotspotSizeHeight", SM.Editor.Marker.onInputHotspotSizeHeight);
+		$(document).on("click", "#hotspotSettingsDone", SM.Editor.Marker.onHotspotSettingsDone);
+		$(document).on("click", "#hotzoneSettingsDone", SM.Editor.Marker.onHotzoneSettingsDone);
+
+		//Actions
+		$(document).on("click", "div.actions_container button.add_action", function(){
+			SM.Editor.Actions.addNewAction($(this).closest("div.actions_container"));
+		});
+		$(document).on("change", "select.actionEvent", SM.Editor.Actions.onActionEventChange);
+		$(document).on("change", "select.actionType", SM.Editor.Actions.onActionTypeChange);
+		$(document).on("click", "div.delete_action", SM.Editor.Actions.onDeleteAction);
+		$(document).on("change", "div.actionParamsPuzzle select", SM.Editor.Actions.onPuzzleChange);
+		
+		//Element settings
+		$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
+
+		//Captions
+		$(document).on("click", "#captionDone", SM.Editor.Caption.onCaptionDone);
+
+		//Import
+		$(document).on("change", "#import_file_input", SM.Editor.onImportFileChange);
+		$(document).on("click", "#import_file_button", SM.Editor.importSceneFromJSON);
+
+		$(document).on('click', handleClick);
+		$(document).bind('keydown', handleBodyKeyDown);
+		$(document).bind('keyup', handleBodyKeyUp);
+
+		// Slide Enter and Leave events
+		$('article').live('slideenter', SM.Editor.onSlideEnterEditor);
+		$('article').live('slideleave', SM.Editor.onSlideLeaveEditor);
+
+		//Waiting overlay
+		$(document).on('click',"#waiting_overlay", function(event){
+			event.stopPropagation();
+			event.preventDefault();
+		});
+
+		$(window).on('orientationchange',function(){
+			$(window).trigger('resize');
+		});
+
+		// //Focus
+		// $(window).focus(function(){
+		// }).blur(function(){
+		// });
+
+		//Fancyboxes
+
+		// fancybox to create a new view
+		$("a#addViewFancybox").fancybox({
+			'autoDimensions' : false,
+			'scrolling': 'no',
+			'width': 800,
+			'height': 740,
+			'padding': 0,
+			"onStart"  : function(data) {
+				SM.Editor.setContentAddMode(SM.Constant.VIEW);
+				var clickedZoneId = $(data).attr("zone");
+				SM.Editor.setCurrentArea($("#" + clickedZoneId));
+				SM.Editor.Utils.loadTab('tab_views');
+			},
+			"onClosed"  : function(data) {
+				SM.Editor.setContentAddMode(SM.Constant.NONE);
+			}
+		});
+
+		// fancybox to import JSON files
+		$("a#importSceneFancybox").fancybox({
+			'autoDimensions' : false,
+			'scrolling': 'no',
+			'width': 800,
+			'height': 740,
+			'padding': 0,
+			"onStart"  : function(data) {
+				$("#import_file_input").val("");
+				$("#import_file_button").hide();
+				SM.Editor.Utils.loadTab('tab_import');
+			},
+			"onClosed"  : function(data) {
+			}
+		});
+		
+		//Loading fancybox
+		$("#fancyLoad").fancybox({
+			'type'		   : 'inline',
+			'autoDimensions' : false,
+			'scrolling': 'no',
+			'autoScale' : true,		      
+			'width': '100%',
+			'height': '100%',
+			'padding': 0,
+			'margin' : 0,
+			'overlayOpacity': 0.0,
+			'overlayColor' : "#fff",
+			'showCloseButton'	: false,
+			'onComplete'  : function(data) {
+				SM.Utils.Loader.prepareFancyboxForFullLoading();
+			},
+			'onClosed' : function(data) {
+			}
+		});
+
+		//Change background
+		$("#hidden_button_to_change_slide_background").fancybox({
+			'autoDimensions' : false,
+			'width': 800,
+			'scrolling': 'no',
+			'height': 600,
+			'padding' : 0,
+			"onStart"  : function(data) {
+				SM.Editor.Image.setAddContentMode(SM.Constant.SCREEN);
+				SM.Editor.Utils.loadTab('tab_pic_from_url');
+			},
+			"onClosed"  : function(data) {
+				SM.Editor.Image.setAddContentMode(SM.Constant.NONE);
+			}
+		});
+
+		//onbeforeunload event
+		window.onbeforeunload = _exitConfirmation;
+		_confirmOnExit = true;
 	};
 
-	var bindEditorEventListeners = function(){
-		if(!_bindedEditorEventListeners){
-			$(document).on('click', '#addScreenButton', SM.Editor.Screen.onClickAddScreenButton);
-			$(document).on('click', '#addViewButton', SM.Editor.View.onClickAddViewButton);
-			$(document).on('click', '#screen_selected_img', SM.Editor.Screen.onClickOpenScreen);
-					
-			$(document).on('click', '#save_scene_details', SM.Editor.Settings.onSaveSceneSettingsButtonClicked);
-			$(document).on('click','div.viewthumb', SM.Editor.onViewThumbClicked);
-
-			$(document).on('click','.editable', SM.Editor.onEditableClicked);
-			$(document).on('click','.selectable', SM.Editor.onSelectableClicked);
-			$(document).on('click',':not(".selectable"):not(".preventNoselectable")', SM.Editor.onNoSelectableClicked);
-			
-			$(document).on('click','.delete_screen', SM.Editor.Screen.onDeleteScreenClicked);
-			$(document).on('click','.delete_view', SM.Editor.View.onDeleteViewClicked);
-			$(document).on('click','.delete_content', SM.Editor.onDeleteItemClicked);
-
-			$(document).on("click", ".change_bg_button", SM.Editor.Tools.changeBackground);
-
-			$(document).on("click", "#tab_pic_from_url_content button.button_addContent", SM.Editor.Image.addContent);
-			$(document).on("click", "#tab_object_from_url_content button.button_addContent", SM.Editor.Object.drawPreviewElement);
-			$(document).on("click", "#tab_video_from_url_content button.button_addContent", SM.Editor.Video.addContent);
-
-			//Marker settings
-			$(document).on("change", "#hotspotImageSource", SM.Editor.Marker.onHotspotImageSourceChange);
-			$(document).on("click", "#hotspotImageGallery img", SM.Editor.Marker.onClickHotspotImageGallery);
-			$(document).on("blur", "#hotspotImageURL", SM.Editor.Marker.checkHotspotImageURLPreview);
-			$(document).on("input", "#hotspotSizeWidth", SM.Editor.Marker.onInputHotspotSizeWidth);
-			$(document).on("input", "#hotspotSizeHeight", SM.Editor.Marker.onInputHotspotSizeHeight);
-			$(document).on("click", "#hotspotSettingsDone", SM.Editor.Marker.onHotspotSettingsDone);
-			$(document).on("click", "#hotzoneSettingsDone", SM.Editor.Marker.onHotzoneSettingsDone);
-
-			//Actions
-			$(document).on("click", "div.actions_container button.add_action", function(){
-				SM.Editor.Actions.addNewAction($(this).closest("div.actions_container"));
-			});
-			$(document).on("change", "select.actionEvent", SM.Editor.Actions.onActionEventChange);
-			$(document).on("change", "select.actionType", SM.Editor.Actions.onActionTypeChange);
-			$(document).on("click", "div.delete_action", SM.Editor.Actions.onDeleteAction);
-			$(document).on("change", "div.actionParamsPuzzle select", SM.Editor.Actions.onPuzzleChange);
-			
-			//Element settings
-			$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
-
-			//Captions
-			$(document).on("click", "#captionDone", SM.Editor.Caption.onCaptionDone);
-
-			$(document).on('click', handleClick);
-			$(document).bind('keydown', handleBodyKeyDown);
-			$(document).bind('keyup', handleBodyKeyUp);
-
-			// Slide Enter and Leave events
-			$('article').live('slideenter', SM.Editor.onSlideEnterEditor);
-			$('article').live('slideleave', SM.Editor.onSlideLeaveEditor);
-
-			//Waiting overlay
-			$(document).on('click',"#waiting_overlay", function(event){
-				event.stopPropagation();
-				event.preventDefault();
-			});
-
-			$(window).on('orientationchange',function(){
-				$(window).trigger('resize');
-			});
-
-			// //Focus
-			// $(window).focus(function(){
-			// }).blur(function(){
-			// });
-
-			//Fancyboxes
-
-			// fancybox to create a new view
-			$("a#addViewFancybox").fancybox({
-				'autoDimensions' : false,
-				'scrolling': 'no',
-				'width': 800,
-				'height': 740,
-				'padding': 0,
-				"onStart"  : function(data) {
-					SM.Editor.setContentAddMode(SM.Constant.VIEW);
-					var clickedZoneId = $(data).attr("zone");
-					SM.Editor.setCurrentArea($("#" + clickedZoneId));
-					SM.Editor.Utils.loadTab('tab_views');
-				},
-				"onClosed"  : function(data) {
-					SM.Editor.setContentAddMode(SM.Constant.NONE);
-				}
-			});
-			
-			//Loading fancybox
-			$("#fancyLoad").fancybox({
-				'type'		   : 'inline',
-				'autoDimensions' : false,
-				'scrolling': 'no',
-				'autoScale' : true,		      
-				'width': '100%',
-				'height': '100%',
-				'padding': 0,
-				'margin' : 0,
-				'overlayOpacity': 0.0,
-				'overlayColor' : "#fff",
-				'showCloseButton'	: false,
-				'onComplete'  : function(data) {
-					SM.Utils.Loader.prepareFancyboxForFullLoading();
-				},
-				'onClosed' : function(data) {
-				}
-			});
-
-			//Change background
-			$("#hidden_button_to_change_slide_background").fancybox({
-				'autoDimensions' : false,
-				'width': 800,
-				'scrolling': 'no',
-				'height': 600,
-				'padding' : 0,
-				"onStart"  : function(data) {
-					SM.Editor.Image.setAddContentMode(SM.Constant.SCREEN);
-					SM.Editor.Utils.loadTab('tab_pic_from_url');
-				},
-				"onClosed"  : function(data) {
-					SM.Editor.Image.setAddContentMode(SM.Constant.NONE);
-				}
-			});
-
-			//onbeforeunload event
-			window.onbeforeunload = _exitConfirmation;
-			_confirmOnExit = true;
-
-			_bindedEditorEventListeners = true;
-		}
-	};
-
-	//////////////
-	// Event Listeners
-	//////////////
 	var addZoneThumbsEvents = function(container){
 		$(container).find("a.addpicture").fancybox({
 			'autoDimensions' : false,
@@ -197,11 +209,6 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		});
 	};
 
-
-	//////////////
-	// Event Listeners
-	//////////////
-	
 	var handleClick = function(event){
 		SM.Editor.Marker.onClick(event);
 	};
@@ -286,7 +293,6 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 
 	return {
 			init 							: init,
-			bindEditorEventListeners		: bindEditorEventListeners,
 			addZoneThumbsEvents				: addZoneThumbsEvents,
 			allowExitWithoutConfirmation 	: allowExitWithoutConfirmation
 	};

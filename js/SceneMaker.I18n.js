@@ -1,7 +1,5 @@
 SceneMaker.I18n = (function(SM,$,undefined){
-	
 	var DEFAULT_LANGUAGE = "en";
-
 	//Locales (translation files) available
 	var _availableLocales;
 	//Environment locales
@@ -10,19 +8,13 @@ SceneMaker.I18n = (function(SM,$,undefined){
 	var _availableLanguages;
 	//User preferred language
 	var _language;
-
 	//Preferred locales (environment locales if defined)
 	var _locales;
 	//Default locales
 	var _defaultLocales;
 	
-
-	/**
-	 * Init I18n module
-	 */
 	var init = function(options, scene){
 		var configuration = SM.Configuration.getConfiguration();
-
 		_availableLocales = _getAvailableLocales();
 		_availableLanguages = _getAvailableLanguages();
 

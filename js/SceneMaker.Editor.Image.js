@@ -1,13 +1,14 @@
 SceneMaker.Editor.Image = (function(SM,$,undefined){
-	
+	var initialized = false;
 	var contentToAdd = null;
 	var contentAddMode = SM.Constant.NONE;
-
 	var urlDivId = "tab_pic_from_url_content";
 	var urlInputId = "picture_url";
 	
 	var init = function(){
-		//Load from URL
+		if(initialized) return;
+		initialized = true;
+
 		$("#" + urlDivId + " .previewButton").click(function(event){
 			var imageInputVal = $("#" + urlInputId).val();
 			if(SM.Validator.validateObject(imageInputVal)){

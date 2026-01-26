@@ -1,7 +1,11 @@
 SceneMaker.Editor.Caption = (function(SM,$,undefined){
+	var initialized = false;
 	var hiddenLinkToInitCaptionFancybox;
 
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+		
 		hiddenLinkToInitCaptionFancybox = $('<a href="#caption_fancybox" style="display:none"></a>');
 		$(hiddenLinkToInitCaptionFancybox).fancybox({
 			'autoDimensions' : false,

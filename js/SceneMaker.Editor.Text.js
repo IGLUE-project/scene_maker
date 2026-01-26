@@ -1,81 +1,78 @@
 SceneMaker.Editor.Text = (function(SM,$,undefined){
-	
 	var initialized = false;
 	var _initializedCKEditorInstances = {};
 
 	var init = function(){
-		if(!initialized){
-			$(document).on('click','.textthumb', launchTextEditor);
+		if(initialized) return;
+		initialized = true;
 
-			CKEDITOR.on( 'dialogDefinition', function(ev){
-				// Take the dialog name and its definition from the event data.
-				var dialogName = ev.data.name;
-				var dialogDefinition = ev.data.definition;
+		$(document).on('click','.textthumb', launchTextEditor);
 
-				switch(dialogName){
-					case 'link':
-						//Customize Link window
-						// Remove unused link type options
-						// var linkType = dialogDefinition.getContents('info').get("linkType");
-						// linkType.items.splice(2,1);
-						// linkType.items.splice(1,1);
+		CKEDITOR.on( 'dialogDefinition', function(ev){
+			// Take the dialog name and its definition from the event data.
+			var dialogName = ev.data.name;
+			var dialogDefinition = ev.data.definition;
 
-						//Remove LinkType
-						dialogDefinition.getContents('info').remove("linkType");
-						//Remove unuseful protocols
-						var protocols = dialogDefinition.getContents('info').get("protocol").items;
-						protocols.splice(3,1);
-						protocols.splice(2,1);
+			switch(dialogName){
+				case 'link':
+					//Customize Link window
+					// Remove unused link type options
+					// var linkType = dialogDefinition.getContents('info').get("linkType");
+					// linkType.items.splice(2,1);
+					// linkType.items.splice(1,1);
 
-						//Remove advanced options
-						dialogDefinition.removeContents('advanced');
+					//Remove LinkType
+					dialogDefinition.getContents('info').remove("linkType");
+					//Remove unuseful protocols
+					var protocols = dialogDefinition.getContents('info').get("protocol").items;
+					protocols.splice(3,1);
+					protocols.splice(2,1);
 
-						//Customize target window
-						var targetTab = dialogDefinition.getContents('target');
-						var targetField = targetTab.get('linkTargetType');
-						targetField['default'] ='_blank';
-						targetField.items.splice(6,1);
-						targetField.items.splice(4,1);
-						targetField.items.splice(1,1);
-						targetField.items.splice(0,1);
-						// dialogDefinition.removeContents( 'target' ); //To remove targets
+					//Remove advanced options
+					dialogDefinition.removeContents('advanced');
 
-						break;
-					case 'table':
-						dialogDefinition.removeContents('advanced');
-						var info = dialogDefinition.getContents('info');
-						//Set center as default alignment
-						var alignment = info.get("cmbAlign");
-						alignment.items.splice(0,1);
-						//Keep ["default"] to prevent Google closure compiler errors
-						alignment["default"] = "center";
-						//Remove self-headers
-						info.remove("selHeaders");
+					//Customize target window
+					var targetTab = dialogDefinition.getContents('target');
+					var targetField = targetTab.get('linkTargetType');
+					targetField['default'] ='_blank';
+					targetField.items.splice(6,1);
+					targetField.items.splice(4,1);
+					targetField.items.splice(1,1);
+					targetField.items.splice(0,1);
+					// dialogDefinition.removeContents( 'target' ); //To remove targets
 
-						break;
-					case 'image':
-						//Remove advanced options
-						dialogDefinition.removeContents('advanced');
+					break;
+				case 'table':
+					dialogDefinition.removeContents('advanced');
+					var info = dialogDefinition.getContents('info');
+					//Set center as default alignment
+					var alignment = info.get("cmbAlign");
+					alignment.items.splice(0,1);
+					//Keep ["default"] to prevent Google closure compiler errors
+					alignment["default"] = "center";
+					//Remove self-headers
+					info.remove("selHeaders");
 
-						//Customize target window
-						var linkTab = dialogDefinition.getContents('Link');
-						var targetField = linkTab.get("cmbTarget");
-						targetField['default'] ='_blank';
-						targetField.items.splice(4,1);
-						targetField.items.splice(2,1);
-						targetField.items.splice(0,1);
+					break;
+				case 'image':
+					//Remove advanced options
+					dialogDefinition.removeContents('advanced');
 
-						break;
-					case 'MediaEmbedDialog':
-						break;
-				}
-			});
+					//Customize target window
+					var linkTab = dialogDefinition.getContents('Link');
+					var targetField = linkTab.get("cmbTarget");
+					targetField['default'] ='_blank';
+					targetField.items.splice(4,1);
+					targetField.items.splice(2,1);
+					targetField.items.splice(0,1);
 
-			initialized=true;
-		}
+					break;
+				case 'MediaEmbedDialog':
+					break;
+			}
+		});
 	}
 
-	
 	/**
 	* Function called when user clicks on the text thumb
 	* Allows users to include text content in the slide using a WYSIWYG editor

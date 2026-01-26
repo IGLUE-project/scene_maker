@@ -1,5 +1,4 @@
 SceneMaker.Object.PDF = (function(SM,$,undefined){
-
 	var _pdfSupport = false;
 
 	var init = function(){

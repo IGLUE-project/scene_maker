@@ -11,9 +11,7 @@ SceneMaker.ViewerAdapter = (function(SM,$,undefined){
 	var _referenceSlideHeight;
 
 	var init = function(options){
-		if(_initialized){
-			return;
-		} 
+		if(_initialized) return;
 		_initialized = true;
 
 		_fullscreenButton = SM.FullScreen.canFullScreen();

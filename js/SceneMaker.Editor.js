@@ -583,6 +583,21 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	////////////
 
 	var exportSceneToJSON = function(){
+		if(SM.Screen.getScreens().length === 0){
+			var options = {};
+			options.width = 600;
+			options.height = 150;
+			options.text = SM.I18n.getTrans("i.NoSlidesOnSaveNotification");
+			var button1 = {};
+			button1.text = SM.I18n.getTrans("i.Ok");
+			button1.callback = function(){
+				$.fancybox.close();
+			}
+			options.buttons = [button1];
+			SM.Utils.showDialog(options);
+			return;
+		}
+
 		var scene = saveScene();
 		const sceneJSONString = JSON.stringify(scene, null, 2);
 		const sceneBlob = new Blob([sceneJSONString], { type: "application/json" });
@@ -596,9 +611,74 @@ SceneMaker.Editor = (function(SM,$,undefined){
   		URL.revokeObjectURL(sceneLink);
 	};
 
-	var importSceneFromJSON = function(){
-		return false;
+	var importSceneFromJSON = async function () {
+		const fileInput = $("#import_file_input")[0];
+		const file = fileInput.files[0];
+		if ((!file) || (!file.name.endsWith(".json"))) {
+			_showWrongImportedFileDialog(false);
+			return false;
+		}
+
+		let scene;
+		try {
+			const fileText = await file.text();
+			scene = JSON.parse(fileText);
+		} catch (err) {
+			_showWrongImportedFileDialog(true);
+			return false;
+		}
+
+		if(scene){
+			scene = SM.Utils.fixScene(scene);
+			if(scene === null){
+				_showWrongImportedFileDialog(true);
+				return false;
+			}
+
+			//Reset
+			$.fancybox.close();
+			//Remove slides
+			$('article[type="' + SM.Constant.SCREEN + '"]').remove();
+			SM.Editor.Marker.resetData();
+			SM.Utils.resetIds();
+			initOptions.scene = scene;
+			_init(initOptions);
+		}
 	};
+
+	var importSceneFromJSONFancybox = function(){
+		$("#importSceneFancybox").trigger('click');
+	};
+
+	var onImportFileChange = function (e) {
+		const fileInput = e.target;
+		const file = fileInput.files[0];
+		if (!file) return;
+
+		if (!file.name.endsWith(".json")) {
+			fileInput.value = "";
+			return _showWrongImportedFileDialog(false);
+		}
+		$("#import_file_button").show();
+	};
+
+	var _showWrongImportedFileDialog = function(parsed){
+		var options = {};
+		options.width = 650;
+		options.height = 220;
+		if(parsed===true){
+			options.text = SM.I18n.getTrans("i.WrongResource");
+		} else {
+			options.text = SM.I18n.getTrans("i.WrongImportedFile");
+		}
+		var button1 = {};
+		button1.text = SM.I18n.getTrans("i.Ok");
+		button1.callback = function(){
+			$.fancybox.close();
+		}
+		options.buttons = [button1];
+		SM.Utils.showDialog(options);
+	}
 
 	//////////////////
 	///  Getters and Setters
@@ -684,32 +764,34 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	};
 
 	return {
-		init					: init,
-		getOptions				: getOptions,
-		getCurrentElementType 	: getCurrentElementType,
-		getCurrentArea			: getCurrentArea,
-		setCurrentArea			: setCurrentArea,
-		selectContentZone		: selectContentZone,
-		getLastArea				: getLastArea,
-		cleanArea				: cleanArea,
-		getCurrentContainer		: getCurrentContainer,
-		setCurrentContainer		: setCurrentContainer,
-		getContentAddMode		: getContentAddMode,
-		setContentAddMode		: setContentAddMode,
-		isZoneEmpty				: isZoneEmpty,
-		saveScene				: saveScene,
-		sendScene				: sendScene,
-		exportSceneToJSON		: exportSceneToJSON,
-		importSceneFromJSON		: importSceneFromJSON,
-		onSlideEnterEditor 		: onSlideEnterEditor,
-		onSlideLeaveEditor		: onSlideLeaveEditor,
-		onViewThumbClicked		: onViewThumbClicked,
-		onEditableClicked		: onEditableClicked,
-		onSelectableClicked 	: onSelectableClicked,
-		onNoSelectableClicked 	: onNoSelectableClicked,
-		onDeleteItemClicked 	: onDeleteItemClicked,
-		addDeleteButton			: addDeleteButton,
-		hasSceneChanged			: hasSceneChanged
+		init						: init,
+		getOptions					: getOptions,
+		getCurrentElementType 		: getCurrentElementType,
+		getCurrentArea				: getCurrentArea,
+		setCurrentArea				: setCurrentArea,
+		selectContentZone			: selectContentZone,
+		getLastArea					: getLastArea,
+		cleanArea					: cleanArea,
+		getCurrentContainer			: getCurrentContainer,
+		setCurrentContainer			: setCurrentContainer,
+		getContentAddMode			: getContentAddMode,
+		setContentAddMode			: setContentAddMode,
+		isZoneEmpty					: isZoneEmpty,
+		saveScene					: saveScene,
+		sendScene					: sendScene,
+		exportSceneToJSON			: exportSceneToJSON,
+		importSceneFromJSON			: importSceneFromJSON,
+		importSceneFromJSONFancybox : importSceneFromJSONFancybox,
+		onImportFileChange			: onImportFileChange,
+		onSlideEnterEditor 			: onSlideEnterEditor,
+		onSlideLeaveEditor			: onSlideLeaveEditor,
+		onViewThumbClicked			: onViewThumbClicked,
+		onEditableClicked			: onEditableClicked,
+		onSelectableClicked 		: onSelectableClicked,
+		onNoSelectableClicked 		: onNoSelectableClicked,
+		onDeleteItemClicked 		: onDeleteItemClicked,
+		addDeleteButton				: addDeleteButton,
+		hasSceneChanged				: hasSceneChanged
 	};
 
 }) (SceneMaker, jQuery);

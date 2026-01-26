@@ -3,7 +3,6 @@ SceneMaker.Actions = (function(SM,$,undefined){
 	var _actionsSlideRevealedFirstTime;
 	var _actionsSlideRevealed;
 	
-
 	var init = function(scene){
 		_slideIdsAlias = {};
 		_actionsSlideRevealedFirstTime = {};

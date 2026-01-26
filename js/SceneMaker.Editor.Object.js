@@ -1,4 +1,5 @@
 SceneMaker.Editor.Object = (function(SM,$,undefined){
+	var initialized = false;
 	var contentToAdd = null;
 	var urlDivId = "tab_object_from_url_content";
 	var urlInputId = "object_web_input";
@@ -6,6 +7,9 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 	var _hiddenLinkToInitObjectSettings;
 		
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+		
 		SM.Editor.Object.Web.init();
 		SM.Editor.Object.GoogleDOC.init();
 		SM.Editor.Object.PDF.init();

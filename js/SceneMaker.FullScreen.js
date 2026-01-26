@@ -1,5 +1,4 @@
 SceneMaker.FullScreen = (function(SM,$,undefined){
-
 	//Native FS params
 	var _currentFSElement;
 	var _lastFSElement;

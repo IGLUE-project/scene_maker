@@ -1,6 +1,10 @@
 SceneMaker.Editor.Actions = (function(SM,$,undefined){
+	var initialized = false;
 
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+		
 		//Fill action template with current puzzles
 		var currentOptionsPuzzles = [];
 		var nPuzzles = SM.Editor.getOptions().nPuzzles;

@@ -125,10 +125,12 @@ SceneMaker.Editor.Screen = (function(SM,$,undefined){
 			onLeaveScreen(screen);
 		}
 
+		var screenToDeleteId = $(screen).attr("id");
 		var screenToDeleteNumber = $(screen).attr("slidenumber");
 		var currentScreenNumber = SM.Screen.getCurrentScreenNumber();
 
 		$(screen).remove();
+		SM.Editor.Marker.afterDeleteSlide(screenToDeleteId);
 
 		if(screenToDeleteNumber <= currentScreenNumber){
 			if((currentScreenNumber-1) > 0) {

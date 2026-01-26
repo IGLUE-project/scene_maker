@@ -83,8 +83,6 @@ SceneMaker.Editor.Utils = (function(SM,$,undefined){
 		$(".fancy_tab").removeClass("fancy_selected");
 		//select the correct one
 		$("#" + tab_id).addClass("fancy_selected");
-		//show correct one
-		$("#"+ tab_id + "_help").show();
 
 		//Submodule callbacks
 		switch (tab_id) {

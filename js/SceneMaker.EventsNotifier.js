@@ -1,9 +1,12 @@
 SceneMaker.EventsNotifier = (function(SM,$,undefined){
-
+	var initialized = false;
 	var listeners;
 	// listeners['event'] = [callback1,callback2,...,callbackn];
 
 	var init = function() {
+		if(initialized) return;
+		initialized = true;
+		
 		listeners = new Array();		
 	};
 

@@ -60,7 +60,7 @@ SceneMaker.Text = (function(SM,$,undefined){
 				return;
 			}
 
-			//Convert to rem (http://pxtoem.com/)
+			//Convert to rem
 			var rem = (fontSize/fontSizeReference) + "rem";
 			var newStyle = SM.Utils.addFontSizeToStyle(oldStyle,rem);
 			$(el).attr("style",newStyle);

@@ -1,8 +1,5 @@
 SceneMaker.Editor.Tools = (function(SM,$,undefined){
-	
-	var toolbarEventsLoaded = false;
-	var INCREASE_SIZE = 1.05; //Constant to multiply or divide the actual size of the element
-
+	var initialized = false;
 
 	/*
 	 * Toolbar is divided in three zones.
@@ -12,23 +9,22 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 	 */
 
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+
 		cleanToolbar();
 
-		if(!toolbarEventsLoaded){
-			//Add listeners to toolbar buttons
-			$.each($("#toolbar_wrapper a.tool_action, div.tool_action"), function(index, toolbarButton) {
-				$(toolbarButton).on("click", function(event){
-					if(typeof SM.Editor.Tools[$(toolbarButton).attr("action")] == "function"){
-						if(!$(toolbarButton).find(".toolbar_scene_wrapper").hasClass("toolbar_scene_wrapper_disabled")){
-							SM.Editor.Tools[$(toolbarButton).attr("action")](this);
-						}
+		//Add listeners to toolbar buttons
+		$.each($("#toolbar_wrapper a.tool_action, div.tool_action"), function(index, toolbarButton) {
+			$(toolbarButton).on("click", function(event){
+				if(typeof SM.Editor.Tools[$(toolbarButton).attr("action")] == "function"){
+					if(!$(toolbarButton).find(".toolbar_scene_wrapper").hasClass("toolbar_scene_wrapper_disabled")){
+						SM.Editor.Tools[$(toolbarButton).attr("action")](this);
 					}
-					return false; //Prevent iframe to move
-				});
+				}
+				return false; //Prevent iframe to move
 			});
-
-			toolbarEventsLoaded = true;
-		}
+		});
 
 		SM.Editor.Tools.Menu.init();
 	};

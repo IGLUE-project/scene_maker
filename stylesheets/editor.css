@@ -996,6 +996,15 @@ button.previewButton {
 	margin-top: -7px;
 }
 
+#tab_import_content {
+	padding: 4%;
+}
+
+#tab_import_content p.textfancy {
+	margin-bottom: 40px;
+}
+
+
 
 /* Objects wrapper */
 

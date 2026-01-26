@@ -70,18 +70,20 @@ SceneMaker.Editor.View = (function(SM,$,undefined){
 
 		var screen = $(view).parent();
 		var currentView = SM.View.getCurrentView();
+		var currentViewId = $(currentView).attr("id");
 		var removingCurrentView = (currentView === view);
 
-		if(SM.View.getCurrentView() === view){
+		if(removingCurrentView){
 			closeView(view);
 		}
 		$(view).remove();
+		SM.Editor.Marker.afterDeleteSlide(currentViewId);
 
 		//Update view numbers
 		var views = $(screen).find("article");
 		$(views).each(function(index,view){
 			$(view).attr("slidenumber",index+1);
-		});	
+		});
 
 		SM.Editor.Thumbnails.drawViewThumbnails(views,function(){
 			//Views thumbnails drawed succesfully

@@ -1,4 +1,5 @@
 SceneMaker.Editor.Marker = (function(SM,$,undefined){
+	var initialized = false;
 	var slideData;
 	var currentHotspot;
 	var currentHotzoneId;
@@ -8,6 +9,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 	var hiddenLinkToInitHotzoneSettings;
 
 	var init = function(){
+		if(initialized) return;
+		initialized = true;
+		
 		slideData = {};
 		hotzoneIdsAlias = {};
 
@@ -1066,6 +1070,19 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		SM.Utils.showDialog(options);
 	};
 
+	var afterDeleteSlide = function(slideId){
+		if((typeof slideData != "undefined") && (typeof slideData[slideId] != "undefined")){
+			delete slideData[slideId];
+		}
+	};
+
+	var resetData = function(){
+		slideData = {};
+		hotzoneIdsAlias = {};
+		currentHotspot = undefined;
+		currentHotzoneId = undefined;
+		currentEditingMode = "NONE";
+	};
 
 	////////////////////
 	// JSON Manipulation
@@ -1186,6 +1203,8 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		showHotzoneSettings					: showHotzoneSettings,
 		cancelAnnotationSelectedForSlide	: cancelAnnotationSelectedForSlide,
 		deleteCurrentHotmarker				: deleteCurrentHotmarker,
+		afterDeleteSlide					: afterDeleteSlide,
+		resetData							: resetData,
 		onHotspotImageSourceChange			: onHotspotImageSourceChange,
 		onClickHotspotImageGallery			: onClickHotspotImageGallery,
 		checkHotspotImageURLPreview			: checkHotspotImageURLPreview,
