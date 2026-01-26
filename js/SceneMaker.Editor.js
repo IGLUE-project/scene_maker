@@ -14,10 +14,11 @@ SceneMaker.Editor = (function(SM,$,undefined){
 	/**
 	 * Scene Maker Editor initializer.
 	 */
-	var init = function(options){
-		if(typeof options === "undefined"){
-			options = SM.getOptions();
-		}
+	var init = function(){
+		return _initWithOptions(SM.getOptions());
+	}
+
+	var _initWithOptions = function(options){
 		$("#waiting_overlay").show();
 		
 		$("body").addClass("SceneMakerBody");
@@ -637,9 +638,15 @@ SceneMaker.Editor = (function(SM,$,undefined){
 			$('article[type="' + SM.Constant.SCREEN + '"]').remove();
 			SM.Editor.Marker.resetData();
 			SM.Utils.resetIds();
+
+			//Prepare options for import
 			initOptions.importedScene = true;
 			initOptions.scene = scene;
-			init(initOptions);
+			if((typeof initOptions.configuration === "object")&&(typeof SM.UploadScenePath === "string")){
+				initOptions.configuration.UploadScenePath = SM.UploadScenePath;
+			}
+
+			_initWithOptions(initOptions);
 		}
 	};
 
