@@ -288,8 +288,8 @@ SceneMaker.Editor.Text = (function(SM,$,undefined){
 		config.fontSize_defaultLabel = '12';
 
 		//Apply sceneMaker skin
-		var ckeditorBasePath = CKEDITOR.basePath.substr(0, CKEDITOR.basePath.indexOf("editor/"));
-		config.skin = 'sceneMaker,' + ckeditorBasePath + 'editor/skins/sceneMaker/';
+		var ckeditorSceneMakerSkinPath = CKEDITOR.basePath + 'skins/sceneMaker/';
+		config.skin = 'sceneMaker,' + ckeditorSceneMakerSkinPath;
 
 		var newInstance = !(typeof initial_text === "string")||((options)&&(options.forceNew));
 		if(newInstance){
