@@ -92,7 +92,6 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 	var onSlideEnterViewer = function(e){
 		var slide = e.target;
 		var isView = SM.Slides.isView(slide);
-		var cSlide = SM.Slides.getCurrentSlide();
 
 		//Prevent parent to trigger onSlideEnterViewer
 		//Use to prevent screens to be called when enter in one of their views
@@ -100,15 +99,16 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 
 		//Load objects
 		if(isView){
-			setTimeout(function(){
-				var $slide = $(slide);
-				if($slide.hasClass(SM.Constant.OBJECT)){
+			var $slide = $(slide);
+			if($slide.hasClass(SM.Constant.OBJECT)){
+				setTimeout(function(){
 					//Prevent objects to load when the view isn't focused
-					if($(cSlide).attr("id") === $(SM.Slides.getCurrentSlide()).attr("id")){
+					var cView = SM.View.getCurrentView();
+					if((cView !== null)&&($(cView).attr("id") === $slide.attr("id"))){
 						SM.ObjectPlayer.loadObject($slide);
 					}
-				}
-			}, 400);
+				}, 0);
+			}
 			SM.Video.HTML5.playMultimedia(slide);
 		} else {
 			//isScreen
@@ -126,8 +126,15 @@ SceneMaker.Viewer = (function(SM,$,undefined){
 		e.stopPropagation();
 
 		if(isView){
-			if($(slide).hasClass(SM.Constant.OBJECT)){
-				SM.ObjectPlayer.unloadObject($(slide));
+			var $slide = $(slide);
+			if($slide.hasClass(SM.Constant.OBJECT)){
+				setTimeout(function(){
+					// Prevent object to be unload if the view is focused
+					var cView = SM.View.getCurrentView();
+					if((cView === null)||($(cView).attr("id") !== $slide.attr("id"))){
+						SM.ObjectPlayer.unloadObject($slide);
+					}
+				}, 800);
 			}
 			SM.Video.HTML5.stopMultimedia(slide);
 		} else {

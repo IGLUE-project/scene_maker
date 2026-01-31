@@ -50,8 +50,9 @@ SceneMaker.View = (function(SM,$,undefined){
 				closeView(currentViewId);
 			}
 		}
-		SM.Caption.unloadScreenCaptionBeforeOpenView(SM.Screen.getCurrentScreen());
-
+		if(SM.Editing === false){
+			SM.Caption.unloadScreenCaptionBeforeOpenView(SM.Screen.getCurrentScreen());
+		}
 		_currentViewId = viewId;
 		var $viewToOpen = $("#" + viewId);
 		$viewToOpen.removeClass("hide_in_screen");
@@ -64,7 +65,9 @@ SceneMaker.View = (function(SM,$,undefined){
 		var $viewToClose = $("#" + viewId);
 		$viewToClose.removeClass("show_in_screen");
 		$viewToClose.addClass("hide_in_screen");
-		SM.Caption.loadScreenCaptionAfterCloseView(SM.Screen.getCurrentScreen());
+		if(SM.Editing === false){
+			SM.Caption.loadScreenCaptionAfterCloseView(SM.Screen.getCurrentScreen());
+		}
 		SM.Slides.triggerSlideLeaveEvent(viewId);
 	};
 
