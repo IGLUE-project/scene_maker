@@ -132,10 +132,14 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		var currentOptionsHotspotIds = [];
 		$('img.hotspot').each(function() {
 			var $hotspot = $(this);
+			var hotspotId = $hotspot.attr('id');
 			currentOptionsHotspotIds.push({
-				value: $hotspot.attr('id'),
-				text: $hotspot.attr('id')
+				value: hotspotId,
+				text: hotspotId
 			});
+		});
+		currentOptionsHotspotIds.sort(function (a, b) {
+			return a.text.localeCompare(b.text, undefined, { numeric: true });
 		});
 
 		$actionTemplateDiv.find("div.actionParamsHotspotId select").each(function() {
@@ -158,6 +162,9 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 					text: SM.Editor.Marker.getAliasForHotzone(hotzoneId)
 				})
 			});
+		});
+		currentOptionsHotzonesIds.sort(function (a, b) {
+			return a.text.localeCompare(b.text, undefined, { numeric: true });
 		});
 
 		$actionTemplateDiv.find("div.actionParamsHotzoneId select").each(function() {
