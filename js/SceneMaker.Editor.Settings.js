@@ -147,6 +147,8 @@ SceneMaker.Editor.Settings = (function(SM,$,undefined){
 		var actions = SM.Editor.Actions.getActionsJSON($("#sceneActions"));
 		if(actions.length > 0){
 			settings.actions = actions;
+		} else if(typeof settings.actions !== "undefined"){
+			delete settings.actions;
 		}
 
 		return settings;
