@@ -876,7 +876,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		annotator.on('createAnnotation', (annotation) => {
 			hotzoneIdsAlias[annotation.id] = SM.Utils.getId("zone-");
 			slideData[slideId].hotzones[annotation.id] = {};
-			slideData[slideId].hotzones[annotation.id].cursorVisibility = "default";
+			slideData[slideId].hotzones[annotation.id].cursorVisibility = "pointer";
 			slideData[slideId].hotzones[annotation.id].enabled = true;
 			_disableEditingMode("HOTZONE");
 		});
@@ -928,7 +928,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		if(typeof slideData[slideId].hotzones[hotzoneId].cursorVisibility === "string"){
 			$("#hotzoneCursorVisibility").val(slideData[slideId].hotzones[hotzoneId].cursorVisibility);
 		} else {
-			$("#hotzoneCursorVisibility").val("default");
+			$("#hotzoneCursorVisibility").val("pointer");
 		}
 
 		//Enabled

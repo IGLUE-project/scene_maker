@@ -235,12 +235,18 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	};
 
 	var _onClickHotspot = function(hotspotId){
+		if((typeof hotspotData[hotspotId] !== "object")||(typeof hotspotData[hotspotId].actions === "undefined")){
+			return;
+		}
 		SM.Actions.performActions(hotspotData[hotspotId].actions,hotspotId);
 	};
 
 	var _onClickHotzone = function(hotzoneId){
 		var hotzoneDOM = getHotzoneDOM(hotzoneId);
 		if($(hotzoneDOM).attr("hotzone_enabled") === "false"){
+			return;
+		}
+		if((typeof hotzoneData[hotzoneId] !== "object")||(typeof hotzoneData[hotzoneId].actions === "undefined")){
 			return;
 		}
 		SM.Actions.performActions(hotzoneData[hotzoneId].actions,hotzoneData[hotzoneId].idAlias);
