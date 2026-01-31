@@ -43,8 +43,13 @@ SceneMaker.Caption = (function(SM,$,undefined){
 	};
 
 	var onCaptionButtonClicked = function(event){
-		var $currentSlide = $(SM.Slides.getCurrentSlide());
-		var $captionWrapperDiv = $currentSlide.find("div.captionWrapper");
+		var $captionWrapperDiv = $(event.target).closest('.captionWrapper');
+		if ($captionWrapperDiv.length === 1) {
+			_toggleCaption($captionWrapperDiv);
+		}
+	};
+
+	var _toggleCaption = function($captionWrapperDiv){
 		var captionMode = $captionWrapperDiv.attr("mode");
 		switch(captionMode){
 			case "minimizable":
@@ -68,10 +73,31 @@ SceneMaker.Caption = (function(SM,$,undefined){
 		}
 	};
 
+	var loadScreenCaptionAfterCloseView = function(screen){
+		var $captionWrapperDiv = $(screen).children('.captionWrapper');
+		if ($captionWrapperDiv.length !== 1) return;
+		setTimeout(function(){
+			if((SM.Screen.getCurrentScreen() === screen)&&(SM.View.getCurrentView() !== null)){
+				return;
+			}
+			$captionWrapperDiv.animate({ opacity: 1 }, 400);
+			$captionWrapperDiv.css("z-index",9999);
+		}, 600);
+	};
+
+	var unloadScreenCaptionBeforeOpenView = function(screen){
+		var $captionWrapperDiv = $(screen).children('.captionWrapper');
+		if ($captionWrapperDiv.length !== 1) return;
+		$captionWrapperDiv.css("opacity",0);
+		$captionWrapperDiv.css("z-index",1);
+	};
+
 	return {
-		init 					: init,
-		drawCaption				: drawCaption,
-		onCaptionButtonClicked	: onCaptionButtonClicked
+		init 								: init,
+		drawCaption							: drawCaption,
+		onCaptionButtonClicked				: onCaptionButtonClicked,
+		loadScreenCaptionAfterCloseView		: loadScreenCaptionAfterCloseView,
+		unloadScreenCaptionBeforeOpenView	: unloadScreenCaptionBeforeOpenView
 	};
 
 }) (SceneMaker, jQuery);
