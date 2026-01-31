@@ -396,7 +396,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			delete slideData[newSlideId].annotator;
 			slideData[newSlideId].hotzones = {};
 			var $imgBackground = SM.Slides.getSlideBackgroundImg($newSlide);
-			$imgBackground.parent("div[data-theme]").remove();
+			var $imgsWrapper = $imgBackground.parent("div[data-theme]");
+			$imgsWrapper.children('img.hotspot').appendTo($newSlide); //Move hotspots
+			$imgsWrapper.remove();
 			$imgBackground.prependTo($newSlide);
 		}
 
@@ -421,6 +423,9 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		//Change hotzone ids in config
 		var oldSlideJSON = saveSlideWithMarkers($("#"+oldSlideId));
 		var hotzones = oldSlideJSON.hotzones;
+		if(typeof hotzones === "undefined"){
+			hotzones = [];
+		}
 		var hotzoneIdsMapping = {};
 		for (var i = 0; i < hotzones.length; i++) {
 			var oldHotzoneId = hotzones[i].id;
@@ -883,7 +888,7 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 		annotator.on('selectionChanged', _onAnnotationSelectionChange);
 
 		//Move hotspots inside the annotator div
-		var $container = $($slide.find("div > svg.a9s-annotationlayer").parent());
+		var $container = $imgBackground.parent("div[data-theme]");
 		$slide.children("img.hotspot").each(function(index,hotspotDOM){
 			$container.append(hotspotDOM);
 		});
