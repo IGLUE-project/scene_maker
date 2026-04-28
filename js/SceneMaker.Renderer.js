@@ -127,7 +127,11 @@ SceneMaker.Renderer = (function(SM,$,undefined){
 				if(typeof bodySrc !== "undefined"){
 					bodySrc = SM.Utils.checkWebUrl(bodySrc);
 					if((objectInfo.type === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE)||(objectSettings.addPreviewParamToObject === true)){
-						bodySrc = SM.Utils.addParamToUrl(bodySrc,"escapp_preview",(""+SM.Status.isPreview()));
+						if(SM.Status.isPreview()===true){
+							bodySrc = SM.Utils.addParamToUrl(bodySrc,"preview","true");
+						} else {
+							bodySrc = SM.Utils.removeParamFromUrl(bodySrc,"preview");
+						}
 					}
 					$body.attr("src",bodySrc);
 				}

@@ -100,7 +100,7 @@ SceneMaker.Object = (function(SM,$,undefined){
 	var http_urls_pattern=/(http(s)?:\/\/)([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
 	var www_urls_pattern = /(www[.])([aA-zZ0-9%=_&+?])+([./-][aA-zZ0-9%=_&+?]+)*[/]?/g
 	var youtube_video_pattern=/(http(s)?:\/\/)?(((youtu.be\/)([aA-zZ0-9-]+))|((www.youtube.com\/((watch\?v=)|(embed\/)|(v\/)))([aA-z0-9-Z&=.])+))/g
-	var reusable_puzzle_instance_pattern = /^https?:\/\/[^\/]+\/escapeRooms\/[A-Za-z0-9]+\/reusablePuzzleInstances\/[A-Za-z0-9]+\/render$/
+	var reusable_puzzle_instance_pattern = /^https?:\/\/[^\/]+\/escapeRooms\/[A-Za-z0-9]+\/reusablePuzzleInstances\/[A-Za-z0-9]+\/render(\?.*)?$/
 
 	var html5VideoFormats = ["mp4","webm","ogg"];
 	var imageFormats = ["jpg","jpeg","png","gif","bmp","svg"];

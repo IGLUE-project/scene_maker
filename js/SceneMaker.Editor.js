@@ -504,11 +504,17 @@ SceneMaker.Editor = (function(SM,$,undefined){
 				var object = $(wrapper).children()[0];
 				var $myObject = $(object).clone();
 				$myObject.removeAttr("style");
-				var myObjectSrc = SM.Utils.removeParamFromUrl($myObject.attr("src"),"escapp_preview");
-				$myObject.attr("src",myObjectSrc);
+
+				element.subtype = SM.Object.getObjectInfo($myObject).type;
+
+				if((element.subtype === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE)||(element.settings && element.settings.addPreviewParamToObject === true)){
+					var myObjectSrc = SM.Utils.removeParamFromUrl($myObject.attr("src"),"preview");
+					$myObject.attr("src",myObjectSrc);
+				}
+
 				element.body   = SM.Utils.getOuterHTML($myObject);
 				element.style  = SM.Editor.Utils.getStylesForFitContent();
-				element.subtype = SM.Object.getObjectInfo($myObject).type;
+				
 			} else if(typeof element.type == "undefined"){
 				//Empty element
 			}

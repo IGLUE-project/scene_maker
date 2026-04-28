@@ -406,10 +406,11 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		//Apply settings
 		var objectURL = $object.attr("src");
 		//var objectURL = oSettings.url;
-		if(oSettings.addPreviewParamToObject){
-			objectURL = SM.Utils.addParamToUrl(objectURL,"escapp_preview",(""+SM.Status.isPreview()));
+
+		if((oSettings.addPreviewParamToObject)&&((SM.Editing)||(SM.Status.isPreview()))){
+			objectURL = SM.Utils.addParamToUrl(objectURL,"preview","true");
 		} else {
-			objectURL = SM.Utils.removeParamFromUrl(objectURL,"escapp_preview");
+			objectURL = SM.Utils.removeParamFromUrl(objectURL,"preview");
 		}
 
 		$object.attr("src",objectURL);

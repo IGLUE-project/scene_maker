@@ -779,18 +779,21 @@ SceneMaker.Utils = (function(SM,undefined){
 			return url;
 		}
 		url = checkUrlProtocol(url);
-
-		var options = SM.Utils.getOptions();
-		if((typeof options !== "undefined")&&(typeof options.escapp !== "undefined")&&(typeof options.escapp.endpoint === "string")){
-			try {
-				var endpointDomain = new URL(options.escapp.endpoint).hostname;
-				var urlDomain = new URL(url).hostname;
-				if (endpointDomain === urlDomain) {
-					//Add preview param
-					return SM.Utils.addParamToUrl(url,"escapp_preview",(""+SM.Status.isPreview()));
-				}
-			} catch(e){}
+		if((SM.Editing)||(SM.Status.isPreview())){
+			url = SM.Utils.addParamToUrl(url,"preview","true");
 		}
+
+		// var options = SM.Utils.getOptions();
+		// if((typeof options !== "undefined")&&(typeof options.escapp !== "undefined")&&(typeof options.escapp.endpoint === "string")){
+		// 	try {
+		// 		var endpointDomain = new URL(options.escapp.endpoint).hostname;
+		// 		var urlDomain = new URL(url).hostname;
+		// 		if (endpointDomain === urlDomain) {
+		// 			//Add preview param if necessary [...]
+		// 		}
+		// 	} catch(e){}
+		// }
+
 		return url;
 	};
 
