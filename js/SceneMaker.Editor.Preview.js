@@ -4,9 +4,12 @@ SceneMaker.Editor.Preview = (function(SM,$,undefined){
 	};
 
 	var preview = function(){
-		var slideNumberToPreview = 1;
+		var screenNumberToPreview = SM.Screen.getCurrentScreenNumber();
+		if(screenNumberToPreview < 1){
+			return;
+		}
 		if(typeof SM.PreviewPath !== "undefined"){
-			$("#preview_action").attr("href", SM.PreviewPath + "#" + slideNumberToPreview);
+			$("#preview_action").attr("href", SM.PreviewPath + "#" + screenNumberToPreview);
 		}
 		window.SCENE_MAKER_OPTIONS_PREVIEW = JSON.parse(JSON.stringify(SM.Utils.getOptions()));
 		window.SCENE_MAKER_OPTIONS_PREVIEW.preview = true;
