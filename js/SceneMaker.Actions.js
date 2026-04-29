@@ -204,16 +204,13 @@ SceneMaker.Actions = (function(SM,$,undefined){
 				}
 				break;
 			case "enableHotzone":
+				if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
+					SM.Marker.enableHotzone(action.actionParams.hotzoneId);
+				}
+				break;
 			case "disableHotzone":
 				if((action.actionParams)&&(typeof action.actionParams.hotzoneId === "string")){
-					var $hotzoneDOM = SM.Marker.getHotzoneDOM(action.actionParams.hotzoneId);
-					if ($hotzoneDOM.length > 0) {
-						if(action.actionType === "enableHotzone"){
-							$hotzoneDOM.attr("hotzone_enabled","true");
-						} else {
-							$hotzoneDOM.attr("hotzone_enabled","false");
-						}
-					}
+					SM.Marker.disableHotzone(action.actionParams.hotzoneId);
 				}
 				break;
 			case "playSound":

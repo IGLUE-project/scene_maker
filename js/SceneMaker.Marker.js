@@ -117,16 +117,28 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		}
 	};
 
-	var _drawHotzone = function($slide, hotzoneJSON){
+	var _drawHotzone = function($slide, hotzoneJSON, redraw=false){
 		if((!hotzoneJSON)||(!hotzoneJSON.id)){
 			return;
 		}
 		if(!Array.isArray(hotzoneJSON.points)){
 			return;
 		}
+		if (!Array.isArray(hotzoneJSON.actions) || (hotzoneJSON.actions.length < 1)) {
+			return;
+		}
+
 		var slideId = $slide.attr("id");
+		hotzoneJSON.slideId = slideId;
 		var hotzoneId = hotzoneJSON.id;
+		hotzoneData[hotzoneId] = hotzoneJSON;
 		var annotator = _createAnnotatorForSlide(slideId);
+
+		if(hotzoneJSON.enabled === false){
+			//Do not draw disabled hotzones until enabled
+			return;
+		}
+
 		var annotation = createAnnotationFromPointsArray(hotzoneId,hotzoneJSON.points);
 		annotator.addAnnotation(annotation);
 		
@@ -134,16 +146,8 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			if(hotzoneJSON.cursorVisibility === "pointer"){
 				$(hotzoneDOM).attr("hotzone_cursor_visibility",hotzoneJSON.cursorVisibility);
 			}
-			if(hotzoneJSON.enabled === false){
-				$(hotzoneDOM).attr("hotzone_enabled","false");
-			} else {
-				$(hotzoneDOM).attr("hotzone_enabled","true");
-			}
-			if (Array.isArray(hotzoneJSON.actions)&&(hotzoneJSON.actions.length > 0)) {
-				hotzoneData[hotzoneId] = hotzoneJSON;
-				for(i in hotzoneJSON.actions){
-					SM.Actions.addActionToHotzone(hotzoneDOM,hotzoneJSON.actions[i]);
-				}
+			for(i in hotzoneJSON.actions){
+				SM.Actions.addActionToHotzone(hotzoneDOM,hotzoneJSON.actions[i]);
 			}
 		});
 	};
@@ -188,9 +192,15 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				fill: '#dddddd00',
 				fillOpacity: 0,
 				stroke: '#00000000',
-				//stroke: '#000000ff', //for testing
 				strokeWidth: 1
 			}
+			//For testing
+			// style: {
+			// 	fill: '#dddddd',
+			// 	fillOpacity: 0.25,
+			// 	stroke: '#000000',
+			// 	strokeWidth: 1
+			// }
 		});
 		annotator.on('selectionChanged', function(annotations){
 			if(Array.isArray(annotations)){
@@ -244,14 +254,54 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	};
 
 	var _onClickHotzone = function(hotzoneId){
-		var hotzoneDOM = getHotzoneDOM(hotzoneId);
-		if($(hotzoneDOM).attr("hotzone_enabled") === "false"){
-			return;
-		}
-		if((typeof hotzoneData[hotzoneId] !== "object")||(typeof hotzoneData[hotzoneId].actions === "undefined")){
+		if((typeof hotzoneData[hotzoneId] !== "object")||(typeof hotzoneData[hotzoneId].actions === "undefined")||(hotzoneData[hotzoneId].enabled === false)){
 			return;
 		}
 		SM.Actions.performActions(hotzoneData[hotzoneId].actions,hotzoneData[hotzoneId].idAlias);
+	};
+
+	var enableHotzone = function(hotzoneId){
+		if((typeof hotzoneData === "undefined")||(typeof hotzoneData[hotzoneId] === "undefined")){
+			return;
+		}
+		var hotzoneJSON = hotzoneData[hotzoneId];
+		if(hotzoneJSON.enabled === true){
+			return;
+		}
+		if(typeof hotzoneJSON.slideId === "undefined"){
+			return;
+		}
+		var $slide = $("#" + hotzoneJSON.slideId);
+		if($slide.length !== 1){
+			return;
+		}
+
+		hotzoneData[hotzoneId].enabled = true;
+		_drawHotzone($slide, hotzoneData[hotzoneId], true);
+	};
+
+	var disableHotzone = function(hotzoneId){
+		if((typeof hotzoneData === "undefined")||(typeof hotzoneData[hotzoneId] === "undefined")){
+			return;
+		}
+		var hotzoneJSON = hotzoneData[hotzoneId];
+		if(hotzoneJSON.enabled === false){
+			return;
+		}
+		var slideId = hotzoneJSON.slideId;
+		if(typeof slideId === "undefined"){
+			return;
+		}
+		var $slide = $("#" + slideId);
+		if($slide.length !== 1){
+			return;
+		}
+
+		//Disable hotzone
+		if(typeof slideData[slideId].annotator !== "undefined"){
+			slideData[slideId].annotator.removeAnnotation(hotzoneId);
+		}
+		hotzoneData[hotzoneId].enabled = false;
 	};
 
 	return {
@@ -259,7 +309,9 @@ SceneMaker.Marker = (function(SM,$,undefined){
 		getDefaultHotspotImg			: getDefaultHotspotImg,
 		getHotzoneDOM					: getHotzoneDOM,
 		drawSlideWithMarkers			: drawSlideWithMarkers,
-		createAnnotationFromPointsArray : createAnnotationFromPointsArray
+		createAnnotationFromPointsArray : createAnnotationFromPointsArray,
+		enableHotzone					: enableHotzone,
+		disableHotzone					: disableHotzone
 	};
 
 }) (SceneMaker, jQuery);
