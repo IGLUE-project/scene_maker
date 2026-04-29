@@ -46,7 +46,12 @@ SceneMaker.Video.HTML5 = (function(SM,$,undefined){
 					//Do nothing
 				}
 			} else {
-				mEl.currentTime = 0;
+				if (mEl.currentTime > 0) {
+					mEl.currentTime = 0;
+					if((typeof $mEL.attr("poster") === "string")&&($mEL.attr("autoplayonslideenter")!=="true")){
+						mEl.load();
+					}
+				}
 				if ($mEL.attr("autoplayonslideenter")==="true"){
 					mEl.play();
 				}

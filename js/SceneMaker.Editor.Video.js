@@ -25,7 +25,7 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		$(_hiddenLinkToInitMultimediaSettings).fancybox({
 			'autoDimensions' : false,
 			'height': 400,
-			'width': 400,
+			'width': 600,
 			'scrolling': 'no',
 			'showCloseButton': false,
 			'padding' : 0,
@@ -104,11 +104,16 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		$mSF.find("input[type='hidden'][name='elId']").val($area.attr("id"));
 
 		//Get object
-		// var $object = $area.find("audio, video").first();
-		// if ($object.length !== 1) {
-		// 	return;
-		// }
-		// var isAudio = ($object.prop("tagName").toLowerCase() === "audio");
+		var $object = $area.find("audio, video").first();
+		if ($object.length !== 1) {
+			return;
+		}
+		var isVideo = ($object.prop("tagName").toLowerCase() === "video");
+		if(isVideo){
+			$("#posterURLMultimediaWrapper").show();
+		} else {
+			$("#posterURLMultimediaWrapper").hide();
+		}
 
 		//Load settings
 		var mSettings = {};
@@ -129,7 +134,7 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		if(typeof mSettings.resume === "undefined"){
 			mSettings.resume = false;
 		}
-
+		
 		//Fill and reset form
 		var $autoplayObjectCheckbox = $mSF.find("input[type='checkbox'][name='autoplay']");
 		$autoplayObjectCheckbox.prop('checked', mSettings.autoplay);
@@ -139,6 +144,10 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		$controlsObjectCheckbox.prop('checked', mSettings.controls);
 		var $resumeCheckbox = $mSF.find("input[type='checkbox'][name='resume']");
 		$resumeCheckbox.prop('checked', mSettings.resume);
+
+		if((isVideo)&&(typeof mSettings.poster === "string")){
+			$("#posterURLMultimedia").val(mSettings.poster);
+		}
 	};
 
 	var onMultimediaSettingsDone = function(){
@@ -148,7 +157,8 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		var areaId = $mSF.find("input[type='hidden'][name='elId']").val();
 		var $area = $("#"+areaId);
 		//Get object
-		//var $object = $area.find("audio, video").first();
+		var $object = $area.find("audio, video").first();
+		var isVideo = ($object.prop("tagName").toLowerCase() === "video");
 
 		//Get previous settings
 		var mSettings = {};
@@ -161,6 +171,12 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		mSettings.loop = $mSF.find("input[type='checkbox'][name='loop']").is(":checked");
 		mSettings.controls = $mSF.find("input[type='checkbox'][name='controls']").is(":checked");
 		mSettings.resume = $mSF.find("input[type='checkbox'][name='resume']").is(":checked");
+		if(isVideo){
+			var posterURL = $("#posterURLMultimedia").val();
+			if (posterURL && posterURL.trim() !== "") {
+				mSettings.poster = posterURL.trim();
+			}
+		}
 
 		//Save Settings
 		var mSSerialized = JSON.stringify(mSettings);
