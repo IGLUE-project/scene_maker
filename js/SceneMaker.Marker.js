@@ -27,20 +27,22 @@ SceneMaker.Marker = (function(SM,$,undefined){
 				src: slideJSON.background
 			});
 			$slide.append(imgBackground);
-		}
 
-		//Hotzones
-		if (Array.isArray(slideJSON.hotzones)&&(slideJSON.hotzones.length > 0)){
-			for(j in slideJSON.hotzones){
-				_drawHotzone($slide, slideJSON.hotzones[j]);
-			}
-		}
+			imgBackground.on('load', function() {
+				//Hotzones
+				if (Array.isArray(slideJSON.hotzones)&&(slideJSON.hotzones.length > 0)){
+					for(j in slideJSON.hotzones){
+						_drawHotzone($slide, slideJSON.hotzones[j]);
+					}
+				}
 
-		//Hotspots
-		if (Array.isArray(slideJSON.hotspots)&&(slideJSON.hotspots.length > 0)){
-			for(i in slideJSON.hotspots){
-				_drawHotspot($slide, slideJSON.hotspots[i]);
-			}
+				//Hotspots
+				if (Array.isArray(slideJSON.hotspots)&&(slideJSON.hotspots.length > 0)){
+					for(i in slideJSON.hotspots){
+						_drawHotspot($slide, slideJSON.hotspots[i]);
+					}
+				}
+			});
 		}
 
 		//Caption
@@ -231,7 +233,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 	};
 
 	var getHotzoneDOM = function(hotzoneId){
-		return $("g.[data-id='" + hotzoneId + "']");
+		return $("g[data-id='" + hotzoneId + "']");
 	};
 
 	var _onClickHotspot = function(hotspotId){
