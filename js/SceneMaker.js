@@ -1,6 +1,6 @@
 var SceneMaker = SceneMaker || {};
 
-SceneMaker.VERSION = '1.0.0';
+SceneMaker.VERSION = '1.0.1';
 
 SceneMaker.getOptions = function(){
 	try {

@@ -280,30 +280,56 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 	};
 	
 	var _drawObjectWithWrapper = function(wrapper, objectType, current_area, style){
-		current_area.attr('type', 'object');
-		current_area.attr('object_type', objectType);
+		var $currentArea = $(current_area);
+		$currentArea.attr('type', 'object');
+		$currentArea.attr('object_type', objectType);
 		var wrapperDiv = document.createElement('div');
+		$wrapperDiv = $(wrapperDiv);
 		if(style){
-			wrapperDiv.setAttribute('style', style);
+			$wrapperDiv.attr('style', style);
 		}
-		$(wrapperDiv).addClass('object_wrapper');
+		$wrapperDiv.addClass('object_wrapper');
 
-		var wrapperTag = $(wrapper);
-		$(wrapperTag).css('pointer-events', "none");
-		$(wrapperTag).attr('class', "view_content_object");
-		$(wrapperTag).attr('wmode', "opaque");
-		if(typeof $(wrapperTag).attr("scrolling") !== "undefined"){
-			$(wrapperTag).attr("scrolling","auto");
+		var $wrapperTag = $(wrapper);
+		$wrapperTag.css('pointer-events', "none");
+		$wrapperTag.attr('class', "view_content_object");
+		$wrapperTag.attr('wmode', "opaque");
+		if(typeof $wrapperTag.attr("scrolling") !== "undefined"){
+			$wrapperTag.attr("scrolling","auto");
 		}
 
-		$(current_area).html("");
-		$(current_area).append(wrapperDiv);
+		var elementSettings;
+		try {
+			elementSettings = JSON.parse($currentArea.attr("elSettings"));
+		} catch(e){}
 
-		SM.Editor.addDeleteButton($(current_area));
+		if(typeof elementSettings === "undefined"){
+			//Add default settings
+			var defaultSettings;
+			if(objectType === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE){
+				defaultSettings = SM.Editor.Object.Web.getDefaultSettingsForReusablePuzzleInstance();
+			} else if(objectType === SM.Constant.MEDIA.WEB){
+				defaultSettings = SM.Editor.Object.Web.getDefaultSettingsForWeb();
+			}
+			if(typeof defaultSettings !== "undefined"){
+				elementSettings = defaultSettings;
+				var defaultSettingsSerialized = JSON.stringify(defaultSettings);
+				$currentArea.attr("elSettings",defaultSettingsSerialized);
+			}
+		}
+
+		if(typeof elementSettings !== "undefined"){
+			_applySettingsToObject($wrapperTag,elementSettings);
+		}
+
+		$currentArea.html("");
+		$currentArea.append($wrapperDiv);
+
+		SM.Editor.addDeleteButton($currentArea);
 			
-		$(wrapperDiv).append(wrapperTag);
+		$wrapperDiv.append($wrapperTag);
 
-		_adjustWrapperOfObject(wrapperTag, current_area);
+		_adjustWrapperOfObject($wrapperTag, $currentArea);
 
 		//Load toolbar
 		SM.Editor.Tools.loadToolbarForObject(wrapper);
@@ -404,18 +430,22 @@ SceneMaker.Editor.Object = (function(SM,$,undefined){
 		$area.attr("elSettings",oSSerialized);
 
 		//Apply settings
-		var objectURL = $object.attr("src");
-		//var objectURL = oSettings.url;
-
-		if((oSettings.addPreviewParamToObject)&&((SM.Editing)||(SM.Status.isPreview()))){
-			objectURL = SM.Utils.addParamToUrl(objectURL,"preview","true");
-		} else {
-			objectURL = SM.Utils.removeParamFromUrl(objectURL,"preview");
-		}
-
-		$object.attr("src",objectURL);
+		_applySettingsToObject($object,oSettings);
 
 		$.fancybox.close();
+	};
+
+	var _applySettingsToObject = function($object,objectSettings){
+		if (typeof objectSettings !== "object") return;
+		var objectURL = $object.attr("src");
+		if(typeof objectURL === "string"){
+			if((objectSettings.addPreviewParamToObject===true)&&((SM.Editing)||(SM.Status.isPreview()))){
+				objectURL = SM.Utils.addParamToUrl(objectURL,"preview","true");
+			} else {
+				objectURL = SM.Utils.removeParamFromUrl(objectURL,"preview");
+			}
+			$object.attr("src",objectURL);
+		}
 	};
 	
 	

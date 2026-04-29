@@ -507,6 +507,15 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 				element.subtype = SM.Object.getObjectInfo($myObject).type;
 
+				if(typeof element.settings === "undefined"){
+					//Set default settings
+					if(element.subtype === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE){
+						element.settings = SM.Edtitor.Object.Web.getDefaultSettingsForReusablePuzzleInstance();
+					} else if(element.subtype === SM.Constant.MEDIA.WEB){
+						element.settings = SM.Edtitor.Object.Web.getDefaultSettingsForWeb();
+					}
+				}
+				
 				if((element.subtype === SM.Constant.MEDIA.REUSABLE_PUZZLE_INSTANCE)||(element.settings && element.settings.addPreviewParamToObject === true)){
 					var myObjectSrc = SM.Utils.removeParamFromUrl($myObject.attr("src"),"preview");
 					$myObject.attr("src",myObjectSrc);
@@ -514,7 +523,7 @@ SceneMaker.Editor = (function(SM,$,undefined){
 
 				element.body   = SM.Utils.getOuterHTML($myObject);
 				element.style  = SM.Editor.Utils.getStylesForFitContent();
-				
+
 			} else if(typeof element.type == "undefined"){
 				//Empty element
 			}

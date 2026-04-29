@@ -22,13 +22,23 @@ SceneMaker.Editor.Object.Web = (function(SM,$,undefined){
 		url = SM.Utils.checkReusablePuzzleInstanceUrl(url);
 		return generatePreviewWrapperForWeb(url);
 	};
-			
+
+	var getDefaultSettingsForWeb = function(){
+		return {"unloadObject": true, "addPreviewParamToObject": false};
+	}
+
+	var getDefaultSettingsForReusablePuzzleInstance = function(){
+		return {"unloadObject": false, "addPreviewParamToObject": true};
+	}
+	
 	return {
 		init 											: 	init,
 		generatePreviewWrapperForWeb 					: 	generatePreviewWrapperForWeb,
 		generateWrapperForReusablePuzzleInstance 		: 	generateWrapperForReusablePuzzleInstance,
 		generateWrapperForWeb 							: 	generateWrapperForWeb,
-		generatePreviewWrapperForReusablePuzzleInstance	: 	generatePreviewWrapperForReusablePuzzleInstance
+		generatePreviewWrapperForReusablePuzzleInstance	: 	generatePreviewWrapperForReusablePuzzleInstance,
+		getDefaultSettingsForWeb						: 	getDefaultSettingsForWeb,
+		getDefaultSettingsForReusablePuzzleInstance		: getDefaultSettingsForReusablePuzzleInstance
 	};
 
 }) (SceneMaker, jQuery);
