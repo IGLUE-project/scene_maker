@@ -10,6 +10,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 		_actionsForRelatedPuzzles = {};
 		_linkedPuzzleIds = _getLinkedPuzzleIdsForScene(scene);
 		_relatedPuzzleIds = _getRelatedPuzzleIdsForScene(scene);
+
 		if((_linkedPuzzleIds.length === 0)&&(_relatedPuzzleIds.length === 0)){
 			//No need to use Escapp.
 			return;
@@ -72,14 +73,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 
 		for (var screenIndex in scene.screens) {
 			var screen = scene.screens[screenIndex];
-			for (var hotspotIndex in screen.hotspots) {
-				var hotspot = screen.hotspots[hotspotIndex];
-				linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsForActions(hotspot.actions));
-			}
-			for (var hotzoneIndex in screen.hotzones) {
-				var hotzone = screen.hotzones[hotzoneIndex];
-				linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsForActions(hotzone.actions));
-			}
+			linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsForScreen(screen));
 		}
 
 		//Remove duplicates and convert to numbers
@@ -91,7 +85,33 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 		return linkedPuzzleIds;
 	};
 
-	var _getLinkedPuzzleIdsForActions = function(actions){
+	var _getLinkedPuzzleIdsForScreen = function(screen){
+		var linkedPuzzleIds = _getLinkedPuzzleIdsFromMarkers(screen);
+
+		for (var viewIndex in screen.views) {
+			var view = screen.views[viewIndex];
+			linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsFromMarkers(view));
+		}
+
+		return linkedPuzzleIds;
+	};
+
+	var _getLinkedPuzzleIdsFromMarkers = function(slide){
+		var linkedPuzzleIds = [];
+
+		for (var hotspotIndex in slide.hotspots) {
+			var hotspot = slide.hotspots[hotspotIndex];
+			linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsFromActions(hotspot.actions));
+		}
+		for (var hotzoneIndex in slide.hotzones) {
+			var hotzone = slide.hotzones[hotzoneIndex];
+			linkedPuzzleIds = linkedPuzzleIds.concat(_getLinkedPuzzleIdsFromActions(hotzone.actions));
+		}
+		
+		return linkedPuzzleIds;
+	};
+
+	var _getLinkedPuzzleIdsFromActions = function(actions){
 		var linkedPuzzleIds = [];
 		if (Array.isArray(actions)){
 			for (var actionIndex in actions) {
@@ -105,7 +125,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 	};
 
 	var _getRelatedPuzzleIdsForScene = function(scene){
-		var relatedPuzzleIds = _getRelatedPuzzleIdsForActions(scene.actions);
+		var relatedPuzzleIds = _getRelatedPuzzleIdsFromActions(scene.actions);
 		//Include _linkedPuzzleIds
 		relatedPuzzleIds = (relatedPuzzleIds.map(Number).filter(n => !isNaN(n))).concat(_linkedPuzzleIds);
 
@@ -115,7 +135,7 @@ SceneMaker.Escapp = (function(SM,$,undefined){
 		return relatedPuzzleIds;
 	};
 
-	var _getRelatedPuzzleIdsForActions = function(actions){
+	var _getRelatedPuzzleIdsFromActions = function(actions){
 		var relatedPuzzleIds = [];
 		if (Array.isArray(actions)){
 			for (var actionIndex in actions) {
