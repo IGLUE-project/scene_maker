@@ -238,6 +238,10 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 							var $actionParamsUrlInput = $actionWrapper.find("div.actionParamsURL input");
 							$actionParamsUrlInput.val(action.actionParams.url);
 						}
+						if(action.actionParams.loop === true){
+							var $actionParamsLoopInput = $actionWrapper.find("div.actionParamsLoop input[type='checkbox']");
+							$actionParamsLoopInput.prop("checked", true);
+						}
 						if(typeof action.actionParams.hotspotId === "string"){
 							var $actionParamsHotspotIdSelect = $actionWrapper.find("div.actionParamsHotspotId select");
 							$actionParamsHotspotIdSelect.val(action.actionParams.hotspotId);
@@ -324,6 +328,8 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 		var $textAreaText = $textAreaTextWrapper.find("textarea");
 		var $inputURLWrapper = $actionWrapperDiv.find("div.actionParamsURL");
 		var $inputURL = $inputURLWrapper.find("input");
+		var $inputLoopWrapper = $actionWrapperDiv.find("div.actionParamsLoop");
+		var $inputLoop = $inputLoopWrapper.find("input[type='checkbox']");
 		var $selectHotspotIdWrapper = $actionWrapperDiv.find("div.actionParamsHotspotId");
 		var $selectHotspotId = $selectHotspotIdWrapper.find("select");
 		var $selectHotzoneIdWrapper = $actionWrapperDiv.find("div.actionParamsHotzoneId");
@@ -372,6 +378,12 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 			$inputURLWrapper.show();
 		} else {
 			$inputURLWrapper.hide();
+		}
+		if(option === "playSound"){
+			$inputLoop.prop("checked", false);
+			$inputLoopWrapper.show();
+		} else {
+			$inputLoopWrapper.hide();
 		}
 		if((option === "showHotspot")||(option === "hideHotspot")){
 			$selectHotspotId.prop("selectedIndex", 0);
@@ -462,6 +474,10 @@ SceneMaker.Editor.Actions = (function(SM,$,undefined){
 				var $actionParamsUrlInput = $actionWrapper.find("div.actionParamsURL input");
 				if($actionParamsUrlInput.is(":visible")){
 					action.actionParams.url = SM.Editor.Utils.autocompleteUrls($actionParamsUrlInput.val());
+				}
+				var $actionParamsLoopInput = $actionWrapper.find("div.actionParamsLoop input[type='checkbox']");
+				if($actionParamsLoopInput.is(":visible")){
+					action.actionParams.loop = $actionParamsLoopInput.prop("checked");
 				}
 				var $actionParamsHotspotIdSelect = $actionWrapper.find("div.actionParamsHotspotId select");
 				if($actionParamsHotspotIdSelect.is(":visible")){

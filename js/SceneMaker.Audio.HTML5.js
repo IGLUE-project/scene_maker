@@ -1,44 +1,72 @@
 SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 	
 	//For managing sound effects
-	var currentAudio;
-
+	var players;
+	var activeAudios;
+	
 	var init = function(){
-		var player = new Audio();
-		currentAudio = {"player": player, "url": undefined};
-		player.addEventListener("ended", () => {
-			currentAudio.url = undefined;
-		});
+		players = {};
+		activeAudios = new Set();
 	};
 
-	var playAudio = function(url){
-		if((typeof currentAudio === "undefined")||(typeof currentAudio.player === "undefined")){
+	var _getPlayer = function(url){
+		if(typeof url !== "string"){
+			return;
+		}
+		if(typeof players[url] !== "undefined"){
+			return players[url];
+		}
+		var player = new Audio();
+		player.addEventListener("ended", () => {
+			activeAudios.delete(url);
+		});
+		player.src = url;
+		players[url] = player;
+		return player;
+	};
+
+	var playAudio = function(url, loop=false){
+		if((typeof players === "undefined")||(typeof activeAudios === "undefined")){
 			//Not initialized
 			return;
 		}
-		if((typeof url === "string")&&(currentAudio.url === url)){
+		if(typeof url !== "string"){
+			return;
+		}
+		if(activeAudios.has(url)){
 			//Sound is already playing
 			return;
 		}
-		currentAudio.url = url;
-		currentAudio.player.pause();
-  		currentAudio.player.currentTime = 0;
-  		currentAudio.player.src = url; 
-  		currentAudio.player.play().then(() => {
-		}).catch(err => {
-			currentAudio.url = undefined;
-		});
+		
+		var player = _getPlayer(url);
+		if(typeof player !== "undefined"){
+			activeAudios.add(url);
+			player.pause();
+			player.currentTime = 0;
+			player.loop = (loop === true);
+			player.play().then(() => {
+			}).catch(err => {
+				activeAudios.delete(url);
+			});
+		}
 	};
 
 	var stopAudio = function(url){
-		if((typeof currentAudio === "undefined")||(typeof currentAudio.player === "undefined")){
+		if((typeof players === "undefined")||(typeof activeAudios === "undefined")){
 			//Not initialized
 			return;
 		}
-		if((typeof url === "string")&&(currentAudio.url === url)){
-			currentAudio.player.pause();
-			currentAudio.url = undefined;
+		if(!activeAudios.has(url)){
+			//Sound is not playing
+			return;
 		}
+
+		var player = players[url];
+		if(typeof player !== "undefined"){
+			player.pause();
+			player.currentTime = 0;
+		}
+		activeAudios.delete(url);
 	};
 
 	/*

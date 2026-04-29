@@ -215,7 +215,7 @@ SceneMaker.Actions = (function(SM,$,undefined){
 				break;
 			case "playSound":
 				if((action.actionParams)&&(typeof action.actionParams.url === "string")){
-					SM.Audio.HTML5.playAudio(action.actionParams.url);
+					SM.Audio.HTML5.playAudio(action.actionParams.url, (action.actionParams.loop === true));
 				}
 				break;
 			case "stopSound":
