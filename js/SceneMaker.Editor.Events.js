@@ -69,11 +69,11 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		$('article').live('slideleave', SM.Editor.onSlideLeaveEditor);
 
 		//Fancybox fix for macOS
-		// $('#fancybox-outer').mousewheel(function(event, delta) {
-		// 	event.stopPropagation();
-		// 	$('#fancybox-wrap').trigger('mousewheel.fb', delta);
-		// });
-		$('#fancybox-wrap').unbind('mousewheel.fb');
+		$('#fancybox-outer').mousewheel(function(event, delta) {
+			event.stopPropagation();
+			$('#fancybox-wrap').trigger('mousewheel.fb', delta);
+		});
+		//$('#fancybox-wrap').unbind('mousewheel.fb');
 
 		//Waiting overlay
 		$(document).on('click',"#waiting_overlay", function(event){
