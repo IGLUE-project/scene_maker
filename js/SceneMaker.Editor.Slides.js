@@ -18,7 +18,7 @@ SceneMaker.Editor.Slides = (function(SM,$,undefined){
 			//Load the default image
 			_updateThumbnail(slide,slideThumbnail,SM.Editor.Thumbnails.getDefaultThumbnailURLForSlide(slide));
 		});
-
+		
 		_updateThumbnail(slide,slideThumbnail,thumbnailURL);
 	};
 
