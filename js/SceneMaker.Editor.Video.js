@@ -152,7 +152,7 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		var areaId = $mSF.find("input[type='hidden'][name='elId']").val();
 		var $area = $("#"+areaId);
 		//Get object
-		// var $object = $area.find("audio, video").first();
+		var $object = $area.find("audio, video").first();
 		// var isVideo = ($object.prop("tagName").toLowerCase() === "video");
 
 		//Get previous settings
@@ -175,7 +175,45 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		var mSSerialized = JSON.stringify(mSettings);
 		$area.attr("elSettings",mSSerialized);
 
+		//Apply settings
+		_applySettingsToMultimediaResource($object,mSettings);
+
 		$.fancybox.close();
+	};
+
+	var _applySettingsToMultimediaResource = function($object,multimediaSettings){
+		if (typeof multimediaSettings !== "object") return;
+		var isVideo = ($object.prop("tagName").toLowerCase() === "video");
+
+		if(isVideo){
+			if (typeof multimediaSettings.poster === "string"){
+				$object.attr("poster",multimediaSettings.poster);
+			} else {
+				$object.removeAttr("poster");
+			}
+		} else {
+			//Audio
+			var $zone = $object.parent("div.view_content_zone[type='audio']");
+			if($zone.length !== 1){
+				return;
+			}
+			var $imgAudioPoster = $zone.find("img.audio_poster");
+			if (typeof multimediaSettings.poster === "string"){
+				if($imgAudioPoster.length === 0){
+					$imgAudioPoster = $("<img>", {
+						class: "audio_poster",
+						src: multimediaSettings.poster
+					});
+					$zone.prepend($imgAudioPoster);
+				} else {
+					$imgAudioPoster.attr("src",multimediaSettings.poster);
+				}
+			} else {
+				if($imgAudioPoster.length > 0){
+					$imgAudioPoster.remove();
+				}
+			}
+		}
 	};
 	
 	return {

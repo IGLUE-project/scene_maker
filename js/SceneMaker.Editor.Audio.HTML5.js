@@ -25,15 +25,14 @@ SceneMaker.Editor.Audio.HTML5 = (function(SM,$,undefined){
 		}	else {
 			current_area = SM.Editor.getCurrentArea();
 		}
-		current_area.attr('type','audio');
+		$currentArea = $(current_area);
+		$currentArea.attr('type','audio');
 
 		//Default options
-		var autoplay = false;
-			
-		//Replace defeault options if options hash is defined
+		var posterUrl;
 		if(options){
-			if(options['autoplay']){
-				autoplay = options['autoplay'];
+			if(options['poster']){
+				posterUrl = options['poster'];
 			}
 		}
 
@@ -41,18 +40,26 @@ SceneMaker.Editor.Audio.HTML5 = (function(SM,$,undefined){
 		audioTag.setAttribute('class', "view_content_audio");
 		audioTag.setAttribute('controls', "controls");
 		audioTag.setAttribute('preload', "metadata");
-		audioTag.setAttribute('autoplayonslideenter',autoplay);
 		if(style){
 			audioTag.setAttribute('style', style);
 		}
 		
-		$(current_area).html("");
-		$(current_area).append(audioTag);
+		$currentArea.html("");
+		$currentArea.append(audioTag);
 
 		//Insert sources after append audio
 		SM.Audio.HTML5.addSourcesToAudioTag(sources,audioTag,{timestamp:true});
 
-		SM.Editor.addDeleteButton($(current_area));
+		if(typeof posterUrl === "string"){
+			//audioTag.setAttribute('poster', posterUrl);
+			var $imgAudioPoster = $("<img>", {
+				class: "audio_poster",
+				src: posterUrl
+			});
+			$currentArea.prepend($imgAudioPoster);
+		}
+
+		SM.Editor.addDeleteButton($currentArea);
 
 		SM.Editor.Tools.loadToolsForZone(current_area);
 	};

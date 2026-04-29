@@ -75,7 +75,6 @@ SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 		var $audio = $("<audio></audio>");
 
 		$audio.attr("preload","metadata");
-		$audio.addClass("smaudioelement");
 
 		if((options)&&(options.extraAttrs)){
 			for(var key in options.extraAttrs){

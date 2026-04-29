@@ -96,14 +96,15 @@ SceneMaker.Editor.Renderer = (function(SM,$,undefined){
 				SM.Editor.Image.drawImage(element.body, area, element.style, element.hyperlink, element.options);
 			} else if(element.type === SM.Constant.VIDEO){
 				var options = [];
-				if(typeof element.poster === "string"){
-					options['poster'] = element.poster;
+				if((element.settings)&&(typeof element.settings.poster === "string")){
+					options['poster'] = element.settings.poster;
 				}
-				options['autoplay'] = element.autoplay;
 				SM.Editor.Video.HTML5.drawVideo(SM.Video.HTML5.getSourcesFromJSON(element), options, area, element.style);
 			} else if(element.type === SM.Constant.AUDIO){
 				var options = [];
-				options['autoplay'] = element.autoplay;
+				if((element.settings)&&(typeof element.settings.poster === "string")){
+					options['poster'] = element.settings.poster;
+				}
 				SM.Editor.Audio.HTML5.drawAudio(SM.Audio.HTML5.getSourcesFromJSON(element), options, area, element.style);
 			} else if(element.type === SM.Constant.OBJECT){
 				SM.Editor.Object.drawObject(element.body, {area:area, style:element.style});

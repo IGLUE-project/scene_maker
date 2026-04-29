@@ -40,15 +40,9 @@ SceneMaker.Editor.Video.HTML5 = (function(SM,$,undefined){
 
 		//Default options
 		var posterUrl;
-		var autoplay = false;
-			
-		//Replace defeault options if options hash is defined
 		if(options){
 			if(options['poster']){
 				posterUrl = options['poster'];
-			}
-			if(options['autoplay']){
-				autoplay = options['autoplay'];
 			}
 		}
 			
@@ -59,7 +53,6 @@ SceneMaker.Editor.Video.HTML5 = (function(SM,$,undefined){
 		if(typeof posterUrl === "string"){
 			videoTag.setAttribute('poster', posterUrl);
 		}
-		videoTag.setAttribute('autoplayonslideenter',autoplay);
 		if(style){
 			videoTag.setAttribute('style', style);
 		}

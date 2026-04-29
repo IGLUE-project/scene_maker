@@ -104,7 +104,6 @@ SceneMaker.Video.HTML5 = (function(SM,$,undefined){
 		var $video = $("<video></video>");
 
 		$video.attr("preload","metadata");
-		$video.addClass("smvideoelement");
 
 		if((options)&&(options.extraAttrs)){
 			for(var key in options.extraAttrs){
