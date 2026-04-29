@@ -223,6 +223,14 @@ article[type="view_content"] {
 	height: 100%;
 }
 
+.view_content_audio_wrapper img.audio_poster {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
 div.view_content_text {
     padding: 2% 4%;
     width: 93% !important;

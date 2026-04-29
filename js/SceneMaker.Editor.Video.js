@@ -108,12 +108,6 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		if ($object.length !== 1) {
 			return;
 		}
-		var isVideo = ($object.prop("tagName").toLowerCase() === "video");
-		if(isVideo){
-			$("#posterURLMultimediaWrapper").show();
-		} else {
-			$("#posterURLMultimediaWrapper").hide();
-		}
 
 		//Load settings
 		var mSettings = {};
@@ -144,9 +138,10 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		$controlsObjectCheckbox.prop('checked', mSettings.controls);
 		var $resumeCheckbox = $mSF.find("input[type='checkbox'][name='resume']");
 		$resumeCheckbox.prop('checked', mSettings.resume);
-
-		if((isVideo)&&(typeof mSettings.poster === "string")){
+		if(typeof mSettings.poster === "string"){
 			$("#posterURLMultimedia").val(mSettings.poster);
+		} else {
+			$("#posterURLMultimedia").val("");
 		}
 	};
 
@@ -157,8 +152,8 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		var areaId = $mSF.find("input[type='hidden'][name='elId']").val();
 		var $area = $("#"+areaId);
 		//Get object
-		var $object = $area.find("audio, video").first();
-		var isVideo = ($object.prop("tagName").toLowerCase() === "video");
+		// var $object = $area.find("audio, video").first();
+		// var isVideo = ($object.prop("tagName").toLowerCase() === "video");
 
 		//Get previous settings
 		var mSettings = {};
@@ -171,11 +166,9 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		mSettings.loop = $mSF.find("input[type='checkbox'][name='loop']").is(":checked");
 		mSettings.controls = $mSF.find("input[type='checkbox'][name='controls']").is(":checked");
 		mSettings.resume = $mSF.find("input[type='checkbox'][name='resume']").is(":checked");
-		if(isVideo){
-			var posterURL = $("#posterURLMultimedia").val();
-			if (posterURL && posterURL.trim() !== "") {
-				mSettings.poster = posterURL.trim();
-			}
+		var posterURL = $("#posterURLMultimedia").val();
+		if (posterURL && posterURL.trim() !== "") {
+			mSettings.poster = posterURL.trim();
 		}
 
 		//Save Settings

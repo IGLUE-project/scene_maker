@@ -66,6 +66,7 @@ SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 		renderOptions.loop = (typeof audioSettings['loop'] !== "undefined") ? audioSettings['loop'] : false;
 		renderOptions.controls = (typeof audioSettings['controls'] !== "undefined") ? audioSettings['controls'] : true;
 		renderOptions.resume = (typeof audioSettings['resume'] !== "undefined") ? audioSettings['resume'] : false;
+		renderOptions.poster = (typeof audioSettings['poster'] === "string") ? audioSettings['poster'] : undefined;
 
 		return renderAudioFromSources(getSourcesFromJSON(audioJSON), renderOptions);
 	};
@@ -133,6 +134,11 @@ SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 
 		audio = audio + "</audio>";
 
+		//Poster
+		if(typeof options.poster === "string"){
+			audio = "<img src='" + options.poster + "' class='audio_poster'/>" + audio;
+		}
+		
 		return audio;
 	};
 
