@@ -19,6 +19,24 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 				contentToAdd = null;
 			}
 		});
+
+		//Multimedia Settings
+		_hiddenLinkToInitMultimediaSettings = $('<a href="#multimediaSettings_fancybox" style="display:none"></a>');
+		$(_hiddenLinkToInitMultimediaSettings).fancybox({
+			'autoDimensions' : false,
+			'height': 400,
+			'width': 400,
+			'scrolling': 'no',
+			'showCloseButton': false,
+			'padding' : 0,
+			"onStart"  : function(data){
+				_onStartMultimediaSettingsFancybox();
+			},
+			"onComplete" : function(data){
+			},
+			"onClosed"  : function(data){
+			}
+		});
 	};
 
 	var onLoadTab = function(tab){
@@ -68,15 +86,99 @@ SceneMaker.Editor.Video = (function(SM,$,undefined){
 		}
 		return defaultTab;
 	};
-			
+
+
+	/////////////////
+	// Multimedia Settings
+	/////////////////
+
+	var showMultimediaSettings = function(){
+		$(_hiddenLinkToInitMultimediaSettings).trigger("click");
+	};
+
+	var _onStartMultimediaSettingsFancybox = function(){
+		var $mSF = $("#multimediaSettings_fancybox");
+
+		//Get area
+		var $area = $(SM.Editor.getCurrentArea());
+		$mSF.find("input[type='hidden'][name='elId']").val($area.attr("id"));
+
+		//Get object
+		// var $object = $area.find("audio, video").first();
+		// if ($object.length !== 1) {
+		// 	return;
+		// }
+		// var isAudio = ($object.prop("tagName").toLowerCase() === "audio");
+
+		//Load settings
+		var mSettings = {};
+		try {
+			mSettings = JSON.parse($area.attr("elSettings"));
+		} catch(e){}
+
+		//Default settings
+		if(typeof mSettings.autoplay === "undefined"){
+			mSettings.autoplay = false;
+		}
+		if(typeof mSettings.loop === "undefined"){
+			mSettings.loop = false;
+		}
+		if(typeof mSettings.controls === "undefined"){
+			mSettings.controls = true;
+		}
+		if(typeof mSettings.resume === "undefined"){
+			mSettings.resume = false;
+		}
+
+		//Fill and reset form
+		var $autoplayObjectCheckbox = $mSF.find("input[type='checkbox'][name='autoplay']");
+		$autoplayObjectCheckbox.prop('checked', mSettings.autoplay);
+		var $loopObjectCheckbox = $mSF.find("input[type='checkbox'][name='loop']");
+		$loopObjectCheckbox.prop('checked', mSettings.loop);
+		var $controlsObjectCheckbox = $mSF.find("input[type='checkbox'][name='controls']");
+		$controlsObjectCheckbox.prop('checked', mSettings.controls);
+		var $resumeCheckbox = $mSF.find("input[type='checkbox'][name='resume']");
+		$resumeCheckbox.prop('checked', mSettings.resume);
+	};
+
+	var onMultimediaSettingsDone = function(){
+		var $mSF = $("#multimediaSettings_fancybox");
+
+		//Get area
+		var areaId = $mSF.find("input[type='hidden'][name='elId']").val();
+		var $area = $("#"+areaId);
+		//Get object
+		//var $object = $area.find("audio, video").first();
+
+		//Get previous settings
+		var mSettings = {};
+		try {
+			mSettings = JSON.parse($(area).attr("elsettings"));
+		} catch(e) {}
+		
+		//Get new settings
+		mSettings.autoplay = $mSF.find("input[type='checkbox'][name='autoplay']").is(":checked");
+		mSettings.loop = $mSF.find("input[type='checkbox'][name='loop']").is(":checked");
+		mSettings.controls = $mSF.find("input[type='checkbox'][name='controls']").is(":checked");
+		mSettings.resume = $mSF.find("input[type='checkbox'][name='resume']").is(":checked");
+
+		//Save Settings
+		var mSSerialized = JSON.stringify(mSettings);
+		$area.attr("elSettings",mSSerialized);
+
+		$.fancybox.close();
+	};
+	
 	return {
-		init				: init,
-		onLoadTab 			: onLoadTab,
-		addVideo			: addVideo,
-		addContent 			: addContent,
-		getAddContentMode	: getAddContentMode,
-		setAddContentMode	: setAddContentMode,
-		getDefaultTab		: getDefaultTab
+		init						: init,
+		onLoadTab 					: onLoadTab,
+		addVideo					: addVideo,
+		addContent 					: addContent,
+		getAddContentMode			: getAddContentMode,
+		setAddContentMode			: setAddContentMode,
+		getDefaultTab				: getDefaultTab,
+		showMultimediaSettings		: showMultimediaSettings,
+		onMultimediaSettingsDone	: onMultimediaSettingsDone
 	};
 
 }) (SceneMaker, jQuery);

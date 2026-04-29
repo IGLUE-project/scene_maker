@@ -177,12 +177,9 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 		
 		var type = $(zone).attr("type");
 		switch(type){
-			case "text":  
-				_loadToolbarForElement(type);
-				break;
+			case "text":
 			case "image":
-				_loadToolbarForElement(type);
-				break;
+			case "audio":
 			case "video":
 				_loadToolbarForElement(type);
 				break;
@@ -396,13 +393,17 @@ SceneMaker.Editor.Tools = (function(SM,$,undefined){
 				SM.Editor.Marker.showHotzoneSettings();
 				break;
 			case "ZONE":
-			switch($(SM.Editor.getCurrentArea()).attr("type")){
-				case SM.Constant.OBJECT:
-					SM.Editor.Object.showObjectSettings();
-					break;
-				default:
-					break;
-			}
+				switch($(SM.Editor.getCurrentArea()).attr("type")){
+					case SM.Constant.OBJECT:
+						SM.Editor.Object.showObjectSettings();
+						break;
+					case SceneMaker.Constant.AUDIO:
+					case SceneMaker.Constant.VIDEO:
+						SM.Editor.Video.showMultimediaSettings();
+						break;
+					default:
+						break;
+				}
 				break;
 		}
 	};

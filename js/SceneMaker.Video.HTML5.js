@@ -38,15 +38,16 @@ SceneMaker.Video.HTML5 = (function(SM,$,undefined){
 	var playMultimedia = function(slide){
 		var multimediaEls = $(slide).find("video, audio");
 		$.each(multimediaEls, function(index,mEl){
-			if ($(mEl).attr("wasplayingonslideleave")=="true"){
-				mEl.play();
-			} else if ($(mEl).attr("wasplayingonslideleave")=="false"){
-				//Do nothing
-			} else if (typeof $(mEl).attr("wasplayingonslideleave") == "undefined"){
-				//No wasplayingonslideleave attr
-				
-				//Check autoplayonsliddenter attr
-				if ($(mEl).attr("autoplayonslideenter")=="true"){
+			$mEL = $(mEl);
+			if(($mEL.attr("resumeonslideenter")==="true")&&(typeof $mEL.attr("wasplayingonslideleave") !== "undefined")){
+				if ($mEL.attr("wasplayingonslideleave")=="true"){
+					mEl.play();
+				} else if ($(mEl).attr("wasplayingonslideleave")=="false"){
+					//Do nothing
+				}
+			} else {
+				mEl.currentTime = 0;
+				if ($mEL.attr("autoplayonslideenter")==="true"){
 					mEl.play();
 				}
 			}
@@ -67,100 +68,92 @@ SceneMaker.Video.HTML5 = (function(SM,$,undefined){
 		});
 	};
 
-
-	/*
-	 * Rendering
-	 */
-
 	 var renderVideoFromJSON = function(videoJSON, options){
-		var renderOptions = options || {};
-
-		if(typeof renderOptions.id == "undefined"){
-			renderOptions.id = ((typeof videoJSON != "undefined")&&(videoJSON['id'])) ? videoJSON['id'] : SM.Utils.getId();
+		if (typeof videoJSON === "undefined") {
+			return "";
 		}
-		if(typeof renderOptions.controls == "undefined"){
-			renderOptions.controls = videoJSON['controls'];
+
+		var renderOptions = $.extend({}, options);
+
+		if (typeof renderOptions.id === "undefined") {
+			renderOptions.id = videoJSON['id'] ? videoJSON['id'] : SM.Utils.getId();
 		}
 
 		renderOptions.style = videoJSON['style'];
-		renderOptions.autoplay = videoJSON['autoplay'];
-		renderOptions.loop = videoJSON['loop'];
-		
-		return renderVideoFromSources(getSourcesFromJSON(videoJSON),renderOptions);
+
+		var videoSettings = {};
+		if (typeof videoJSON.settings === "object") {
+			videoSettings = videoJSON.settings;
+		}
+
+		renderOptions.autoplay = (typeof videoSettings['autoplay'] !== "undefined") ? videoSettings['autoplay'] : false;
+		renderOptions.loop = (typeof videoSettings['loop'] !== "undefined") ? videoSettings['loop'] : false;
+		renderOptions.controls = (typeof videoSettings['controls'] !== "undefined") ? videoSettings['controls'] : true;
+		renderOptions.resume = (typeof videoSettings['resume'] !== "undefined") ? videoSettings['resume'] : false;
+		renderOptions.poster = (typeof videoSettings['poster'] === "string") ? videoSettings['poster'] : undefined;
+
+		return renderVideoFromSources(getSourcesFromJSON(videoJSON), renderOptions);
 	};
 
 	var renderVideoFromSources = function(sources,options){
-		var video = $("<video></video>");
+		var $video = $("<video></video>");
 
-		$(video).attr("preload","metadata");
+		$video.attr("preload","metadata");
+		$video.addClass("smvideoelement");
 
 		if((options)&&(options.extraAttrs)){
 			for(var key in options.extraAttrs){
-				$(video).attr(key,options.extraAttrs[key]);
+				$video.attr(key,options.extraAttrs[key]);
 			}
 		}
 
 		if(options){
 			if(options['id']){
-				$(video).attr("id",options['id']);
-			}
-			if(typeof options.onVideoReady == "string"){
-				//Look for the function
-				try {
-					var onVideoReadySplit = options.onVideoReady.split(".");
-					var onVideoReadyFunction = window[onVideoReadySplit[0]];
-					for(var k=1; k<onVideoReadySplit.length; k++){
-						onVideoReadyFunction = onVideoReadyFunction[onVideoReadySplit[k]];
-					}
-					if(typeof onVideoReadyFunction == "function"){
-						$(video).attr("onloadeddata",options.onVideoReady + '(this)');
-					}
-				} catch(e){}
+				$video.attr("id",options['id']);
 			}
 			if(options['extraClasses']){
 				var extraClassesLength = options['extraClasses'].length;
 				for(var i=0; i<extraClassesLength; i++){
-					$(video).addClass(options['extraClasses'][i]);
+					$video.addClass(options['extraClasses'][i]);
 				}
 			}
-			if(options.controls !== false){
-				$(video).attr("controls","controls");
+
+			if(options.autoplay === true){
+				$video.attr("autoplayonslideenter", "true");
 			}
-			if(typeof options.autoplay != "undefined"){
-				$(video).attr("autoplayonslideenter",options.autoplay);
+			$video.prop("loop", options.loop === true);
+			$video.prop("controls", options.controls !== false);
+			if(options.resume === true){
+				$video.attr("resumeonslideenter", "true");
 			}
-			if(typeof options['poster'] === "string"){
-				$(video).attr("poster",options['poster']);
+			if(typeof options.poster === "string"){
+				$video.attr("poster",options.poster);
 			}
-			if(options['loop'] === true){
-				$(video).attr("loop","loop");
-			}
-			if(options['style']){
-				$(video).attr("style",options['style']);
+
+			if (options.style){
+				$video.attr("style",options['style']);
 			}
 		}
 
 		//Default callback
-		if(typeof $(video).attr("onloadeddata") == "undefined"){
-			$(video).attr("onloadeddata",'SceneMaker.Video.HTML5.onVideoReady(this)');
-		};
+		if (!$video.attr("onloadeddata")) {
+			$video.attr("onloadeddata",'SceneMaker.Video.HTML5.onVideoReady(this)');
+		}
 
-		video = SM.Utils.getOuterHTML(video);
-		video = video.split("</video>")[0];
+		var video = (SM.Utils.getOuterHTML($video)).split("</video>")[0];
 
 		//Write sources (we can't loaded it to the DOM directly, because then they will start to load, before been actually rendered)
 		if((!options)||(options.loadSources !== false)){
 			$.each(sources, function(index, source){
 				if(typeof source.src == "string"){
 					var sourceSrc = source.src;
-					if((typeof options != "undefined")&&(options.timestamp === true)){
+					if(options && options.timestamp === true){
 						sourceSrc = SM.Utils.addParamToUrl(sourceSrc,"timestamp",""+new Date().getTime());
 					}
 					var mimeType = (source.mimeType)?"type='" + source.mimeType + "' ":"";
 					video = video + "<source src='" + sourceSrc + "' " + mimeType + ">";
 				}
 			});
-
 			if(sources.length>0){
 				video = video + "<p>Your browser does not support HTML5 video.</p>";
 			}
@@ -195,6 +188,7 @@ SceneMaker.Video.HTML5 = (function(SM,$,undefined){
 			$(video).attr("loaded","true");
 		}
 	};
+
 
 	/*
 	 * Utils

@@ -45,92 +45,87 @@ SceneMaker.Audio.HTML5 = (function(SM,$,undefined){
 	 * Rendering
 	 */
 	var renderAudioFromJSON = function(audioJSON, options){
-		var renderOptions = options || {};
-
-		if(typeof renderOptions.id == "undefined"){
-			renderOptions.id = ((typeof audioJSON != "undefined")&&(audioJSON['id'])) ? audioJSON['id'] : SM.Utils.getId();
+		if (typeof audioJSON === "undefined") {
+			return "";
 		}
-		if(typeof renderOptions.controls == "undefined"){
-			renderOptions.controls = audioJSON['controls'];
+
+		var renderOptions = $.extend({}, options);
+
+		if (typeof renderOptions.id === "undefined") {
+			renderOptions.id = audioJSON['id'] ? audioJSON['id'] : SM.Utils.getId();
 		}
 
 		renderOptions.style = audioJSON['style'];
-		renderOptions.autoplay = audioJSON['autoplay'];
-		renderOptions.loop = audioJSON['loop'];
-		
-		return renderAudioFromSources(getSourcesFromJSON(audioJSON),renderOptions);
+
+		var audioSettings = {};
+		if (typeof audioJSON.settings === "object") {
+			audioSettings = audioJSON.settings;
+		}
+
+		renderOptions.autoplay = (typeof audioSettings['autoplay'] !== "undefined") ? audioSettings['autoplay'] : false;
+		renderOptions.loop = (typeof audioSettings['loop'] !== "undefined") ? audioSettings['loop'] : false;
+		renderOptions.controls = (typeof audioSettings['controls'] !== "undefined") ? audioSettings['controls'] : true;
+		renderOptions.resume = (typeof audioSettings['resume'] !== "undefined") ? audioSettings['resume'] : false;
+
+		return renderAudioFromSources(getSourcesFromJSON(audioJSON), renderOptions);
 	};
 
 	var renderAudioFromSources = function(sources,options){
-		var audio = $("<audio></audio>");
+		var $audio = $("<audio></audio>");
 
-		$(audio).attr("preload","metadata");
-		$(audio).addClass("veaudioelement");
+		$audio.attr("preload","metadata");
+		$audio.addClass("smaudioelement");
 
 		if((options)&&(options.extraAttrs)){
 			for(var key in options.extraAttrs){
-				$(audio).attr(key,options.extraAttrs[key]);
+				$audio.attr(key,options.extraAttrs[key]);
 			}
 		}
 
 		if(options){
 			if(options['id']){
-				$(audio).attr("id",options['id']);
-			}
-			if(typeof options.onAudioReady == "string"){
-				//Look for the function
-				try {
-					var onAudioReadySplit = options.onAudioReady.split(".");
-					var onAudioReadyFunction = window[onAudioReadySplit[0]];
-					for(var k=1; k<onAudioReadySplit.length; k++){
-						onAudioReadyFunction = onAudioReadyFunction[onAudioReadySplit[k]];
-					}
-					if(typeof onAudioReadyFunction == "function"){
-						$(audio).attr("onloadeddata",options.onAudioReady + '(this)');
-					}
-				} catch(e){}
+				$audio.attr("id",options['id']);
 			}
 			if(options['extraClasses']){
 				var extraClassesLength = options['extraClasses'].length;
 				for(var i=0; i<extraClassesLength; i++){
-					$(audio).addClass(options['extraClasses'][i]);
+					$audio.addClass(options['extraClasses'][i]);
 				}
 			}
-			if(options.controls !== false){
-				$(audio).attr("controls","controls");
+
+			if(options.autoplay === true){
+				$audio.attr("autoplayonslideenter", "true");
 			}
-			if(typeof options.autoplay != "undefined"){
-				$(audio).attr("autoplayonslideenter",options.autoplay);
+			$audio.prop("loop", options.loop === true);
+			$audio.prop("controls", options.controls !== false);
+			if(options.resume === true){
+				$audio.attr("resumeonslideenter", "true");
 			}
-			if(options['loop'] === true){
-				$(audio).attr("loop","loop");
-			}
-			if(options['style']){
-				$(audio).attr("style",options['style']);
+
+			if (options.style){
+				$audio.attr("style",options['style']);
 			}
 		}
 
 		//Default callback
-		if(typeof $(audio).attr("onloadeddata") == "undefined"){
-			$(audio).attr("onloadeddata",'SceneMaker.Audio.HTML5.onAudioReady(this)');
-		};
+		if (!$audio.attr("onloadeddata")) {
+			$audio.attr("onloadeddata",'SceneMaker.Audio.HTML5.onAudioReady(this)');
+		}
 
-		audio = SM.Utils.getOuterHTML(audio);
-		audio = audio.split("</audio>")[0];
+		var audio = (SM.Utils.getOuterHTML($audio)).split("</audio>")[0];
 
 		//Write sources (we can't loaded it to the DOM directly, because then they will start to load, before been actually rendered)
 		if((!options)||(options.loadSources !== false)){
 			$.each(sources, function(index, source){
 				if(typeof source.src == "string"){
 					var sourceSrc = source.src;
-					if((typeof options != "undefined")&&(options.timestamp === true)){
+					if(options && options.timestamp === true){
 						sourceSrc = SM.Utils.addParamToUrl(sourceSrc,"timestamp",""+new Date().getTime());
 					}
 					var mimeType = (source.mimeType)?"type='" + source.mimeType + "' ":"";
 					audio = audio + "<source src='" + sourceSrc + "' " + mimeType + ">";
 				}
 			});
-
 			if(sources.length>0){
 				audio = audio + "<p>Your browser does not support HTML5 audio.</p>";
 			}

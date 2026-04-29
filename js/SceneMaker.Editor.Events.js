@@ -52,6 +52,7 @@ SceneMaker.Editor.Events = (function(SM,$,undefined){
 		
 		//Element settings
 		$(document).on("click", "#objectSettingsDone", SM.Editor.Object.onObjectSettingsDone);
+		$(document).on("click", "#multimediaSettingsDone", SM.Editor.Video.onMultimediaSettingsDone);
 
 		//Captions
 		$(document).on("click", "#captionDone", SM.Editor.Caption.onCaptionDone);
