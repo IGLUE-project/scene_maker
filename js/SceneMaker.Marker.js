@@ -28,7 +28,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 			});
 			$slide.append(imgBackground);
 
-			imgBackground.on('load', function() {
+			// imgBackground.on('load', function() {
 				//Hotzones
 				if (Array.isArray(slideJSON.hotzones)&&(slideJSON.hotzones.length > 0)){
 					for(j in slideJSON.hotzones){
@@ -42,7 +42,7 @@ SceneMaker.Marker = (function(SM,$,undefined){
 						_drawHotspot($slide, slideJSON.hotspots[i]);
 					}
 				}
-			});
+			// });
 		}
 
 		//Caption
