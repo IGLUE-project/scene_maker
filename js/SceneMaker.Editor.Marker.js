@@ -639,8 +639,12 @@ SceneMaker.Editor.Marker = (function(SM,$,undefined){
 			{ src: SM.ImagesPath + "hotspotgallery/clock_standard.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/clock_retro.png" },
 			{ src: SM.ImagesPath + "hotspotgallery/clock_futuristic.png" },
-			{ src: SM.ImagesPath + "hotspotgallery/wired_bomb.png", aspectRatio: 0.82 }
-
+			{ src: SM.ImagesPath + "hotspotgallery/wired_bomb.png", aspectRatio: 0.82 },
+			{ src: SM.ImagesPath + "hotspotgallery/tv_smart.png", aspectRatio: 1.319 },
+			{ src: SM.ImagesPath + "hotspotgallery/tv_retro_remote.png", aspectRatio: 1.342 },
+			{ src: SM.ImagesPath + "hotspotgallery/tv_retro.png", aspectRatio: 1.487 },
+			{ src: SM.ImagesPath + "hotspotgallery/telephone_smart.png", aspectRatio: 0.500 },
+			{ src: SM.ImagesPath + "hotspotgallery/telephone_retro.png", aspectRatio: 1.336 }
 		];
 
 		var carouselImages = [];
